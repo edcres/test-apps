@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.aldreduser.my2_waydatabinding.MainViewModel" />
+    </data>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:name="com.aldreduser.my2_waydatabinding.MainFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/main_fragment" />
+
+</layout>
