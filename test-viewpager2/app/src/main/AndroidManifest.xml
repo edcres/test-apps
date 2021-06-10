@@ -10,8 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestMyViewpager2">
         <activity android:name=".activities.FragmentViewPagerActivity"></activity>
-        <activity android:name=".ViewsSliderActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
