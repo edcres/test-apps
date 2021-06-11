@@ -17,6 +17,7 @@ class FragmentViewPagerActivity : AppCompatActivity() {
 
     // sets the titles of the tabs
     private val titles = arrayOf("Movies", "Events", "Tickets")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFragmentViewPagerBinding.inflate(layoutInflater)
@@ -35,7 +36,6 @@ class FragmentViewPagerActivity : AppCompatActivity() {
                 tab.text = titles[position]
             }.attach()
         }
-
     }
 
     // adapter for the viewpager

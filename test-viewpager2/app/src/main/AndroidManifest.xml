@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TestMyViewpager2">
-        <activity android:name=".fixedtabs.FragmentViewPagerActivity"></activity>
+        <activity android:name=".scrollabledynamictabs.DynamicViewPagerActivity"></activity>
+        <activity android:name=".fixedtabs.FragmentViewPagerActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
