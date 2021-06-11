@@ -1,4 +1,4 @@
-package com.example.testmyviewpager2.fragments
+package com.example.testmyviewpager2.fixedtabs.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
