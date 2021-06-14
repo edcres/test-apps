@@ -19,6 +19,7 @@ class DynamicViewPagerAdapter(fragmentActivity: FragmentActivity):
     override fun getItemId(position: Int): Long {
         // If the tabs would change position, the position of the enum class class would need to be returned.
         // But in my case I only have one fragment, and it's fine if the tabs are always in the same position.
+        // todo: maybe I do need this for removing tabs
         return position.toLong()
     }
 

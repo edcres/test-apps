@@ -12,14 +12,14 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 // I'm not using a viewpager here in order to keep it simple
 
-// add more tabs dynamically
-// display the tab title inside each respective fragment
+// add more tabs dynamically // display the tab title inside each respective fragment
+// change the textView in the fragments so it displays the title
 // use a fab in the holder activity
 
 class DynamicViewPagerActivity : AppCompatActivity() {
 
-    var binding: ActivityDynamicViewPagerBinding? = null
-    val viewPagerAdapter: DynamicViewPagerAdapter by lazy {DynamicViewPagerAdapter(this)}
+    private var binding: ActivityDynamicViewPagerBinding? = null
+    private val viewPagerAdapter: DynamicViewPagerAdapter by lazy {DynamicViewPagerAdapter(this)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

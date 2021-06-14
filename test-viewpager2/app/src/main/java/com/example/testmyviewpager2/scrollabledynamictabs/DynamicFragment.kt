@@ -33,17 +33,27 @@ class DynamicFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         textView = dynamic_fragment_text
-        buttonOnClick()
+        addButtonOnClick()
+        removeButtonOnClick()
         super.onViewCreated(view, savedInstanceState)
     }
 
-    private fun buttonOnClick() {
-        button.setOnClickListener{
+    private fun addButtonOnClick() {
+        addButton.setOnClickListener {
             val numOfTabs = titles.size
             val nextTitle = testMovieTitles[numOfTabs - 1]
             viewPagerAdapter.addTab(nextTitle)
 //            textView?.text = titles.size.toString()
 //            viewPagerActivity.addTitle()
+        }
+    }
+
+    // removes the last tab
+    private fun removeButtonOnClick() {
+        removeButton.setOnClickListener {
+            val numOfTabs = titles.size
+            val lastTabPositionInArray = numOfTabs - 1
+            viewPagerAdapter.removeTab(lastTabPositionInArray)
         }
     }
 }
