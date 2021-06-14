@@ -8,8 +8,6 @@ import com.example.testmyviewpager2.titles
 class DynamicViewPagerAdapter(fragmentActivity: FragmentActivity):
     FragmentStateAdapter(fragmentActivity){
 
-    private val viewPagerActivity = fragmentActivity
-
     override fun createFragment(position: Int): Fragment {
         return DynamicFragment()
     }
@@ -18,13 +16,15 @@ class DynamicViewPagerAdapter(fragmentActivity: FragmentActivity):
         return titles.size
     }
 
-//    override fun getItemId(position: Int): Long {
-//        return super.getItemId(position)
-//    }
+    override fun getItemId(position: Int): Long {
+        // If the tabs would change position, the position of the enum class class would need to be returned.
+        // But in my case I only have one fragment, and it's fine if the tabs are always in the same position.
+        return position.toLong()
+    }
 
-//    override fun containsItem(itemId: Long): Boolean {
-//        return super.containsItem(itemId)
-//    }
+    override fun containsItem(itemId: Long): Boolean {
+        return titles.contains(titles[itemId.toInt()])
+    }
 
     fun addTab(title: String) {
         titles.add(title)

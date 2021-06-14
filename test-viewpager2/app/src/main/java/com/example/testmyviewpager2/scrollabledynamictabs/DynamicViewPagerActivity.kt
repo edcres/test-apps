@@ -3,9 +3,6 @@ package com.example.testmyviewpager2.scrollabledynamictabs
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.testmyviewpager2.databinding.ActivityDynamicViewPagerBinding
-import com.example.testmyviewpager2.testMovieTitles
-import com.example.testmyviewpager2.titles
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 //better source
@@ -22,6 +19,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 class DynamicViewPagerActivity : AppCompatActivity() {
 
     var binding: ActivityDynamicViewPagerBinding? = null
+    val viewPagerAdapter: DynamicViewPagerAdapter by lazy {DynamicViewPagerAdapter(this)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,23 +30,27 @@ class DynamicViewPagerActivity : AppCompatActivity() {
     }
 
     private fun setUpTabs() {
-        binding?.dynamicViewPager?.adapter = DynamicViewPagerAdapter(this)
+        binding?.dynamicViewPager?.offscreenPageLimit = 4
+        binding?.dynamicViewPager?.adapter = viewPagerAdapter
 
-        // attaching tab mediator
-        binding?.let { TabLayoutMediator(binding!!.dynamicTabLayout, it.dynamicViewPager
-            ) { tab: TabLayout.Tab, position: Int ->
-                tab.text = titles[position]
-            }.attach()
-        }
-    }
+        TabLayoutMediator(binding!!.dynamicTabLayout, binding!!.dynamicViewPager) { tab, position ->
+            tab.text = when (title[position]) {
+                // naming the tabs
+                title[0] -> title[0].toString()
+                title[1] -> title[1].toString()
+                title[2] -> title[2].toString()
+                title[3] -> title[3].toString()
+                else -> title[0].toString()
+            }
+        }.attach()
 
-//    fun addTitle() {
-//        // Get the next String in 'movieTitles'
-//        // and add it as a tab
-//        val movieToGet = titles.size - 1
-//        titles.add(testMovieTitles[movieToGet])
+//        binding?.dynamicViewPager?.adapter = DynamicViewPagerAdapter(this)
 //
-//        // todo: update the recycler view with new tabs
-//        setUpTabs()
-//    }
+//        // attaching tab mediator
+//        binding?.let { TabLayoutMediator(binding!!.dynamicTabLayout, it.dynamicViewPager) {
+//                tab: TabLayout.Tab, position: Int ->
+//                tab.text = titles[position]
+//            }.attach()
+//        }
+    }
 }

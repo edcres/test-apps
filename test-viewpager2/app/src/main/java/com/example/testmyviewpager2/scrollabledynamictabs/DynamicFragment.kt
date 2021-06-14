@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.testmyviewpager2.R
+import com.example.testmyviewpager2.testMovieTitles
 import com.example.testmyviewpager2.titles
 import kotlinx.android.synthetic.main.fragment_dynamic.*
 
@@ -16,6 +17,8 @@ class DynamicFragment : Fragment() {
 
     //delete this
     private var textView: TextView? = null
+    private val holderActivity = DynamicViewPagerActivity()
+    private val viewPagerAdapter: DynamicViewPagerAdapter by lazy {DynamicViewPagerAdapter(holderActivity)}
 
     // todo: possible null pointer bug
     private val viewPagerActivity = DynamicViewPagerActivity() // delete this
@@ -36,6 +39,9 @@ class DynamicFragment : Fragment() {
 
     private fun buttonOnClick() {
         button.setOnClickListener{
+            val numOfTabs = titles.size
+            val nextTitle = testMovieTitles[numOfTabs - 1]
+            viewPagerAdapter.addTab(nextTitle)
 //            textView?.text = titles.size.toString()
 //            viewPagerActivity.addTitle()
         }
