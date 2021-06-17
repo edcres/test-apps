@@ -56,4 +56,20 @@ class DynamicFragment : Fragment() {
             viewPagerAdapter.removeTab(lastTabPositionInArray)
         }
     }
+
+    fun setTitleText(text: String) {
+        textView?.text = text
+    }
+
+    companion object{
+        //The Fragment will then need to retrieve the Item from the List and display the content of
+        // that item. Here is an example pager adapter.
+        fun getInstance(titleId: Int): DynamicFragment {
+
+            val titleToDisplay = titles[titleId]
+            DynamicFragment().setTitleText(titleToDisplay)
+
+            return DynamicFragment as DynamicFragment
+        }
+    }
 }

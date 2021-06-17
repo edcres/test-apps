@@ -2,7 +2,9 @@ package com.example.testmyviewpager2.scrollabledynamictabs
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.testmyviewpager2.databinding.ActivityDynamicViewPagerBinding
+import com.example.testmyviewpager2.titles
 import com.google.android.material.tabs.TabLayoutMediator
 
 //better source
@@ -34,13 +36,13 @@ class DynamicViewPagerActivity : AppCompatActivity() {
         binding?.dynamicViewPager?.adapter = viewPagerAdapter
 
         TabLayoutMediator(binding!!.dynamicTabLayout, binding!!.dynamicViewPager) { tab, position ->
-            tab.text = when (title[position]) {
+            tab.text = when (titles[position]) {
                 // naming the tabs
-                title[0] -> title[0].toString()
-                title[1] -> title[1].toString()
-                title[2] -> title[2].toString()
-                title[3] -> title[3].toString()
-                else -> title[0].toString()
+                titles[0] -> titles[0]
+                titles[1] -> titles[1]
+                titles[2] -> titles[2]
+                titles[3] -> titles[3]
+                else -> titles[0]
             }
         }.attach()
 

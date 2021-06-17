@@ -1,15 +1,18 @@
 package com.example.testmyviewpager2.scrollabledynamictabs
 
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.testmyviewpager2.titles
 
-class DynamicViewPagerAdapter(fragmentActivity: FragmentActivity):
-    FragmentStateAdapter(fragmentActivity){
+class DynamicViewPagerAdapter(
+    fragmentActivity: FragmentActivity,
+    private val titleId: Int
+) : FragmentStateAdapter(fragmentActivity) {
 
     override fun createFragment(position: Int): Fragment {
-        return DynamicFragment()
+        return DynamicFragment.getInstance()
     }
 
     override fun getItemCount(): Int {
