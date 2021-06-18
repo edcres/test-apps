@@ -1,6 +1,7 @@
 package com.example.testmyviewpager2.scrollabledynamictabs
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -41,9 +42,13 @@ class DynamicFragment : Fragment() {
     private fun addButtonOnClick() {
         addButton.setOnClickListener {
             val nextTitlePosition = titles.size - 1
-            titles.add(testMovieTitles[nextTitlePosition])
+            //titles.add(testMovieTitles[nextTitlePosition])  delete this
             viewPagerAdapter = DynamicViewPagerAdapter(holderActivity, nextTitlePosition)
             viewPagerAdapter.addTab(testMovieTitles[nextTitlePosition])
+
+            //todo: delete log
+            val numOfTabs = titles.size
+            Log.d("QryTabAdd", "message: Adds tab. Size: $numOfTabs. Last2: $titles")
 //            textView?.text = titles.size.toString()
 //            viewPagerActivity.addTitle()
         }
@@ -52,11 +57,16 @@ class DynamicFragment : Fragment() {
     // removes the last tab
     private fun removeButtonOnClick() {
         removeButton.setOnClickListener {
-            val numOfTabs = titles.size
+            var numOfTabs = titles.size
             val lastTabPositionInArray = numOfTabs - 1
-            if(numOfTabs > 0) {
+            //todo: delete logs
+            Log.d("QryTabAddRemoveAttempt", "massage: Remove Tab Attempt. Size: $numOfTabs")
+            if(numOfTabs > 1) {
                 viewPagerAdapter.removeTab(lastTabPositionInArray)
+                numOfTabs = titles.size     // delete this line
+                Log.d("QryTabRemove", "massage: Removes Tab. Size: $numOfTabs")
             }
+            Log.d("QryTabSpace", " ")
         }
     }
 
