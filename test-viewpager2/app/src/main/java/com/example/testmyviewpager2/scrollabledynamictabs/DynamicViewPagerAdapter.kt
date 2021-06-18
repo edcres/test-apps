@@ -12,7 +12,7 @@ class DynamicViewPagerAdapter(
 ) : FragmentStateAdapter(fragmentActivity) {
 
     override fun createFragment(position: Int): Fragment {
-        return DynamicFragment.getInstance()
+        return DynamicFragment.getInstance(titleId)
     }
 
     override fun getItemCount(): Int {

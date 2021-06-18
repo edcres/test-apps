@@ -18,7 +18,7 @@ class DynamicFragment : Fragment() {
     //delete this
     private var textView: TextView? = null
     private val holderActivity = DynamicViewPagerActivity()
-    private val viewPagerAdapter: DynamicViewPagerAdapter by lazy {DynamicViewPagerAdapter(holderActivity)}
+    private lateinit var viewPagerAdapter: DynamicViewPagerAdapter// by lazy {DynamicViewPagerAdapter(holderActivity)}
 
     // todo: possible null pointer bug
     private val viewPagerActivity = DynamicViewPagerActivity() // delete this
@@ -40,9 +40,10 @@ class DynamicFragment : Fragment() {
 
     private fun addButtonOnClick() {
         addButton.setOnClickListener {
-            val numOfTabs = titles.size
-            val nextTitle = testMovieTitles[numOfTabs - 1]
-            viewPagerAdapter.addTab(nextTitle)
+            val nextTitlePosition = titles.size - 1
+            titles.add(testMovieTitles[nextTitlePosition])
+            viewPagerAdapter = DynamicViewPagerAdapter(holderActivity, nextTitlePosition)
+            viewPagerAdapter.addTab(testMovieTitles[nextTitlePosition])
 //            textView?.text = titles.size.toString()
 //            viewPagerActivity.addTitle()
         }
@@ -53,7 +54,9 @@ class DynamicFragment : Fragment() {
         removeButton.setOnClickListener {
             val numOfTabs = titles.size
             val lastTabPositionInArray = numOfTabs - 1
-            viewPagerAdapter.removeTab(lastTabPositionInArray)
+            if(numOfTabs > 0) {
+                viewPagerAdapter.removeTab(lastTabPositionInArray)
+            }
         }
     }
 
@@ -62,14 +65,15 @@ class DynamicFragment : Fragment() {
     }
 
     companion object{
+
         //The Fragment will then need to retrieve the Item from the List and display the content of
         // that item. Here is an example pager adapter.
         fun getInstance(titleId: Int): DynamicFragment {
-
+            val thisDynamicFragment = DynamicFragment()
             val titleToDisplay = titles[titleId]
-            DynamicFragment().setTitleText(titleToDisplay)
+            thisDynamicFragment.setTitleText(titleToDisplay)
 
-            return DynamicFragment as DynamicFragment
+            return thisDynamicFragment
         }
     }
 }

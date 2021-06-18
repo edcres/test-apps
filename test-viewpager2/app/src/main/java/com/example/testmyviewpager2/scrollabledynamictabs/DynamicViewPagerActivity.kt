@@ -21,7 +21,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 class DynamicViewPagerActivity : AppCompatActivity() {
 
     private var binding: ActivityDynamicViewPagerBinding? = null
-    private val viewPagerAdapter: DynamicViewPagerAdapter by lazy {DynamicViewPagerAdapter(this)}
+    private val viewPagerAdapter: DynamicViewPagerAdapter by lazy {
+        DynamicViewPagerAdapter(this, titles.size - 1)} // todo: probably get rid of 'titles.size - 1'
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
