@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.testmyviewpager2.R
+import com.example.testmyviewpager2.MYLOG
 import com.example.testmyviewpager2.testMovieTitles
 import com.example.testmyviewpager2.titles
 import kotlinx.android.synthetic.main.fragment_dynamic.*
@@ -19,7 +20,8 @@ class DynamicFragment : Fragment() {
     //delete this
     private var textView: TextView? = null
     private val holderActivity = DynamicViewPagerActivity()
-    private lateinit var viewPagerAdapter: DynamicViewPagerAdapter// by lazy {DynamicViewPagerAdapter(holderActivity)}
+    //private lateinit var viewPagerAdapter: DynamicViewPagerAdapter// by lazy {DynamicViewPagerAdapter(holderActivity)}
+    private var viewPagerAdapter: DynamicViewPagerAdapter? = null
 
     // todo: possible null pointer bug
     private val viewPagerActivity = DynamicViewPagerActivity() // delete this
@@ -34,6 +36,7 @@ class DynamicFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         textView = dynamic_fragment_text
+        viewPagerAdapter = (activity as? DynamicViewPagerActivity)?.viewPagerAdapter
         addButtonOnClick()
         removeButtonOnClick()
         super.onViewCreated(view, savedInstanceState)
@@ -42,13 +45,12 @@ class DynamicFragment : Fragment() {
     private fun addButtonOnClick() {
         addButton.setOnClickListener {
             val nextTitlePosition = titles.size - 1
-            //titles.add(testMovieTitles[nextTitlePosition])  delete this
-            viewPagerAdapter = DynamicViewPagerAdapter(holderActivity, nextTitlePosition)
-            viewPagerAdapter.addTab(testMovieTitles[nextTitlePosition])
+            //viewPagerAdapter = DynamicViewPagerAdapter(holderActivity, nextTitlePosition)  delete this
+            viewPagerAdapter!!.addTab(testMovieTitles[nextTitlePosition])       //'viewPagerAdapter' here might be null
 
             //todo: delete log
             val numOfTabs = titles.size
-            Log.d("QryTabAdd", "message: Adds tab. Size: $numOfTabs. Last2: $titles")
+            Log.d("${MYLOG}AddTab", "message: Adds tab. Size: $numOfTabs. Last2: $titles")
 //            textView?.text = titles.size.toString()
 //            viewPagerActivity.addTitle()
         }
@@ -60,13 +62,13 @@ class DynamicFragment : Fragment() {
             var numOfTabs = titles.size
             val lastTabPositionInArray = numOfTabs - 1
             //todo: delete logs
-            Log.d("QryTabAddRemoveAttempt", "massage: Remove Tab Attempt. Size: $numOfTabs")
+            Log.d("${MYLOG}RmvTab", "massage: Remove Tab Attempt. Size: $numOfTabs")
             if(numOfTabs > 1) {
-                viewPagerAdapter.removeTab(lastTabPositionInArray)
+                viewPagerAdapter?.removeTab(lastTabPositionInArray)
                 numOfTabs = titles.size     // delete this line
-                Log.d("QryTabRemove", "massage: Removes Tab. Size: $numOfTabs")
+                Log.d("${MYLOG}RmvTab", "massage: Removes Tab. Size: $numOfTabs")
             }
-            Log.d("QryTabSpace", " ")
+            Log.d("${MYLOG}Space", " ")
         }
     }
 
@@ -75,7 +77,6 @@ class DynamicFragment : Fragment() {
     }
 
     companion object{
-
         //The Fragment will then need to retrieve the Item from the List and display the content of
         // that item. Here is an example pager adapter.
         fun getInstance(titleId: Int): DynamicFragment {
