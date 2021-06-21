@@ -3,6 +3,7 @@ package com.example.testmyviewpager2.scrollabledynamictabs
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.example.testmyviewpager2.MY_LOG
 import com.example.testmyviewpager2.databinding.ActivityDynamicViewPagerBinding
 import com.example.testmyviewpager2.testMovieTitles
 import com.example.testmyviewpager2.titles
@@ -13,17 +14,16 @@ import com.google.android.material.tabs.TabLayoutMediator
 //extra source just in case
 // https://stackoverflow.com/questions/60130178/how-do-i-dynamically-add-and-remove-fragment-pages-using-viewpager2-and-mediator
 
-// I'm not using a viewpager here in order to keep it simple
-
 // todo:
-// change fragment text so it reflects the tab title
-// use a fab in the holder activity
+// remove tab by its name
+
+// bug: kotlin: if i remove tabs too fast the app crashes (maybe have, try/catch block)
 
 class DynamicViewPagerActivity : AppCompatActivity() {
 
     private var binding: ActivityDynamicViewPagerBinding? = null
-    val viewPagerAdapter: DynamicViewPagerAdapter by lazy {
-        DynamicViewPagerAdapter(this, titles.size - 1)} // todo: probably get rid of 'titles.size - 1'
+    val activityViewPagerAdapter: DynamicViewPagerAdapter by lazy {
+        DynamicViewPagerAdapter(this)} // todo: probably get rid of 'titles.size - 1'
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,24 +31,64 @@ class DynamicViewPagerActivity : AppCompatActivity() {
         setContentView(binding?.root)
 
         setUpTabs()
+        addTabFabOnClick()
     }
 
     private fun setUpTabs() {
         binding?.dynamicViewPager?.offscreenPageLimit = 4
-        binding?.dynamicViewPager?.adapter = viewPagerAdapter
+        binding?.dynamicViewPager?.adapter = activityViewPagerAdapter
 
+        // Set the title of the tabs
         TabLayoutMediator(binding!!.dynamicTabLayout, binding!!.dynamicViewPager) { tab, position ->
-            // Set the title of the tab
             tab.text = titles[position]
-            //probably delete this
-//            tab.text = when (titles[position]) {
-//                // naming the tabs
-//                titles[0] -> position.toString()  //titles[0]
-//                titles[1] -> titles[1]
-//                titles[2] -> titles[2]
-//                titles[3] -> titles[3]
-//                else -> titles[0]
-//            }
         }.attach()
+    }
+
+    private fun addTabFabOnClick() {
+        binding?.addTabFab?.setOnClickListener {
+            val nextTitlePosition = titles.size - 1
+            var nextTitle = testMovieTitles[nextTitlePosition]
+            val numOfTabs = titles.size
+            var titleIncrementer = 0 // to use the next tile until it doesn't match one of the tabs
+
+            while(titles.contains(nextTitle)) {
+                titleIncrementer++
+                nextTitle = testMovieTitles[nextTitlePosition + titleIncrementer]
+                Log.d("${MY_LOG}addTab", "addTabFabOnClick: $nextTitle")
+            }
+            if(!titles.contains(nextTitle)) { activityViewPagerAdapter.addTab(nextTitle) }
+
+
+
+//            if(!titles.contains(nextTitle)) {
+//                activityViewPagerAdapter.addTab(nextTitle)
+//            } else {
+//                while(titles.contains(nextTitle)) {
+//
+//                }
+//            }
+//
+//
+//            if(titles.contains(nextTitle)) {
+//                // add another title
+//                activityViewPagerAdapter.addTab(testMovieTitles[nextTitlePosition+1])
+//            } else if(!titles.contains(nextTitle)) {
+//                activityViewPagerAdapter.addTab(nextTitle)
+//            }
+
+//            Log.d("${MY_LOG}AddTab", "clicked")
+//            do {
+//                if (!titles.contains(testMovieTitles[nextTitlePosition+incrementer])) {
+//                    activityViewPagerAdapter.addTab(nextTitle)
+//                    Log.d("${MY_LOG}AddTab", "message: Adds tab. Size: $numOfTabs. Last2: $titles")
+//                } else if (titles.contains(nextTitle)) {
+//                    incrementer++
+//                    Log.d("${MY_LOG}AddTab", "message: didnt work")
+//                }
+//            } while (titles.contains(nextTitle))
+
+//            activityViewPagerAdapter.addTab(nextTitle)
+
+        }
     }
 }

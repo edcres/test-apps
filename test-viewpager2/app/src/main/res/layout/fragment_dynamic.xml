@@ -11,22 +11,21 @@
         android:layout_height="wrap_content"
         android:textSize="32sp"
         android:layout_gravity="center"
-        android:text="kjhkgfdfgfhglh"
         tools:text="place holder"/>
 
-    <Button
-        android:id="@+id/addButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="16dp"
-        android:text="add tab" />
+<!--    <Button-->
+<!--        android:id="@+id/addButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom|start"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:text="add tab" />-->
 
     <Button
         android:id="@+id/removeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="bottom|start"
         android:layout_margin="16dp"
         android:text="remove tab" />
 
