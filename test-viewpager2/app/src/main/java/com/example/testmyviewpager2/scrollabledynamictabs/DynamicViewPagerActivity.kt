@@ -3,10 +3,8 @@ package com.example.testmyviewpager2.scrollabledynamictabs
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.example.testmyviewpager2.MY_LOG
+import com.example.testmyviewpager2.*
 import com.example.testmyviewpager2.databinding.ActivityDynamicViewPagerBinding
-import com.example.testmyviewpager2.testMovieTitles
-import com.example.testmyviewpager2.titles
 import com.google.android.material.tabs.TabLayoutMediator
 
 //better source
@@ -22,6 +20,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 class DynamicViewPagerActivity : AppCompatActivity() {
 
     private var binding: ActivityDynamicViewPagerBinding? = null
+
     val activityViewPagerAdapter: DynamicViewPagerAdapter by lazy {
         DynamicViewPagerAdapter(this)} // todo: probably get rid of 'titles.size - 1'
 
@@ -40,54 +39,29 @@ class DynamicViewPagerActivity : AppCompatActivity() {
 
         // Set the title of the tabs
         TabLayoutMediator(binding!!.dynamicTabLayout, binding!!.dynamicViewPager) { tab, position ->
-            tab.text = titles[position]
+
+            val (pairTitle, _) = titlesList[position]
+            tab.text = pairTitle
+
         }.attach()
     }
 
     private fun addTabFabOnClick() {
         binding?.addTabFab?.setOnClickListener {
-            val nextTitlePosition = titles.size - 1
+            val nextTitlePosition = titlesList.size - 1
+//            val nextTitlePosition = titles.size - 1
             var nextTitle = testMovieTitles[nextTitlePosition]
-            val numOfTabs = titles.size
+            val numOfTabs = titlesList.size
             var titleIncrementer = 0 // to use the next tile until it doesn't match one of the tabs
 
-            while(titles.contains(nextTitle)) {
+            // new tabs cannot have the same name as old tabs
+            while(pairsToList(titlesList).contains(nextTitle)) {
+//            while(titles.contains(nextTitle)) {
                 titleIncrementer++
                 nextTitle = testMovieTitles[nextTitlePosition + titleIncrementer]
-                Log.d("${MY_LOG}addTab", "addTabFabOnClick: $nextTitle")
             }
-            if(!titles.contains(nextTitle)) { activityViewPagerAdapter.addTab(nextTitle) }
-
-
-
-//            if(!titles.contains(nextTitle)) {
-//                activityViewPagerAdapter.addTab(nextTitle)
-//            } else {
-//                while(titles.contains(nextTitle)) {
-//
-//                }
-//            }
-//
-//
-//            if(titles.contains(nextTitle)) {
-//                // add another title
-//                activityViewPagerAdapter.addTab(testMovieTitles[nextTitlePosition+1])
-//            } else if(!titles.contains(nextTitle)) {
-//                activityViewPagerAdapter.addTab(nextTitle)
-//            }
-
-//            Log.d("${MY_LOG}AddTab", "clicked")
-//            do {
-//                if (!titles.contains(testMovieTitles[nextTitlePosition+incrementer])) {
-//                    activityViewPagerAdapter.addTab(nextTitle)
-//                    Log.d("${MY_LOG}AddTab", "message: Adds tab. Size: $numOfTabs. Last2: $titles")
-//                } else if (titles.contains(nextTitle)) {
-//                    incrementer++
-//                    Log.d("${MY_LOG}AddTab", "message: didnt work")
-//                }
-//            } while (titles.contains(nextTitle))
-
-//            activityViewPagerAdapter.addTab(nextTitle)
+            if(!pairsToList(titlesList).contains(nextTitle)) { activityViewPagerAdapter.addTab(nextTitle) }
+//            if(!titles.contains(nextTitle)) { activityViewPagerAdapter.addTab(nextTitle) }
 
         }
     }

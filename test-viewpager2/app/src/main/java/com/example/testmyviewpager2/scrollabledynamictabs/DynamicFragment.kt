@@ -6,10 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.testmyviewpager2.R
-import com.example.testmyviewpager2.MY_LOG
-import com.example.testmyviewpager2.testMovieTitles
-import com.example.testmyviewpager2.titles
+import androidx.fragment.app.FragmentTransaction
+import com.example.testmyviewpager2.*
 import kotlinx.android.synthetic.main.fragment_dynamic.*
 
 // todo: The text in the view will change depending on which tab is selected
@@ -35,17 +33,10 @@ class DynamicFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    // CLICK LISTENERS //
-//      delete this   // adds a tab in the end
-//    private fun addButtonOnClick() {
-//        addButton.setOnClickListener {
-//            val nextTitlePosition = titles.size - 1
-//            fragmentViewPagerAdapter!!.addTab(testMovieTitles[nextTitlePosition])       //'viewPagerAdapter' here might be null
-//
-//            val numOfTabs = titles.size
-//            Log.d("${MY_LOG}AddTab", "message: Adds tab. Size: $numOfTabs. Last2: $titles")
-//        }
-//    }
+    override fun onDestroy() {
+        Log.d("$MY_LOG", "onDestroy called on $titleToDisplay")
+        super.onDestroy()
+    }
 
     // todo: remove tab from the fragment to be removed
     // removes the last tab
@@ -53,12 +44,16 @@ class DynamicFragment : Fragment() {
         removeButton.setOnClickListener {
             // todo: possible bug: 'titleToDisplay' might be a bug here
 
-            val numOfTabs = titles.size
-            if(numOfTabs > 1 && titleToDisplay != "All Movies") {
+//            val numOfTabs = titles.size
+            val numOfTabs = titlesList.size
+            if (numOfTabs > 1 && titleToDisplay != "All Movies") {
                 fragmentViewPagerAdapter?.removeTab(titleToDisplay)
                 //titles.remove(titleToDisplay)
             }
-            Log.d("${MY_LOG}RemoveTab", "\t $titles Remove from Fragment")
+            //fragmentTransaction.remove(yourfragment).commit()
+//            this.onDestroy()
+            // possible gub: if I destroy this fragment manually, the last fragment might still be
+            // destroyed bc it happens first. Maybe do it in the adapter
         }
     }
 
@@ -72,8 +67,14 @@ class DynamicFragment : Fragment() {
         // that item. Here is an example pager adapter.
         fun getInstance(titleId: Int): DynamicFragment {
             val thisDynamicFragment = DynamicFragment()
-            val titleToDisplay = titles[titleId]
+
+            val (titleToDisplay, _) = titlesList[titleId]
+//            val titleToDisplay = titles[titleId]
             thisDynamicFragment.setTitleText(titleToDisplay)
+            return thisDynamicFragment
+        }
+        fun getInstance(): DynamicFragment {
+            val thisDynamicFragment = DynamicFragment()
             return thisDynamicFragment
         }
     }
