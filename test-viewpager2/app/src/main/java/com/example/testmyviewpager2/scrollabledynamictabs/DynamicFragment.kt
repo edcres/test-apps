@@ -6,11 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentTransaction
 import com.example.testmyviewpager2.*
 import kotlinx.android.synthetic.main.fragment_dynamic.*
-
-// todo: The text in the view will change depending on which tab is selected
 
 class DynamicFragment : Fragment() {
 
@@ -34,42 +31,31 @@ class DynamicFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        Log.d("$MY_LOG", "onDestroy called on $titleToDisplay")
+        Log.d(MY_LOG, "onDestroy called on $titleToDisplay")
         super.onDestroy()
     }
 
-    // todo: remove tab from the fragment to be removed
-    // removes the last tab
     private fun removeButtonOnClick() {
         removeButton.setOnClickListener {
-            // todo: possible bug: 'titleToDisplay' might be a bug here
 
-//            val numOfTabs = titles.size
-            val numOfTabs = titlesList.size
+            val numOfTabs = titles.size
             if (numOfTabs > 1 && titleToDisplay != "All Movies") {
                 fragmentViewPagerAdapter?.removeTab(titleToDisplay)
-                //titles.remove(titleToDisplay)
             }
-            //fragmentTransaction.remove(yourfragment).commit()
-//            this.onDestroy()
-            // possible gub: if I destroy this fragment manually, the last fragment might still be
-            // destroyed bc it happens first. Maybe do it in the adapter
         }
     }
 
     fun setTitleText(title: String) {
         titleToDisplay = title
-        // another bug is probably what calls this function
     }
 
     companion object{
-        //The Fragment will then need to retrieve the Item from the List and display the content of
-        // that item. Here is an example pager adapter.
+        //The Fragment retrieves the Item from the List and display the content of that item.
         fun getInstance(titleId: Int): DynamicFragment {
             val thisDynamicFragment = DynamicFragment()
 
-            val (titleToDisplay, _) = titlesList[titleId]
-//            val titleToDisplay = titles[titleId]
+//            val (titleToDisplay, _) = titlesList[titleId]
+            val titleToDisplay = titles[titleId]
             thisDynamicFragment.setTitleText(titleToDisplay)
             return thisDynamicFragment
         }

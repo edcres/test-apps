@@ -39,30 +39,26 @@ class DynamicViewPagerActivity : AppCompatActivity() {
 
         // Set the title of the tabs
         TabLayoutMediator(binding!!.dynamicTabLayout, binding!!.dynamicViewPager) { tab, position ->
-
-            val (pairTitle, _) = titlesList[position]
-            tab.text = pairTitle
-
+            tab.text = titles[position]
         }.attach()
     }
 
     private fun addTabFabOnClick() {
         binding?.addTabFab?.setOnClickListener {
-            val nextTitlePosition = titlesList.size - 1
-//            val nextTitlePosition = titles.size - 1
+            val nextTitlePosition = titles.size - 1
             var nextTitle = testMovieTitles[nextTitlePosition]
-            val numOfTabs = titlesList.size
+//            val numOfTabs = titles.size
             var titleIncrementer = 0 // to use the next tile until it doesn't match one of the tabs
 
-            // new tabs cannot have the same name as old tabs
-            while(pairsToList(titlesList).contains(nextTitle)) {
-//            while(titles.contains(nextTitle)) {
+//            new tabs cannot have the same name as old tabs
+            while(titles.contains(nextTitle)) {
                 titleIncrementer++
                 nextTitle = testMovieTitles[nextTitlePosition + titleIncrementer]
             }
-            if(!pairsToList(titlesList).contains(nextTitle)) { activityViewPagerAdapter.addTab(nextTitle) }
-//            if(!titles.contains(nextTitle)) { activityViewPagerAdapter.addTab(nextTitle) }
-
+            if(!titles.contains(nextTitle)) {
+                //todo: to fix the last bug, maybe start incrememnter at 1 (bc first fragment is 0), and get rid of this +1
+                activityViewPagerAdapter.addTab(nextTitlePosition+1, nextTitle)
+            }
         }
     }
 }

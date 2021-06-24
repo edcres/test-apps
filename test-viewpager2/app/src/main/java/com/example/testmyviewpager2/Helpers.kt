@@ -5,15 +5,6 @@ val testMovieTitles = listOf<String>(
     "Avatar", "Joker", "Profile", "Saw", "Ladies")
 
 val titles = mutableListOf("All Movies")
-val titlesList = mutableListOf(Pair("All Movies", 0), Pair("Doctor", 1))
+val titlesOrdinals: MutableMap<String, Int> = mutableMapOf("All Movies" to 0)   // maybe have this stored
 
 const val MY_LOG = "MY_LOG"
-
-fun pairsToList(titlePairs: MutableList<Pair<String, Int>>): MutableList<String> {
-    val newList: MutableList<String> = mutableListOf()
-    for(theString in 1..titlePairs.size) {
-        val (theTitle, _) = titlePairs[theString]
-        newList.add(theTitle)
-    }
-    return newList
-}
