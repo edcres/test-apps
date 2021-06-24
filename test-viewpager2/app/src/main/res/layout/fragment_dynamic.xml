@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:textSize="32sp"
         android:layout_gravity="center"
+        android:text="default"
         tools:text="place holder"/>
 
     <Button

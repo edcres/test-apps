@@ -24,14 +24,16 @@ class DynamicFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // get the adapter instance from the main activity
-        fragmentViewPagerAdapter = (activity as? DynamicViewPagerActivity)?.activityViewPagerAdapter
+        fragmentViewPagerAdapter = (activity as? DynamicViewPagerActivity)!!.activityViewPagerAdapter
         removeButtonOnClick()
         dynamic_fragment_text.text = titleToDisplay
+        Log.d("${MY_LOG}fragCreated", "name: ${titleToDisplay}")
         super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onDestroy() {
-        Log.d(MY_LOG, "onDestroy called on $titleToDisplay")
+        Log.d("${MY_LOG}destroyed", "\t\t\t $titles")
+        Log.d("${MY_LOG}destroyed", "\t\t\t $titlesOrdinals")
         super.onDestroy()
     }
 
@@ -40,7 +42,7 @@ class DynamicFragment : Fragment() {
 
             val numOfTabs = titles.size
             if (numOfTabs > 1 && titleToDisplay != "All Movies") {
-                fragmentViewPagerAdapter?.removeTab(titleToDisplay)
+                fragmentViewPagerAdapter!!.removeTab(titleToDisplay)
             }
         }
     }
