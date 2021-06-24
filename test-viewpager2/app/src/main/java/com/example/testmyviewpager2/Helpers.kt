@@ -1,6 +1,6 @@
 package com.example.testmyviewpager2
 
-val testMovieTitles = listOf<String>(
+val testMovieTitles = listOf(
     "Hulk", "Chucky", "Cruella", "Nobody", "Scar Face",
     "Avatar", "Joker", "Profile", "Saw", "Ladies")
 

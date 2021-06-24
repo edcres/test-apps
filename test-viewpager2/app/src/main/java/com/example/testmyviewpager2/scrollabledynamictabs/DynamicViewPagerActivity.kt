@@ -12,10 +12,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 //extra source just in case
 // https://stackoverflow.com/questions/60130178/how-do-i-dynamically-add-and-remove-fragment-pages-using-viewpager2-and-mediator
 
-// todo:
-// remove tab by its name
-
-// bug: kotlin: if i remove tabs too fast the app crashes (maybe have, try/catch block)
+// bug: kotlin: if i remove tabs too fast the app crashes
+// bug: kotlin: maybe if i add tabs too fast, the wrong fragment is added
+// bug: kotlin: eventually the titles run out, leads to indexOutOfBoundsException
 
 class DynamicViewPagerActivity : AppCompatActivity() {
 
@@ -23,7 +22,7 @@ class DynamicViewPagerActivity : AppCompatActivity() {
     var titleIncrementer = 0 // to use the next tile until it doesn't match one of the tabs
 
     val activityViewPagerAdapter: DynamicViewPagerAdapter by lazy {
-        DynamicViewPagerAdapter(this)} // todo: probably get rid of 'titles.size - 1'
+        DynamicViewPagerAdapter(this)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,24 +48,18 @@ class DynamicViewPagerActivity : AppCompatActivity() {
             val nextTitlePosition = titles.size - 1
             val nextOrdinalId = titlesOrdinals.size - 1
             var nextTitle = testMovieTitles[nextTitlePosition]
-//            val numOfTabs = titles.size
-//            var titleIncrementer = 0 // to use the next tile until it doesn't match one of the tabs
 
             // if a title has been added before, don't add it
-
-//            new tabs cannot have the same name as old tabs
+            // new tabs cannot have the same name as old tabs
             while(titles.contains(nextTitle)) {
                 titleIncrementer++
                 nextTitle = testMovieTitles[nextTitlePosition + titleIncrementer]
             }
-//            nextTitle = testMovieTitles[nextTitlePosition]
-
             if (titleIncrementer > 0) { Log.d("${MY_LOG}Activity", "incrementer: $titleIncrementer") }
 
             if(!titles.contains(nextTitle)) {
                 //todo: to fix the last bug, maybe start incrememnter at 1 (bc first fragment is 0), and get rid of this +1
                 activityViewPagerAdapter.addTab(nextOrdinalId+1, nextTitle)
-//                activityViewPagerAdapter.addTab(nextTitlePosition + 1, nextTitle)
             } else {
                 Log.d("${MY_LOG}Activity", "\t\t titles contains next title \t\t $titles $nextTitle")}
         }

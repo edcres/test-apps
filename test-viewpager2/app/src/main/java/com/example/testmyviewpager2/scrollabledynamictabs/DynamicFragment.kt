@@ -56,13 +56,8 @@ class DynamicFragment : Fragment() {
         fun getInstance(titleId: Int): DynamicFragment {
             val thisDynamicFragment = DynamicFragment()
 
-//            val (titleToDisplay, _) = titlesList[titleId]
             val titleToDisplay = titles[titleId]
             thisDynamicFragment.setTitleText(titleToDisplay)
-            return thisDynamicFragment
-        }
-        fun getInstance(): DynamicFragment {
-            val thisDynamicFragment = DynamicFragment()
             return thisDynamicFragment
         }
     }
