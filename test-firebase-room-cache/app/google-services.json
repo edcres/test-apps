@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "867662095467",
+    "project_id": "test-firebase-room-cache",
+    "storage_bucket": "test-firebase-room-cache.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:867662095467:android:e58e01d6ecb5a2d4413d2e",
+        "android_client_info": {
+          "package_name": "com.example.testfirebaseroomcache"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "867662095467-p2vf4etbohj0ig77kq5dn456djcs881u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4HTLV-fK1W5So1BWdhbRWiQdefY34H98"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "867662095467-p2vf4etbohj0ig77kq5dn456djcs881u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

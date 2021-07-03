@@ -19,8 +19,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 class DynamicViewPagerActivity : AppCompatActivity() {
 
     private var binding: ActivityDynamicViewPagerBinding? = null
-    var titleIncrementer = 0 // to use the next tile until it doesn't match one of the tabs
-
     val activityViewPagerAdapter: DynamicViewPagerAdapter by lazy {
         DynamicViewPagerAdapter(this)}
 
@@ -34,7 +32,7 @@ class DynamicViewPagerActivity : AppCompatActivity() {
     }
 
     private fun setUpTabs() {
-        binding!!.dynamicViewPager.offscreenPageLimit = 4
+//        binding!!.dynamicViewPager.offscreenPageLimit = 4
         binding!!.dynamicViewPager.adapter = activityViewPagerAdapter
 
         // Set the title of the tabs
@@ -45,11 +43,12 @@ class DynamicViewPagerActivity : AppCompatActivity() {
 
     private fun addTabFabOnClick() {
         binding!!.addTabFab.setOnClickListener {
+            var titleIncrementer = 0 // to use the next tile until it doesn't match one of the tabs
             val nextTitlePosition = titles.size - 1
             val nextOrdinalId = titlesOrdinals.size - 1
             var nextTitle = testMovieTitles[nextTitlePosition]
 
-            // if a title has been added before, don't add it
+            // if a title is the same as one of the current tabs, don't add it
             // new tabs cannot have the same name as old tabs
             while(titles.contains(nextTitle)) {
                 titleIncrementer++
@@ -58,10 +57,11 @@ class DynamicViewPagerActivity : AppCompatActivity() {
             if (titleIncrementer > 0) { Log.d("${MY_LOG}Activity", "incrementer: $titleIncrementer") }
 
             if(!titles.contains(nextTitle)) {
-                //todo: to fix the last bug, maybe start incrememnter at 1 (bc first fragment is 0), and get rid of this +1
                 activityViewPagerAdapter.addTab(nextOrdinalId+1, nextTitle)
             } else {
-                Log.d("${MY_LOG}Activity", "\t\t titles contains next title \t\t $titles $nextTitle")}
+                Log.d("${MY_LOG}Activity", "\t\t titles contains next title " +
+                        "\t\t $titles $nextTitle")
+            }
         }
     }
 }

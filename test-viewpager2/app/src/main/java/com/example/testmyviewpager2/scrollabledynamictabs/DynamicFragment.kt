@@ -23,23 +23,22 @@ class DynamicFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         // get the adapter instance from the main activity
         fragmentViewPagerAdapter = (activity as? DynamicViewPagerActivity)!!.activityViewPagerAdapter
         removeButtonOnClick()
         dynamic_fragment_text.text = titleToDisplay
         Log.d("${MY_LOG}fragCreated", "name: ${titleToDisplay}")
-        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onDestroy() {
+        super.onDestroy()
         Log.d("${MY_LOG}destroyed", "\t\t\t $titles")
         Log.d("${MY_LOG}destroyed", "\t\t\t $titlesOrdinals")
-        super.onDestroy()
     }
 
     private fun removeButtonOnClick() {
         removeButton.setOnClickListener {
-
             val numOfTabs = titles.size
             if (numOfTabs > 1 && titleToDisplay != "All Movies") {
                 fragmentViewPagerAdapter!!.removeTab(titleToDisplay)
@@ -47,17 +46,13 @@ class DynamicFragment : Fragment() {
         }
     }
 
-    fun setTitleText(title: String) {
-        titleToDisplay = title
-    }
-
     companion object{
-        //The Fragment retrieves the Item from the List and display the content of that item.
+        // The Fragment retrieves the Item from the List and displays the content of that item.
         fun getInstance(titleId: Int): DynamicFragment {
             val thisDynamicFragment = DynamicFragment()
-
             val titleToDisplay = titles[titleId]
-            thisDynamicFragment.setTitleText(titleToDisplay)
+            thisDynamicFragment.titleToDisplay = titleToDisplay
+//            thisDynamicFragment.setTitleText(titleToDisplay)
             return thisDynamicFragment
         }
     }
