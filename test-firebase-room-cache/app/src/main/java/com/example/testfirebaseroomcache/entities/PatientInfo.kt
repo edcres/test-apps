@@ -3,8 +3,9 @@ package com.example.testfirebaseroomcache.entities
 import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
-data class UserInfo(
-    var name: String? = "",
+data class PatientInfo(
+    // These variable names become the names of the database nodes.
+    var patientName: String? = "",
     var mobile: String? = "",
-    var sickNessLevel: String? = ""
+    var sickness: String? = ""
 )

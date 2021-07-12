@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/previous_user_name"
+        android:id="@+id/previous_patient_name"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -17,22 +17,22 @@
         android:textSize="32sp"/>
 
     <TextView
-        android:id="@+id/previous_user_mobile"
+        android:id="@+id/previous_patient_mobile"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/previous_user_name"
+        app:layout_constraintTop_toBottomOf="@+id/previous_patient_name"
         android:text="Mobile"
         android:textSize="32sp"/>
 
     <TextView
-        android:id="@+id/previous_user_sickness"
+        android:id="@+id/previous_patient_sickness"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/previous_user_mobile"
+        app:layout_constraintTop_toBottomOf="@+id/previous_patient_mobile"
         android:text="Sickness"
         android:textSize="32sp"/>
 
@@ -43,7 +43,7 @@
         android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/previous_user_sickness">
+        app:layout_constraintTop_toBottomOf="@+id/previous_patient_sickness">
 
         <EditText
             android:id="@+id/name_edt_text"
@@ -88,7 +88,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/update_user_btn"
+        android:id="@+id/update_patient_btn"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="8dp"
@@ -98,13 +98,23 @@
         android:text="Update"/>
 
     <Button
-        android:id="@+id/create_user_btn"
+        android:id="@+id/create_patient_btn"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/update_user_btn"
-        android:text="create user"/>
+        app:layout_constraintTop_toBottomOf="@+id/update_patient_btn"
+        android:text="create patient"/>
+
+    <Button
+        android:id="@+id/retrieve_patient_btn"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/create_patient_btn"
+        android:text="retrieve patient"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

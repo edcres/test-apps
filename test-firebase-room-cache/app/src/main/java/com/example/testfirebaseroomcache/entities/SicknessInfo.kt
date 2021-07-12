@@ -4,6 +4,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 class SicknessInfo(
-    var nameOfUser: String? = "",
-    var sickNessLevel: String? = ""
+    // These variable names become the names of the database nodes.
+    var patientName: String? = "",
+    var sickness: String? = ""
 )
