@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.widget.Button
 import com.example.testfirebaseroomcache.entities.SicknessInfo
 import com.example.testfirebaseroomcache.entities.PatientInfo
 import com.google.firebase.database.*
@@ -26,14 +27,9 @@ App Explanation:
  */
 
 // add authentication
-// add delete patient
 
-/* todo:
-User presses on a previous patient and can edit them
-    - name, mobile, sickness show up in edit texts
-Update sickness node when patients is edited
-Have the name of users show in the buttons
- */
+// I don't think there's much of a difference between create and update
+//  -I know there's a specific way to update but it seems redundant
 
 // I'm not using the Sickness node to retrieve data, I'm just setting data
 // bug but don't fix: when data in 'sickness' node is updated through the database, 'patients' node is not updated
@@ -87,10 +83,8 @@ class MainActivity : AppCompatActivity() {
             dbReference.child(SICKNESS_NODE).child(patientId).setValue(sickness)
             // to get more specific in the nodes, just keep typing '.child(nameOfChild)'
 
-            displayPreviousPatientInfo(name, mobile, sicknessLevel)
+            displayPreviousPatientInfoOnTxtViews(name, mobile, sicknessLevel)
             emptyTheEditTexts()
-
-
 
             // set up previous 4 patients
             // add patients to list
@@ -102,13 +96,10 @@ class MainActivity : AppCompatActivity() {
                 previousPatients.add(patientId)
                 previousPatientsMap.put(patientId, name)
             }
-            // todo: retrieve the last 4 patients added from firebase db, and populate 'previousPatients' (when the app starts up)
             populateButtons()
         }
     }
 
-    // todo: bug, it's updating by getting the patientID
-    // to fix this, update it by pressing the previous patient buttons and resetting the patientID to the appropriate one
     private fun updatePatientBtnOnClick() {
         update_patient_btn.setOnClickListener {
             // Create a new user or update existing user
@@ -116,41 +107,39 @@ class MainActivity : AppCompatActivity() {
             val mobile: String = mobile_edt_text.text.toString()
             val sicknessLevel: String = sickness_edt_text.text.toString()
 
-            updatePatient(name, mobile, sicknessLevel)      // here
-            updateSickness(name, sicknessLevel)             // and here
-            displayPreviousPatientInfo(name, mobile, sicknessLevel)
+            updatePatientNode(name, mobile, sicknessLevel)
+            updateSicknessNode(name, sicknessLevel)
+            displayPreviousPatientInfoOnTxtViews(name, mobile, sicknessLevel)
             emptyTheEditTexts()
         }
     }
 
+    // user can only remove a patient if it is in one of the buttons
     private fun removePatientBtnOnClick() {
         remove_patient_btn.setOnClickListener {
             //pass the patientID in th button to removePatient()
-            val nameInButton = remove_patient_btn.text.toString()
-            var idToRemove: String? = null
+            val nameInButton = name_edt_text.text.toString()
 
-            // get the key using the name
-            previousPatientsMap.forEach { (k, v) ->
-                if (nameInButton == v) {
-                    idToRemove = k
-                }
+            val idToRemove = getIDFromMap(nameInButton)
+
+            if (idToRemove != null) {
+                removePatient(idToRemove)
             }
-            removePatient(idToRemove!!)
         }
     }
 
     private fun pastPatientsOnClick() {
         previous_patient_1_btn.setOnClickListener {
-            // todo: get the user from the database and display the name on the button
+            displayPreviousPatientInfoOnEditTexts(previous_patient_1_btn.text.toString())
         }
         previous_patient_2_btn.setOnClickListener {
-            Log.d(TAG, "pastPatientsOnClick: button 2 clicked")
+            displayPreviousPatientInfoOnEditTexts(previous_patient_2_btn.text.toString())
         }
         previous_patient_3_btn.setOnClickListener {
-            Log.d(TAG, "pastPatientsOnClick: button 3 clicked")
+            displayPreviousPatientInfoOnEditTexts(previous_patient_3_btn.text.toString())
         }
         previous_patient_4_btn.setOnClickListener {
-            Log.d(TAG, "pastPatientsOnClick: button 4 clicked")
+            displayPreviousPatientInfoOnEditTexts(previous_patient_4_btn.text.toString())
         }
     }
 
@@ -164,12 +153,12 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "onDataChange: $patient")
 
                 // Display newly updated name and email
-                displayPreviousPatientInfo(
+                displayPreviousPatientInfoOnTxtViews(
                     patient.patientName.toString(),
                     patient.mobile.toString(),
                     patient.sickness.toString()
                 )
-                updateSickness(patient.patientName.toString(), patient.sickness.toString())
+                updateSicknessNode(patient.patientName.toString(), patient.sickness.toString())
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -179,50 +168,56 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun updatePatient(name: String, mobile: String, sicknessLevel: String) {
+    // HELPER FUNCTIONS //
+    private fun updatePatientNode(name: String, mobile: String, sicknessLevel: String) {
+        val thePatientID = getIDFromMap(name)
         // updating the user via child nodes
-        if (!TextUtils.isEmpty(name)) {
-            dbReference.child(PATIENTS_NODE).child(patientId).child(PATIENT_NAME).setValue(name)
-        }
-
-        if (!TextUtils.isEmpty(mobile))
-            dbReference.child(PATIENTS_NODE).child(patientId).child(MOBILE).setValue(mobile)
-
-        if (!TextUtils.isEmpty(sicknessLevel)) {
-            dbReference.child(PATIENTS_NODE).child(patientId).child(SICKNESS).setValue(sicknessLevel)
-        }
-    }
-
-    fun updateSickness(name: String, sicknessLevel: String) {
-        if (!TextUtils.isEmpty(name)) {
-            dbReference.child(SICKNESS_NODE).child(patientId).child(PATIENT_NAME).setValue(name)
-        }
-
-        if (!TextUtils.isEmpty(sicknessLevel)) {
-            dbReference.child(SICKNESS_NODE).child(patientId).child(SICKNESS).setValue(sicknessLevel)
+        if (thePatientID != null) {
+            if (!TextUtils.isEmpty(name)) {
+                dbReference.child(PATIENTS_NODE).child(thePatientID).child(PATIENT_NAME)
+                    .setValue(name)
+            }
+            if (!TextUtils.isEmpty(mobile)) {
+                dbReference.child(PATIENTS_NODE).child(thePatientID).child(MOBILE).setValue(mobile)
+            }
+            if (!TextUtils.isEmpty(sicknessLevel)) {
+                dbReference.child(PATIENTS_NODE).child(thePatientID).child(SICKNESS)
+                    .setValue(sicknessLevel)
+            }
+        } else {
+            Log.d(TAG, "ERROR: updatePatient: 'thePatientID' is null")
         }
     }
 
-    private fun displayPreviousPatientInfo(theName: String, theMobile: String, theSickness: String) {
-        previous_patient_name.setText(theName).toString()     //Name
-        previous_patient_mobile.setText(theMobile).toString()   //Mobile
-        previous_patient_sickness.setText(theSickness).toString()   //Sickness
+    fun updateSicknessNode(name: String, sicknessLevel: String) {
+        val thePatientID = getIDFromMap(name)
+        if (thePatientID != null) {
+            if (!TextUtils.isEmpty(name)) {
+                dbReference.child(SICKNESS_NODE).child(thePatientID).child(PATIENT_NAME)
+                    .setValue(name)
+            }
+
+            if (!TextUtils.isEmpty(sicknessLevel)) {
+                dbReference.child(SICKNESS_NODE).child(thePatientID).child(SICKNESS)
+                    .setValue(sicknessLevel)
+            }
+        }
     }
 
-    // todo: currently, the button has the id as text, make it have the name
     private fun populateButtons() {
         Log.d(TAG, "populateButtons: ${previousPatients.size}")
         if (previousPatients.size >= 1) {
-            previous_patient_1_btn.text = previousPatients[0]
+            setPatientNameOnBtn(previousPatients[0], previous_patient_1_btn)
         }
         if (previousPatients.size >= 2) {
-            previous_patient_2_btn.text = previousPatients[1]
+            setPatientNameOnBtn(previousPatients[1], previous_patient_2_btn)
         }
         if (previousPatients.size >= 3) {
-            previous_patient_3_btn.text = previousPatients[2]
+            setPatientNameOnBtn(previousPatients[2], previous_patient_3_btn)
         }
         if (previousPatients.size == 4) {
-            previous_patient_4_btn.text = previousPatients[3]
+            setPatientNameOnBtn(previousPatients[3], previous_patient_4_btn)
+
         }
     }
 
@@ -236,6 +231,61 @@ class MainActivity : AppCompatActivity() {
     private fun removePatient(idToRemove: String) {
         dbReference.child(PATIENTS_NODE).child(idToRemove).removeValue()
         dbReference.child(SICKNESS_NODE).child(idToRemove).removeValue()
+    }
+
+    private fun setPatientNameOnBtn(previousPatientName: String, currentBtn: Button) {
+        // get patient name from db
+        val thePatientID = getIDFromMap(previousPatientName)
+        
+        if (thePatientID != null) {
+            dbReference.child(PATIENTS_NODE).child(thePatientID).child(PATIENT_NAME)
+                .get().addOnSuccessListener {
+                    currentBtn.text = it.value.toString()
+                }.addOnFailureListener {
+                    Log.e("firebase", "Error getting data", it)
+                }
+        } else {
+            Log.d(TAG, "ERROR: setPatientNameOnBtn: thePatientID is NULL")
+        }
+    }
+
+    private fun displayPreviousPatientInfoOnTxtViews(theName: String, theMobile: String, theSickness: String) {
+        previous_patient_name.setText(theName).toString()     //Name
+        previous_patient_mobile.setText(theMobile).toString()   //Mobile
+        previous_patient_sickness.setText(theSickness).toString()   //Sickness
+    }
+
+    private fun displayPreviousPatientInfoOnEditTexts(patientName: String) {
+        var theSickness: String? = null
+        var theMobile: String? = null
+        val idToDisplay = getIDFromMap(patientName)
+        if (idToDisplay != null) {
+            dbReference.child(PATIENTS_NODE).child(idToDisplay).child(SICKNESS)
+                .get().addOnSuccessListener {
+                    theSickness = it.value.toString()
+                }
+
+            dbReference.child(PATIENTS_NODE).child(idToDisplay).child(MOBILE)
+                .get().addOnSuccessListener {
+                    theMobile = it.value.toString()
+                }
+        }
+        // set it to the texts
+        name_edt_text.setText(patientName)
+        if (theMobile != null) { mobile_edt_text.setText(theMobile) }
+        if (theSickness != null) { sickness_edt_text.setText(theSickness) }
+    }
+
+    private fun getIDFromMap (patientName: String): String? {
+        var thisPatientID: String? = null
+        if (previousPatientsMap.isNotEmpty()) {
+            previousPatientsMap.forEach { (k, v) ->
+                if (patientName == v) {
+                    thisPatientID = k
+                }
+            }
+        }
+        return thisPatientID
     }
 }
 
