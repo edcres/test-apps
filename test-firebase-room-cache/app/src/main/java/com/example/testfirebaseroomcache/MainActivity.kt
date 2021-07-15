@@ -28,6 +28,12 @@ App Explanation:
 
 // add authentication
 
+// todo:
+// -get rid of many logs
+// -bug:
+//      - updating the patient node through the database doesn't update the sickness
+//      - clicking a button only retrieves the name, not the sickness or mobile
+
 // I don't think there's much of a difference between create and update
 //  -I know there's a specific way to update but it seems redundant
 
@@ -39,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     // To read or write into your database, you need to get the instance of DatabaseReference.
     private lateinit var dbReference: DatabaseReference
     private var patientId: String = "Placeholder"
-    private var previousPatients = mutableListOf<String>()  //contains the patient id
+    private var previousPatientsKeys = mutableListOf<String>()  //contains the patient id
     private var previousPatientsMap = mutableMapOf<String, String>()  // patientID, patientName
 
     companion object {
@@ -88,12 +94,12 @@ class MainActivity : AppCompatActivity() {
 
             // set up previous 4 patients
             // add patients to list
-            if (previousPatients.size <= 4) {
-                previousPatients.add(patientId)
+            if (previousPatientsKeys.size <= 4) {
+                previousPatientsKeys.add(patientId)
                 previousPatientsMap.put(patientId, name)
             } else {
-                previousPatients.removeAt(0)
-                previousPatients.add(patientId)
+                previousPatientsKeys.removeAt(0)
+                previousPatientsKeys.add(patientId)
                 previousPatientsMap.put(patientId, name)
             }
             populateButtons()
@@ -149,7 +155,8 @@ class MainActivity : AppCompatActivity() {
         // User data change listener
         dbReference.child(PATIENTS_NODE).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val patient = dataSnapshot.child(patientId).getValue(PatientInfo::class.java) ?: return    //if it's null, return
+                val patient = dataSnapshot.child(patientId)
+                    .getValue(PatientInfo::class.java) ?: return    //if it's null, return
                 Log.d(TAG, "onDataChange: $patient")
 
                 // Display newly updated name and email
@@ -158,6 +165,11 @@ class MainActivity : AppCompatActivity() {
                     patient.mobile.toString(),
                     patient.sickness.toString()
                 )
+                // update 'previousPatients' list with the changed patient name in the same location
+                Log.d(TAG, "onDataChange: ${previousPatientsMap[patientId]}")
+                Log.d(TAG, "onDataChange: ${patient.patientName.toString()}")
+                Log.d(TAG, "onDataChange: $previousPatientsKeys")
+                previousPatientsMap[patientId] = patient.patientName.toString()
                 updateSicknessNode(patient.patientName.toString(), patient.sickness.toString())
             }
 
@@ -191,6 +203,9 @@ class MainActivity : AppCompatActivity() {
 
     fun updateSicknessNode(name: String, sicknessLevel: String) {
         val thePatientID = getIDFromMap(name)
+        // the problem is that I'm changing the name in the database and using the original name to SicknessNode
+        Log.d(TAG, "updateSicknessNode: $name")
+        Log.d(TAG, "updateSicknessNode: $thePatientID")
         if (thePatientID != null) {
             if (!TextUtils.isEmpty(name)) {
                 dbReference.child(SICKNESS_NODE).child(thePatientID).child(PATIENT_NAME)
@@ -205,19 +220,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun populateButtons() {
-        Log.d(TAG, "populateButtons: ${previousPatients.size}")
-        if (previousPatients.size >= 1) {
-            setPatientNameOnBtn(previousPatients[0], previous_patient_1_btn)
+        Log.d(TAG, "populateButtons: ${previousPatientsKeys.size}")
+        if (previousPatientsKeys.size >= 1) {
+            setPatientNameOnBtn(
+                previousPatientsMap[previousPatientsKeys[previousPatientsKeys.size-1]]!!, previous_patient_1_btn)
         }
-        if (previousPatients.size >= 2) {
-            setPatientNameOnBtn(previousPatients[1], previous_patient_2_btn)
+        if (previousPatientsKeys.size >= 2) {
+            setPatientNameOnBtn(
+                previousPatientsMap[previousPatientsKeys[previousPatientsKeys.size-2]]!!, previous_patient_2_btn)
         }
-        if (previousPatients.size >= 3) {
-            setPatientNameOnBtn(previousPatients[2], previous_patient_3_btn)
+        if (previousPatientsKeys.size >= 3) {
+            setPatientNameOnBtn(
+                previousPatientsMap[previousPatientsKeys[previousPatientsKeys.size-3]]!!, previous_patient_3_btn)
         }
-        if (previousPatients.size == 4) {
-            setPatientNameOnBtn(previousPatients[3], previous_patient_4_btn)
-
+        if (previousPatientsKeys.size >= 4) {
+            setPatientNameOnBtn(
+                previousPatientsMap[previousPatientsKeys[previousPatientsKeys.size-4]]!!, previous_patient_4_btn)
         }
     }
 
@@ -236,7 +254,8 @@ class MainActivity : AppCompatActivity() {
     private fun setPatientNameOnBtn(previousPatientName: String, currentBtn: Button) {
         // get patient name from db
         val thePatientID = getIDFromMap(previousPatientName)
-        
+
+        // todo: I'm getting the name from the database even though I already have the name (leave it like this though)
         if (thePatientID != null) {
             dbReference.child(PATIENTS_NODE).child(thePatientID).child(PATIENT_NAME)
                 .get().addOnSuccessListener {
@@ -278,14 +297,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun getIDFromMap (patientName: String): String? {
         var thisPatientID: String? = null
+        Log.d(TAG, "getIDFromMap: $previousPatientsMap")
         if (previousPatientsMap.isNotEmpty()) {
             previousPatientsMap.forEach { (k, v) ->
+                Log.d(TAG, "key and value $k \t\t\t $v")
                 if (patientName == v) {
                     thisPatientID = k
                 }
             }
         }
+        Log.d(TAG, "thisPatientID = $thisPatientID")
+        Log.d(TAG, "patientName = $patientName")
         return thisPatientID
+    }
+
+    private fun getItemLocationInList(listItem: String, theList: MutableList<String>): Int? {
+        var theLocation: Int = 0
+        theList.forEach {
+            if (listItem == it) {
+                return theLocation
+            }
+            theLocation ++
+        }
+        return null
     }
 }
 
