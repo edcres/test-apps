@@ -31,7 +31,6 @@ App Explanation:
 // todo:
 // -get rid of many logs
 // -bug:
-//      - updating the patient node through the database doesn't update the sickness
 //      - clicking a button only retrieves the name, not the sickness or mobile
 
 // I don't think there's much of a difference between create and update
@@ -136,7 +135,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun pastPatientsOnClick() {
         previous_patient_1_btn.setOnClickListener {
-            displayPreviousPatientInfoOnEditTexts(previous_patient_1_btn.text.toString())
+            Log.d(TAG, "dpp but1")
+            val btnTxt = previous_patient_1_btn.text.toString()
+            displayPreviousPatientInfoOnEditTexts(btnTxt)
+            Log.d(TAG, "dpp but1")
         }
         previous_patient_2_btn.setOnClickListener {
             displayPreviousPatientInfoOnEditTexts(previous_patient_2_btn.text.toString())
@@ -275,24 +277,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun displayPreviousPatientInfoOnEditTexts(patientName: String) {
+        // todo: problem is here
         var theSickness: String? = null
         var theMobile: String? = null
         val idToDisplay = getIDFromMap(patientName)
+        Log.d(TAG, "displayPreviousPatientInfoOnEditTexts: $idToDisplay")
         if (idToDisplay != null) {
+            // it looks like database fetching is done in a different thread
             dbReference.child(PATIENTS_NODE).child(idToDisplay).child(SICKNESS)
                 .get().addOnSuccessListener {
                     theSickness = it.value.toString()
+                    sickness_edt_text.setText(theSickness)
+                }.addOnFailureListener {
+                    Log.e(TAG, "displayPreviousPatientInfoOnEditTexts: Error getting data", )
                 }
-
             dbReference.child(PATIENTS_NODE).child(idToDisplay).child(MOBILE)
                 .get().addOnSuccessListener {
                     theMobile = it.value.toString()
+                    mobile_edt_text.setText(theMobile)
+                }.addOnFailureListener {
+                    Log.e(TAG, "displayPreviousPatientInfoOnEditTexts: Error getting data", )
                 }
         }
-        // set it to the texts
-        name_edt_text.setText(patientName)
-        if (theMobile != null) { mobile_edt_text.setText(theMobile) }
-        if (theSickness != null) { sickness_edt_text.setText(theSickness) }
     }
 
     private fun getIDFromMap (patientName: String): String? {
