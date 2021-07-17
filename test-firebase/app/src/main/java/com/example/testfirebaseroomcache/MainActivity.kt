@@ -14,6 +14,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 // Have a Firebase database with offline cache
 
+// maybe clean up te code in the future, I'm only testing the realtime database
+// do it like this instead:
+// https://firebase.google.com/docs/database/android/lists-of-data
+// also enable offline persistence:
+// https://firebase.google.com/docs/database/android/offline-capabilities
+
 /*
 App Explanation:
 - Have a list of patients at a hospital:
@@ -30,8 +36,6 @@ App Explanation:
 
 // todo:
 // -get rid of many logs
-// -bug:
-//      - clicking a button only retrieves the name, not the sickness or mobile
 
 // I don't think there's much of a difference between create and update
 //  -I know there's a specific way to update but it seems redundant
@@ -119,14 +123,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // user can only remove a patient if it is in one of the buttons
+    // user can only remove a patient if it is in one of the buttons (unless the user writes it manually and the map hasn't been reset)
     private fun removePatientBtnOnClick() {
         remove_patient_btn.setOnClickListener {
-            //pass the patientID in th button to removePatient()
             val nameInButton = name_edt_text.text.toString()
-
             val idToRemove = getIDFromMap(nameInButton)
-
             if (idToRemove != null) {
                 removePatient(idToRemove)
             }
@@ -135,10 +136,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun pastPatientsOnClick() {
         previous_patient_1_btn.setOnClickListener {
-            Log.d(TAG, "dpp but1")
-            val btnTxt = previous_patient_1_btn.text.toString()
-            displayPreviousPatientInfoOnEditTexts(btnTxt)
-            Log.d(TAG, "dpp but1")
+            displayPreviousPatientInfoOnEditTexts(previous_patient_1_btn.text.toString())
         }
         previous_patient_2_btn.setOnClickListener {
             displayPreviousPatientInfoOnEditTexts(previous_patient_2_btn.text.toString())
@@ -277,11 +275,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun displayPreviousPatientInfoOnEditTexts(patientName: String) {
-        // todo: problem is here
-        var theSickness: String? = null
-        var theMobile: String? = null
+        var theSickness: String?
+        var theMobile: String?
         val idToDisplay = getIDFromMap(patientName)
-        Log.d(TAG, "displayPreviousPatientInfoOnEditTexts: $idToDisplay")
         if (idToDisplay != null) {
             // it looks like database fetching is done in a different thread
             dbReference.child(PATIENTS_NODE).child(idToDisplay).child(SICKNESS)
@@ -298,6 +294,7 @@ class MainActivity : AppCompatActivity() {
                 }.addOnFailureListener {
                     Log.e(TAG, "displayPreviousPatientInfoOnEditTexts: Error getting data", )
                 }
+            name_edt_text.setText(patientName)
         }
     }
 
@@ -316,23 +313,14 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "patientName = $patientName")
         return thisPatientID
     }
-
-    private fun getItemLocationInList(listItem: String, theList: MutableList<String>): Int? {
-        var theLocation: Int = 0
-        theList.forEach {
-            if (listItem == it) {
-                return theLocation
-            }
-            theLocation ++
-        }
-        return null
-    }
 }
 
 // When data is read or written, the local version of the data is used first.
 
 // JSON value types: String, Long, Double, Boolean, Map<String, Object>, List<Object>
 //  -can also pass custom Java objects (ie. Patient(name, mobile))
+
+// to store the map with <keys, names> I can just store it in the Firebase db JSON file
 
 /* Firebase recommended way to Structure Your Database.
 // An index to track Ada's memberships
