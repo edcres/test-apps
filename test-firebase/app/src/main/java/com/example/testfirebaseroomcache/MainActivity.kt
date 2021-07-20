@@ -1,5 +1,6 @@
 package com.example.testfirebaseroomcache
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -26,5 +27,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+    }
+
+    private fun buttonOnClick() {
+        basics_db_btn.setOnClickListener {
+            val goToSimpleDB = Intent(this, BasicsActivity::class.java)
+            startActivity(goToSimpleDB)
+        }
     }
 }

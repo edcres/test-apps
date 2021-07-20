@@ -7,8 +7,9 @@ import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class BasicsActivity : AppCompatActivity() {
+//this file contains basic concepts of Firestore
 
+class BasicsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

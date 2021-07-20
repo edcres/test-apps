@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TestFirestore">
-        <activity android:name=".BasicsActivity"></activity>
+        <activity android:name=".FromDocumentation"></activity>
+        <activity android:name=".BasicsActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
