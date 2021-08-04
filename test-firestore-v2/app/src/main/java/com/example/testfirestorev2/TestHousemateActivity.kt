@@ -23,18 +23,31 @@ class TestHousemateActivity : AppCompatActivity() {
     private val db = Firebase.firestore
     private lateinit var editTextTest: EditText
     private lateinit var buttonTest: Button
+    private lateinit var buttonGetData: Button
 
     private var clientGroupIDCollection = "abcd1234"
     private var clientIDCollection = "${clientGroupIDCollection}abcd1234"
 
     companion object {
-        private const val TAG = "TestHousemateActivity"
+        private const val TAG = "TestHousemateActyTAG"
         private const val GENERAL_COLLECTION = "generalCollection"
         private const val GROUPS_DOC = "groupIDs"
         private const val CLIENTS_DOC = "clientIDs"
-//        private const val CLIENT_DATA_COLLECTION = "clientData"
         private const val SHOPPING_LIST = "shoppingList"
         private const val CHORES_LIST = "choresList"
+
+        private const val ID_FIELD = "id"
+        private const val NAME_FIELD = "name"
+        private const val QUANTITY_FIELD = "quantity"
+        private const val ADDED_BY_FIELD = "added_by"
+        private const val COMPLETED_FIELD = "completed"
+        private const val COST_FIELD = "cost"
+        private const val PURCHASE_LOCATION_FIELD = "purchase_location"
+        private const val NEEDED_BY_FIELD = "needed_by"
+        private const val VOLUNTEER_FIELD = "volunteer"
+        private const val PRIORITY_FIELD = "priority"
+
+        private const val DIFFICULTY_FIELD = "difficulty"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,11 +57,16 @@ class TestHousemateActivity : AppCompatActivity() {
         bindWidgetIDs()
 
         buttonOnClick()
+        getButtonOnClick()
     }
+
+
+
+
+
 
     // todo: delete this
     private fun testTheDb() {
-
         //collection
         val docOne = hashMapOf(
             "stringExample" to "Hello world!",
@@ -70,12 +88,12 @@ class TestHousemateActivity : AppCompatActivity() {
         )
         db.collection("data").document("one")
             .set(docOne)
-            .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
         db.collection("data").document("two")
             .set(docTwo)
-            .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
 
         //sub-collection
         val docOneOne = hashMapOf(
@@ -89,17 +107,63 @@ class TestHousemateActivity : AppCompatActivity() {
         db.collection("data").document("one")
             .collection("moreData").document("oneOne")
             .set(docOneOne)
-            .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
+    private fun testTheDbGet() {
+        ///////////////// get data (onetime fetch)
+        // get documents, I think it comes back in the form of a hashMap
+        // get the data from the document
+        Log.d(TAG, "testTheDbGet: called")
+        val theEditText: EditText = findViewById(R.id.edit_text_test)
+        var retrievedDocDataMap: HashMap<String, Any>? = null
+        db.collection("data").document("one")
+            .get().addOnSuccessListener { document ->
+                if (document != null) {
+                    Log.d(TAG, "DocumentSnapshot data: ${document.data}")
+                    retrievedDocDataMap = document.data as HashMap<String, Any>
+                    val thePie = retrievedDocDataMap!!["numberExample"]  //todo: 'thePopulation' might always be null
+                    theEditText.setText(thePie.toString())
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
+
+
+
+
+        // todo: in the real app, turn it into an object
+        val docRef = db.collection("cities").document("BJ")
+        docRef.get().addOnSuccessListener { documentSnapshot ->
+//            val city = documentSnapshot.toObject<City>()
+        }
+    }
+
+
+
+
+
+
 
     // CLICK LISTENERS //
     private fun buttonOnClick() {
         buttonTest.setOnClickListener {
-            val testString = editTextTest.text//.toString()
-            Log.d(TAG, "$testString")
+//            val testString = editTextTest.text//.toString()
+//            Log.d(TAG, "$testString")
+            testTheDb()     //
         }
     }
+    private fun getButtonOnClick() {
+        buttonGetData.setOnClickListener{
+            testTheDbGet()  //
+        }
+    }
+
+
+
 
     // HELPER FUNCTIONS //
     private fun addShoppingItem(
@@ -111,16 +175,16 @@ class TestHousemateActivity : AppCompatActivity() {
     ) {
 
         val shoppingItemData = hashMapOf(
-            "id" to itemID,     // idk if I need this, make it a long
-            "name" to itemName,
-            "quantity" to itemQuantity,
-            "added_by" to addedBy,
-            "completed" to completed,
-            "cost" to itemCost,
-            "purchase_location" to purchaseLocation,
-            "needed_by" to neededBy,
-            "volunteer" to volunteer,
-            "priority" to itemPriority
+            ID_FIELD to itemID,     // idk if I need this, make it a long
+            NAME_FIELD to itemName,
+            QUANTITY_FIELD to itemQuantity,
+            ADDED_BY_FIELD to addedBy,
+            COMPLETED_FIELD to completed,
+            COST_FIELD to itemCost,
+            PURCHASE_LOCATION_FIELD to purchaseLocation,
+            NEEDED_BY_FIELD to neededBy,
+            VOLUNTEER_FIELD to volunteer,
+            PRIORITY_FIELD to itemPriority
         )
 
         // access the clientGroup, then the client, then the shopping item
@@ -139,14 +203,14 @@ class TestHousemateActivity : AppCompatActivity() {
         volunteer: String, itemPriority: Int
     ) {
         val choresItemData = hashMapOf(
-            "id" to itemID,     // idk if I need this, make it a long
-            "name" to itemName,
-            "added_by" to addedBy,
-            "completed" to completed,
-            "difficulty" to difficulty,
-            "needed_by" to neededBy,
-            "volunteer" to volunteer,
-            "priority" to itemPriority
+            ID_FIELD to itemID,     // idk if I need this, make it a long
+            NAME_FIELD to itemName,
+            ADDED_BY_FIELD to addedBy,
+            COMPLETED_FIELD to completed,
+            DIFFICULTY_FIELD to difficulty,
+            NEEDED_BY_FIELD to neededBy,
+            VOLUNTEER_FIELD to volunteer,
+            PRIORITY_FIELD to itemPriority
         )
 
         // access the clientGroup, then the client, then the shopping item
@@ -162,5 +226,6 @@ class TestHousemateActivity : AppCompatActivity() {
     private fun bindWidgetIDs() {
         editTextTest = findViewById(R.id.edit_text_test)
         buttonTest = findViewById(R.id.button_test)
+        buttonGetData = findViewById(R.id.button_test_2)
     }
 }

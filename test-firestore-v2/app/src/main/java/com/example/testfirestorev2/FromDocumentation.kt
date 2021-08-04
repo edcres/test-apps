@@ -150,7 +150,7 @@ class FromDocumentation {
         // turn the document data to an object
         val docRefBJ = db.collection("cities").document("BJ")
         docRefBJ.get().addOnSuccessListener { documentSnapshot ->
-//            val city = documentSnapshot.toObject<City>()      //id what they mean by 'toObject'
+//            val city = documentSnapshot.toObject<City>()      //idk what they mean by 'toObject'
         }
 
         // use where() to query for all of the documents that meet a certain condition
