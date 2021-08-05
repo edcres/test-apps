@@ -23,7 +23,6 @@ import com.google.firebase.ktx.Firebase
 class TestHousemateActivity : AppCompatActivity() {
 
     private val db = Firebase.firestore
-    private lateinit var editTextTest: EditText
 
     private var clientGroupIDCollection = "abcd1234"
     private var clientIDCollection = "${clientGroupIDCollection}abcd1234"
@@ -106,92 +105,6 @@ class TestHousemateActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test_housemate)
 
         bindWidgetIDs()
-
-        buttonClickListeners()
-    }
-
-    // todo: delete these
-    private fun testTheDb() {
-        //collection
-        val docOne = hashMapOf(
-            "stringExample" to "Hello world!",
-            "booleanExample" to true,
-            "capital" to false,
-            "numberExample" to 3.14159265,
-            "timestamp" to FieldValue.serverTimestamp(),
-            "listExample" to arrayListOf(1, 2, 3),
-            "nullExample" to null
-        )
-        val docTwo = hashMapOf(
-            "stringExample2" to "Goodbye world!",
-            "booleanExample2" to false,
-            "capital2" to true,
-            "numberExample2" to 3.14,
-            "timestamp2" to FieldValue.serverTimestamp(),
-            "listExample2" to arrayListOf(3, 2, 1),
-            "nullExample2" to null
-        )
-        db.collection("data").document("one")
-            .set(docOne)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-        db.collection("data").document("two")
-            .set(docTwo)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-
-        //sub-collection
-        val docOneOne = hashMapOf(
-            "name" to "San Francisco",
-            "state" to "CA",
-            "country" to "USA",
-            "capital" to false,
-            "population" to 860000,
-            "regions" to listOf("west_coast", "norcal")
-        )
-        db.collection("data").document("one")
-            .collection("moreData").document("oneOne")
-            .set(docOneOne)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-    }
-    private fun testTheDbGet() {
-        ///////////////// get data (onetime fetch)
-        // get documents, I think it comes back in the form of a hashMap
-        // get the data from the document
-        Log.d(TAG, "testTheDbGet: called")
-//        val theEditText: EditText = findViewById(R.id.edit_text_test)
-        var retrievedDocDataMap: HashMap<String, Any>? = null
-        db.collection("data").document("one")
-            .get().addOnSuccessListener { document ->
-                if (document != null) {
-                    Log.d(TAG, "DocumentSnapshot data: ${document.data}")
-                    retrievedDocDataMap = document.data as HashMap<String, Any>
-                    val thePie = retrievedDocDataMap!!["numberExample"]
-//                    theEditText.setText(thePie.toString())
-                } else {
-                    Log.d(TAG, "No such document")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-            }
-
-
-
-
-        // todo: in the real app, turn it into an object
-        val docRef = db.collection("cities").document("BJ")
-        docRef.get().addOnSuccessListener { documentSnapshot ->
-//            val city = documentSnapshot.toObject<City>()
-        }
-    }
-
-    // CLICK LISTENERS //
-    private fun buttonClickListeners() {
-//            val testString = editTextTest.text//.toString()
-//            Log.d(TAG, "$testString")
-//            testTheDb()     //
     }
 
     // HELPER FUNCTIONS //

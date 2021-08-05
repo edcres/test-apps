@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestFirestoreV2">
         <activity
+            android:name=".MyOwnTestActivity"
+            android:exported="true" />
+        <activity
             android:name=".TestHousemateActivity"
             android:exported="true" />
         <activity
