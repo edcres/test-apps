@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -18,6 +19,7 @@ class MyOwnTestActivity : AppCompatActivity() {
     private lateinit var theSendBtn: Button
     private lateinit var theGetBtn: Button
     private lateinit var theDeleteBtn: Button
+    private lateinit var realtimeTextView: TextView
 
     companion object {
         private const val TAG = "MyOwnTestActyTAG"
@@ -28,10 +30,34 @@ class MyOwnTestActivity : AppCompatActivity() {
         setContentView(R.layout.activity_my_own_test)
 
         bindWidgetIDs()
+        setUpRealtimeFetching()
         buttonClickListeners()
     }
 
-    // todo: delete these
+    // SETUP FUNCTIONS //
+    // set realtime fetch in document 'oneOne' 'state' field
+    private fun setUpRealtimeFetching() {
+        Log.d(TAG, "setUpRealtimeFetching: called")
+        db.collection("data").document("one")
+            .collection("moreData").document("oneOne")
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.d(TAG, "setUpRealtimeFetching: Listen failed.", e)
+                    return@addSnapshotListener
+                }
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d(TAG, "setUpRealtimeFetching: ${snapshot.data}")
+                    // todo: set the textview to the data
+                    val rTDataFromDb = snapshot.data as Map<String, Any>
+                    val dataForText = rTDataFromDb["state"]
+                    realtimeTextView.text = dataForText.toString()
+                } else {
+                    Log.d(TAG, "oneOne document: null")
+                }
+            }
+    }
+
+    // HELPER FUNCTIONS //
     private fun testSendDb() {
         //collection
         val docOne = hashMapOf(
@@ -130,5 +156,6 @@ class MyOwnTestActivity : AppCompatActivity() {
         theSendBtn = findViewById(R.id.button1)
         theGetBtn = findViewById(R.id.button2)
         theDeleteBtn = findViewById(R.id.button3)
+        realtimeTextView = findViewById(R.id.textView3)
     }
 }
