@@ -1,5 +1,6 @@
 package com.example.testfirestorev2
 
+import android.content.ContentValues
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ class MyOwnTestActivity : AppCompatActivity() {
     private lateinit var theEditText: EditText
     private lateinit var theSendBtn: Button
     private lateinit var theGetBtn: Button
+    private lateinit var theDeleteBtn: Button
 
     companion object {
         private const val TAG = "MyOwnTestActyTAG"
@@ -25,6 +27,7 @@ class MyOwnTestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_own_test)
 
+        bindWidgetIDs()
         buttonClickListeners()
     }
 
@@ -100,6 +103,13 @@ class MyOwnTestActivity : AppCompatActivity() {
 //            val city = documentSnapshot.toObject<City>()
         }
     }
+    private fun testTheDBDeleteDoc() {
+        // delete document 'two' in the 'data' collection
+        db.collection("data").document("two")
+            .delete()
+            .addOnSuccessListener { Log.d(TAG, "testTheDBDeleteDoc: Doc successfully deleted") }
+            .addOnFailureListener { e -> Log.d(TAG, "Error deleting document", e) }
+    }
 
     // CLICK LISTENERS //
     private fun buttonClickListeners() {
@@ -109,12 +119,16 @@ class MyOwnTestActivity : AppCompatActivity() {
         theGetBtn.setOnClickListener {
             testTheDbGet()
         }
+        theDeleteBtn.setOnClickListener {
+            testTheDBDeleteDoc()
+        }
     }
 
     // SETUP FUNCTIONS //
     private fun bindWidgetIDs() {
         theEditText = findViewById(R.id.editTextTextPersonName)
-        theSendBtn = findViewById(R.id.button)
+        theSendBtn = findViewById(R.id.button1)
         theGetBtn = findViewById(R.id.button2)
+        theDeleteBtn = findViewById(R.id.button3)
     }
 }
