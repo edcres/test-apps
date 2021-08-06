@@ -20,6 +20,16 @@
             android:background="#E0D3F1"
             android:orientation="vertical">
 
+            <Button
+                android:id="@+id/to_add_item_activity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="add new item"
+                android:backgroundTint="#DCB07E"
+                android:textColor="#404040" />
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

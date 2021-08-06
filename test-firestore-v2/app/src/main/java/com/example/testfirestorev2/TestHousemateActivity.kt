@@ -1,8 +1,10 @@
 package com.example.testfirestorev2
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import com.google.android.material.textfield.TextInputEditText
@@ -20,6 +22,7 @@ import com.google.firebase.ktx.Firebase
 class TestHousemateActivity : AppCompatActivity() {
 
     private val db = Firebase.firestore
+    private lateinit var toAddItemActivity: Button
 
     private lateinit var i1shoppingItIsDone: CheckBox
     private lateinit var i1shoppingItemQty: TextView
@@ -104,18 +107,20 @@ class TestHousemateActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test_housemate)
 
         bindWidgetIDs()
+        buttonsOnClick()
     }
 
-
-
-
-
-
-
-
+    // CLICK LISTENERS //
+    private fun buttonsOnClick() {
+        toAddItemActivity.setOnClickListener {
+            val goToAddItem = Intent(this, AddItemActivity::class.java)
+            startActivity(goToAddItem)
+        }
+    }
 
     // SETUP FUNCTIONS //
     private fun bindWidgetIDs() {
+        toAddItemActivity = findViewById(R.id.to_add_item_activity)
 
         i1shoppingItIsDone = findViewById(R.id.i1shopping_it_is_done)
         i1shoppingItemQty = findViewById(R.id.i1shopping_item_qty)

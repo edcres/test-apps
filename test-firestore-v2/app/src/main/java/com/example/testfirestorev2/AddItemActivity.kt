@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
-import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -14,25 +13,25 @@ class AddItemActivity : AppCompatActivity() {
     private val homeActivity = TestHousemateActivity
     private val db = Firebase.firestore
     private lateinit var addItemButton: Button
+    private val TAG = "AddItemActivityTAG"
 
-    private lateinit var i1shoppingItIsDone: CheckBox
     private lateinit var i1shoppingItemQty: TextView
     private lateinit var i1shoppingItemName: TextView
     private lateinit var i1shoppingWhenNeededDoneText: TextView
     private lateinit var i1shoppingWhereText: TextView
     private lateinit var i1shoppingCostText: TextView
-    private lateinit var i1shoppingPriorityText: TextView
+    private lateinit var i1shoppingPriorityText: RadioGroup
     private lateinit var i1shoppingPriority1: RadioButton
     private lateinit var i1shoppingPriority2: RadioButton
     private lateinit var i1shoppingPriority3: RadioButton
 
     private lateinit var i1choresItemName: TextView
     private lateinit var i1choresWhenNeededDoneText: TextView
-    private lateinit var i1choresDifficulty: TextView
+    private lateinit var i1choresDifficulty: RadioGroup
     private lateinit var i1choresDifficulty1: RadioButton
     private lateinit var i1choresDifficulty2: RadioButton
     private lateinit var i1choresDifficulty3: RadioButton
-    private lateinit var i1choresPriorityText: TextView
+    private lateinit var i1choresPriorityText: RadioGroup
     private lateinit var i1choresPriority1: RadioButton
     private lateinit var i1choresPriority2: RadioButton
     private lateinit var i1choresPriority3: RadioButton
@@ -71,8 +70,8 @@ class AddItemActivity : AppCompatActivity() {
             .collection(homeActivity.clientIDCollection).document(TestHousemateActivity.SHOPPING_LIST)
             .collection(TestHousemateActivity.SHOPPING_ITEMS_COLLECTION).document(itemName)
             .set(shoppingItemData)
-            .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
     private fun addChoreItem(
         itemName: String,
@@ -93,8 +92,8 @@ class AddItemActivity : AppCompatActivity() {
             .collection(homeActivity.clientIDCollection).document(TestHousemateActivity.CHORES_LIST)
             .collection(TestHousemateActivity.CHORE_ITEMS_COLLECTION).document(itemName)
             .set(choresItemData)
-            .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 
     // CLICK LISTENERS //

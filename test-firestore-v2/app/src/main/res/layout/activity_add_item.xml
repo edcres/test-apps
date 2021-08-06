@@ -147,7 +147,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"
                             android:layout_marginRight="16dp"
-                            android:checked="@{shoppingEntity.priority == 1}"
                             android:text="1" />
 
                         <RadioButton
@@ -156,7 +155,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"
                             android:layout_marginRight="16dp"
-                            android:checked="@{shoppingEntity.priority == 2}"
                             android:text="2"
                             tools:checked="true" />
 
@@ -166,7 +164,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"
                             android:layout_marginRight="16dp"
-                            android:checked="@{shoppingEntity.priority == 3}"
                             android:text="3" />
 
                     </RadioGroup>
