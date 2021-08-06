@@ -145,6 +145,7 @@ class AddItemActivity : AppCompatActivity() {
     private fun bindUIWidgets() {
         addItemButton = findViewById(R.id.add_item_button)
 
+        i1shoppingItemName = findViewById(R.id.item_add1Shopping_item_name)
         i1shoppingItemQty = findViewById(R.id.add1Shopping_item_qty)
         i1shoppingWhenNeededDoneText = findViewById(R.id.add1Shopping_when_needed_done_text)
         i1shoppingWhereText = findViewById(R.id.add1Shopping_where_text)
