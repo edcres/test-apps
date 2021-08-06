@@ -1,4 +1,4 @@
-package com.example.testfirestorev2
+package com.example.testfirestorev2.docsandnotes
 
 import android.content.ContentValues
 import android.util.Log

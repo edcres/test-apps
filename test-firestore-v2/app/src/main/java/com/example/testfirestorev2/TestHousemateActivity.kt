@@ -1,14 +1,11 @@
 package com.example.testfirestorev2
 
-import android.content.ContentValues
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.TextView
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -23,9 +20,6 @@ import com.google.firebase.ktx.Firebase
 class TestHousemateActivity : AppCompatActivity() {
 
     private val db = Firebase.firestore
-
-    private var clientGroupIDCollection = "abcd1234"
-    private var clientIDCollection = "${clientGroupIDCollection}abcd1234"
 
     private lateinit var i1shoppingItIsDone: CheckBox
     private lateinit var i1shoppingItemQty: TextView
@@ -54,6 +48,7 @@ class TestHousemateActivity : AppCompatActivity() {
     private lateinit var i3shoppingWhoIsGettingItText: TextInputEditText
     private lateinit var i3shoppingPriorityText: TextView
     private lateinit var i3shoppingAddedByText: TextView
+
     private lateinit var i1choresItIsDone: CheckBox
     private lateinit var i1choresItemName: TextView
     private lateinit var i1choresWhenNeededDoneText: TextView
@@ -61,6 +56,7 @@ class TestHousemateActivity : AppCompatActivity() {
     private lateinit var i1choresWhoIsDoingItText: TextInputEditText
     private lateinit var i1choresPriorityText: TextView
     private lateinit var i1choresAddedByText: TextView
+
     private lateinit var i2choresItIsDone: CheckBox
     private lateinit var i2choresItemName: TextView
     private lateinit var i2choresWhenNeededDoneText: TextView
@@ -77,27 +73,30 @@ class TestHousemateActivity : AppCompatActivity() {
     private lateinit var i3choresAddedByText: TextView
 
     companion object {
-        private const val TAG = "TestHousemateActyTAG"
-        private const val GENERAL_COLLECTION = "generalCollection"
-        private const val GROUPS_DOC = "groupIDs"
-        private const val CLIENTS_DOC = "clientIDs"
-        private const val SHOPPING_LIST = "shoppingList"
-        private const val SHOPPING_ITEMS_COLLECTION = "Shopping items"
-        private const val CHORES_LIST = "choresList"
-        private const val CHORE_ITEMS_COLLECTION = "Chore items"
+        var clientGroupIDCollection = "abcd1234"
+        var clientIDCollection = "${clientGroupIDCollection}abcd1234"
 
-        private const val ID_FIELD = "id"
-        private const val NAME_FIELD = "name"
-        private const val QUANTITY_FIELD = "quantity"
-        private const val ADDED_BY_FIELD = "added_by"
-        private const val COMPLETED_FIELD = "completed"
-        private const val COST_FIELD = "cost"
-        private const val PURCHASE_LOCATION_FIELD = "purchase_location"
-        private const val NEEDED_BY_FIELD = "needed_by"
-        private const val VOLUNTEER_FIELD = "volunteer"
-        private const val PRIORITY_FIELD = "priority"
+        const val TAG = "TestHousemateActyTAG"
+        const val GENERAL_COLLECTION = "generalCollection"
+        const val GROUPS_DOC = "groupIDs"
+        const val CLIENTS_DOC = "clientIDs"
+        const val SHOPPING_LIST = "shoppingList"
+        const val SHOPPING_ITEMS_COLLECTION = "Shopping items"
+        const val CHORES_LIST = "choresList"
+        const val CHORE_ITEMS_COLLECTION = "Chore items"
 
-        private const val DIFFICULTY_FIELD = "difficulty"
+        const val ID_FIELD = "id"
+        const val NAME_FIELD = "name"
+        const val QUANTITY_FIELD = "quantity"
+        const val ADDED_BY_FIELD = "added_by"
+        const val COMPLETED_FIELD = "completed"
+        const val COST_FIELD = "cost"
+        const val PURCHASE_LOCATION_FIELD = "purchase_location"
+        const val NEEDED_BY_FIELD = "needed_by"
+        const val VOLUNTEER_FIELD = "volunteer"
+        const val PRIORITY_FIELD = "priority"
+
+        const val DIFFICULTY_FIELD = "difficulty"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,64 +106,13 @@ class TestHousemateActivity : AppCompatActivity() {
         bindWidgetIDs()
     }
 
-    // HELPER FUNCTIONS //
-    private fun addShoppingItem(
-        itemID: Long, itemName: String,
-        itemQuantity: Double, addedBy: String,
-        completed: Boolean, itemCost: Double,
-        purchaseLocation: String, neededBy: String,   // try and make this a date
-        volunteer: String, itemPriority: Int
-    ) {
 
-        val shoppingItemData = hashMapOf(
-            ID_FIELD to itemID,     // idk if I need this, make it a long
-            NAME_FIELD to itemName,
-            QUANTITY_FIELD to itemQuantity,
-            ADDED_BY_FIELD to addedBy,
-            COMPLETED_FIELD to completed,
-            COST_FIELD to itemCost,
-            PURCHASE_LOCATION_FIELD to purchaseLocation,
-            NEEDED_BY_FIELD to neededBy,
-            VOLUNTEER_FIELD to volunteer,
-            PRIORITY_FIELD to itemPriority
-        )
 
-        // access the clientGroup, then the client, then the shopping item
-        db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
-            .collection(clientGroupIDCollection).document(CLIENTS_DOC)
-            .collection(clientIDCollection).document(SHOPPING_LIST)
-            .collection(SHOPPING_ITEMS_COLLECTION).document(itemName)
-            .set(shoppingItemData)
-            .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
-    }
 
-    private fun addChoreItem(
-        itemID: Long, itemName: String,
-        addedBy: String, completed: Boolean,
-        difficulty: Int, neededBy: String,   // try and make this a date
-        volunteer: String, itemPriority: Int
-    ) {
-        val choresItemData = hashMapOf(
-            ID_FIELD to itemID,     // idk if I need this, make it a long
-            NAME_FIELD to itemName,
-            ADDED_BY_FIELD to addedBy,
-            COMPLETED_FIELD to completed,
-            DIFFICULTY_FIELD to difficulty,
-            NEEDED_BY_FIELD to neededBy,
-            VOLUNTEER_FIELD to volunteer,
-            PRIORITY_FIELD to itemPriority
-        )
 
-        // access the clientGroup, then the client, then the shopping item
-        db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
-            .collection(clientGroupIDCollection).document(CLIENTS_DOC)
-            .collection(clientIDCollection).document(CHORES_LIST)
-            .collection(CHORE_ITEMS_COLLECTION).document(itemName)
-            .set(choresItemData)
-            .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
-    }
+
+
+
 
     // SETUP FUNCTIONS //
     private fun bindWidgetIDs() {
