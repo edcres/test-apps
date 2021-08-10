@@ -175,7 +175,6 @@ class FromDocumentation {
                 Log.w(ContentValues.TAG, "Listen failed.", e)
                 return@addSnapshotListener
             }
-
             if (snapshot != null && snapshot.exists()) {
                 Log.d(ContentValues.TAG, "Current data: ${snapshot.data}")
             } else {

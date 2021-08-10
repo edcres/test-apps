@@ -11,9 +11,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-// Create the database through the client once, but get rid of that code after the database is created.
-// Need a hashmap for groupIDs, clientIDs and shoppingItemContents.
-
 // todo:
 // -set up database
 // -make/get client group id
@@ -23,6 +20,11 @@ class TestHousemateActivity : AppCompatActivity() {
 
     private val db = Firebase.firestore
     private lateinit var toAddItemActivity: Button
+
+    private var threeShoppingItemsNames = mutableListOf<String>()
+    private var threeChoreItemsNames = mutableListOf<String>()
+    private var threeShoppingItems = mutableListOf<MutableMap<String,Any>>()
+    private var threeChoreItems = mutableListOf<MutableMap<String,Any>>()
 
     private lateinit var i1shoppingItIsDone: CheckBox
     private lateinit var i1shoppingItemQty: TextView
@@ -75,6 +77,25 @@ class TestHousemateActivity : AppCompatActivity() {
     private lateinit var i3choresPriorityText: TextView
     private lateinit var i3choresAddedByText: TextView
 
+    // todo: initialize these soon
+    private lateinit var shoppingItIsDoneList: List<CheckBox>
+    private lateinit var shoppingItemQtyList: List<TextView>
+    private lateinit var shoppingItemNameList: List<TextView>
+    private lateinit var shoppingWhenNeededDoneTextList: List<TextView>
+    private lateinit var shoppingWhereTextList: List<TextView>
+    private lateinit var shoppingCostTextList: List<TextView>
+    private lateinit var shoppingWhoIsGettingItTextList: List<TextInputEditText>
+    private lateinit var shoppingPriorityTextList: List<TextView>
+    private lateinit var shoppingAddedByTextList: List<TextView>
+
+    private lateinit var choresItIsDoneList: List<CheckBox>
+    private lateinit var choresItemNameList: List<TextView>
+    private lateinit var choresWhenNeededDoneTextList: List<TextView>
+    private lateinit var choresDifficultyList: List<TextView>
+    private lateinit var choresWhoIsDoingItTextList: List<TextInputEditText>
+    private lateinit var choresPriorityTextList: List<TextView>
+    private lateinit var choresAddedByTextList: List<TextView>
+
     companion object {
         var clientGroupIDCollection = "abcd1234"
         var clientIDCollection = "${clientGroupIDCollection}abcd1234"
@@ -84,9 +105,9 @@ class TestHousemateActivity : AppCompatActivity() {
         const val GROUPS_DOC = "groupIDs"
         const val CLIENTS_DOC = "clientIDs"
         const val SHOPPING_LIST = "shoppingList"
-        const val SHOPPING_ITEMS_COLLECTION = "Shopping items"
+        const val SHOPPING_ITEMS_COLLECTION = "shoppingitems"
         const val CHORES_LIST = "choresList"
-        const val CHORE_ITEMS_COLLECTION = "Chore items"
+        const val CHORE_ITEMS_COLLECTION = "choreItems"
 
         const val ID_FIELD = "id"
         const val NAME_FIELD = "name"
@@ -108,6 +129,120 @@ class TestHousemateActivity : AppCompatActivity() {
 
         bindWidgetIDs()
         buttonsOnClick()
+        populateUIWidgetsList()
+        get3ItemsFromDB()
+        populateTheListItemsUI()
+        setUpRealtimeFetching()
+    }
+
+    // SETUP FUNCTIONS //
+    private fun setUpRealtimeFetching() {
+        val clientIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
+            .collection(clientGroupIDCollection).document(CLIENTS_DOC)
+            .collection(clientIDCollection)
+        // todo: possible bug, I'm assuming that by setting up the collection once,
+        //  the app will listen to the remote db forever (until the activity is destroyed).
+        // get 3 items in shopping list
+        // for each item in the list of items (use for loop)
+        for (item in threeShoppingItems) {
+            val thisItemName = item[NAME_FIELD].toString()      //this might be other than a string (Any)
+            clientIDCollectionDB.document(SHOPPING_LIST)
+                .collection(SHOPPING_ITEMS_COLLECTION).document(thisItemName)
+                .addSnapshotListener { snapshot, e ->
+                    if (e != null) {
+                        Log.d(TAG, "setUpRealtimeFetching: DB Listen Fail.", e)
+                        return@addSnapshotListener
+                    }
+                    if (snapshot != null && snapshot.exists()) {
+                        // todo: set this up
+                        // get 3 maps and set them to threeShoppingItems
+                        // I already have the names of the items, use them to overwritee the data
+                        threeShoppingItemsNames
+                        snapshot.data
+                        Log.d(TAG, "setUpRealtimeFetching: $thisItemName fetch successful.")
+                    } else {
+                        Log.d(TAG, "setUpRealtimeFetching: Data is null.")
+                    }
+                }
+        }
+
+//        // get 3 items in chores list
+//        for (item in threeChoreNames) {
+//            clientIDCollectionDB.document(CHORES_LIST)
+//                .collection(CHORE_ITEMS_COLLECTION).document(item)
+//        }
+
+        // todo: if I keep going with the code below, it'll replace the 2 for loops above,
+        //  but it's more complicated and hard to read.
+//        val itemNamesLists = listOf<MutableList<String>>(threeShoppingNames, threeChoreNames)
+//        val listsDocuments = listOf<String>(SHOPPING_LIST, CHORES_LIST)
+//        val listsCollections = listOf<String>(SHOPPING_ITEMS_COLLECTION, CHORE_ITEMS_COLLECTION)
+//        for (i in 0 until itemNamesLists.size) {
+//            for (item in threeShoppingNames) {
+//                clientIDCollectionDB.document(listsDocuments[i])
+//                    .collection(listsCollections[i]).document(item)
+//                    .addSnapshotListener { snapshot, e ->
+//                        if (e != null) {
+//                            Log.d(TAG, "setUpRealtimeFetching: DB Listen Fail.", e)
+//                            return@addSnapshotListener
+//                        }
+//                        if (snapshot != null && snapshot.exists()) {
+//                            Log.d(TAG, "setUpRealtimeFetching: Fetch successful.")
+//                        } else {
+//                            Log.d(TAG, "setUpRealtimeFetching: Data is null.")
+//                        }
+//                    }
+//            }
+//        }
+    }
+
+    // SETUP FUNCTIONS //
+    private fun get3ItemsFromDB() {
+        val clientIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
+            .collection(clientGroupIDCollection).document(CLIENTS_DOC)
+            .collection(clientIDCollection)
+
+        // add shopping items
+        clientIDCollectionDB.document(SHOPPING_LIST)
+            .collection(SHOPPING_ITEMS_COLLECTION)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d(TAG, "get3ItemNamesAndPopulateTheUI: ")
+                    // add 3 items to the list and exit the get call
+                    if (threeShoppingItems.size < 4) {
+                        val thisItem = document.data as MutableMap<String, Any>
+                        threeShoppingItemsNames.add(thisItem[NAME_FIELD] as String)
+                        threeShoppingItems.add(thisItem)
+                    } else {
+                        return@addOnSuccessListener
+                    }
+                }
+            }
+            .addOnFailureListener{ e ->
+                Log.d(TAG, "Error getting documents: ", e)
+            }
+
+        // add chore items
+        clientIDCollectionDB.document(CHORES_LIST)
+            .collection(CHORE_ITEMS_COLLECTION)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d(TAG, "get3ItemNamesAndPopulateTheUI: called")
+                    // add 3 items to the list and exit the get call
+                    if (threeChoreItems.size < 4) {
+                        val thisItem = document.data as MutableMap<String, Any>
+                        threeChoreItemsNames.add(thisItem[NAME_FIELD] as String)
+                        threeChoreItems.add(thisItem)
+                    } else {
+                        return@addOnSuccessListener
+                    }
+                }
+            }
+            .addOnFailureListener{ e ->
+                Log.d(TAG, "Error getting documents: ", e)
+            }
     }
 
     // CLICK LISTENERS //
@@ -115,6 +250,59 @@ class TestHousemateActivity : AppCompatActivity() {
         toAddItemActivity.setOnClickListener {
             val goToAddItem = Intent(this, AddItemActivity::class.java)
             startActivity(goToAddItem)
+        }
+    }
+
+    // HELPER FUNCTIONS //
+    private fun populateUIWidgetsList() {
+        shoppingItIsDoneList = listOf(i1shoppingItIsDone, i2shoppingItIsDone, i3shoppingItIsDone)
+        shoppingItemQtyList = listOf(i1shoppingItemQty, i2shoppingItemQty, i3shoppingItemQty)
+        shoppingItemNameList = listOf(i1shoppingItemName, i2shoppingItemName, i3shoppingItemName)
+        shoppingWhenNeededDoneTextList = listOf(i1shoppingWhenNeededDoneText,
+            i2shoppingWhenNeededDoneText, i3shoppingWhenNeededDoneText)
+        shoppingWhereTextList = listOf(i1shoppingWhereText, i2shoppingWhereText, i3shoppingWhereText)
+        shoppingCostTextList = listOf(i1shoppingCostText, i2shoppingCostText, i3shoppingCostText)
+        shoppingWhoIsGettingItTextList = listOf(i1shoppingWhoIsGettingItText,
+            i2shoppingWhoIsGettingItText, i3shoppingWhoIsGettingItText)
+        shoppingPriorityTextList = listOf(i1shoppingPriorityText, i2shoppingPriorityText,
+            i3shoppingPriorityText)
+        shoppingAddedByTextList = listOf(i1shoppingAddedByText, i2shoppingAddedByText,
+            i3shoppingAddedByText)
+
+        choresItIsDoneList = listOf(i1choresItIsDone, i2choresItIsDone, i3choresItIsDone)
+        choresItemNameList = listOf(i1choresItemName, i2choresItemName, i3choresItemName)
+        choresWhenNeededDoneTextList = listOf(i1choresWhenNeededDoneText,
+            i2choresWhenNeededDoneText, i3choresWhenNeededDoneText)
+        choresDifficultyList = listOf(i1choresDifficulty, i2choresDifficulty, i3choresDifficulty)
+        choresWhoIsDoingItTextList = listOf(i1choresWhoIsDoingItText, i2choresWhoIsDoingItText,
+            i3choresWhoIsDoingItText)
+        choresPriorityTextList = listOf(i1choresPriorityText, i2choresPriorityText,
+            i3choresPriorityText)
+        choresAddedByTextList = listOf(i1choresAddedByText, i2choresAddedByText, i3choresAddedByText)
+    }
+
+    private fun populateTheListItemsUI() {
+        // shopping
+        for (i in 0 until threeShoppingItems.size) {
+            shoppingItIsDoneList[i].isChecked = threeShoppingItems[i][COMPLETED_FIELD] as Boolean // should give a boolean value
+            shoppingItemQtyList[i].text = threeShoppingItems[i][QUANTITY_FIELD].toString()
+            shoppingItemNameList[i].text = threeShoppingItems[i][NAME_FIELD].toString()
+            shoppingWhenNeededDoneTextList[i].text = threeShoppingItems[i][NEEDED_BY_FIELD].toString()
+            shoppingWhereTextList[i].text = threeShoppingItems[i][PURCHASE_LOCATION_FIELD].toString()
+            shoppingCostTextList[i].text = threeShoppingItems[i][PRIORITY_FIELD].toString()
+            shoppingWhoIsGettingItTextList[i].setText(threeShoppingItems[i][VOLUNTEER_FIELD].toString())
+            shoppingPriorityTextList[i].text = threeShoppingItems[i][PRIORITY_FIELD].toString()
+            shoppingAddedByTextList[i].text = threeShoppingItems[i][ADDED_BY_FIELD].toString()
+        }
+        //chores
+        for (i in 0 until threeChoreItems.size) {
+            choresItIsDoneList[i].isChecked = threeChoreItems[i][COMPLETED_FIELD] as Boolean // should give a boolean value
+            choresItemNameList[i].text = threeChoreItems[i][NAME_FIELD].toString()
+            choresWhenNeededDoneTextList[i].text = threeChoreItems[i][NEEDED_BY_FIELD].toString()
+            choresDifficultyList[i].text = threeChoreItems[i][DIFFICULTY_FIELD].toString()
+            choresWhoIsDoingItTextList[i].setText(threeChoreItems[i][VOLUNTEER_FIELD].toString())
+            choresPriorityTextList[i].text = threeChoreItems[i][PRIORITY_FIELD].toString()
+            choresAddedByTextList[i].text = threeChoreItems[i][ADDED_BY_FIELD].toString()
         }
     }
 

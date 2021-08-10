@@ -37,7 +37,6 @@ class MyOwnTestActivity : AppCompatActivity() {
     // SETUP FUNCTIONS //
     // set realtime fetch in document 'oneOne' 'state' field
     private fun setUpRealtimeFetching() {
-        Log.d(TAG, "setUpRealtimeFetching: called")
         db.collection("data").document("one")
             .collection("moreData").document("oneOne")
             .addSnapshotListener { snapshot, e ->

@@ -1,6 +1,6 @@
 package com.example.testfirestorev2
 
-import android.content.ContentValues
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +14,9 @@ class AddItemActivity : AppCompatActivity() {
     private val db = Firebase.firestore
     private lateinit var addItemButton: Button
     private val TAG = "AddItemActivityTAG"
+    private val clientIDCollectionDB = db.collection(TestHousemateActivity.GENERAL_COLLECTION)
+        .document(TestHousemateActivity.GROUPS_DOC).collection(homeActivity.clientGroupIDCollection)
+        .document(TestHousemateActivity.CLIENTS_DOC).collection(homeActivity.clientIDCollection)
 
     private lateinit var i1shoppingItemQty: TextView
     private lateinit var i1shoppingItemName: TextView
@@ -44,7 +47,6 @@ class AddItemActivity : AppCompatActivity() {
         buttonsOnClick()
     }
 
-    // todo: create an add item activity and put these functions there
     // HELPER FUNCTIONS //
     private fun addShoppingItem(
         itemName: String,
@@ -61,18 +63,20 @@ class AddItemActivity : AppCompatActivity() {
             homeActivity.COST_FIELD to itemCost,
             homeActivity.PURCHASE_LOCATION_FIELD to purchaseLocation,
             homeActivity.NEEDED_BY_FIELD to neededBy,
-            homeActivity.PRIORITY_FIELD to itemPriority
+            homeActivity.PRIORITY_FIELD to itemPriority,
+            homeActivity.COMPLETED_FIELD to false,
+            homeActivity.VOLUNTEER_FIELD to "",
+            homeActivity.ADDED_BY_FIELD to ""
         )
 
         // access the clientGroup, then the client, then the shopping item
-        db.collection(TestHousemateActivity.GENERAL_COLLECTION).document(TestHousemateActivity.GROUPS_DOC)
-            .collection(homeActivity.clientGroupIDCollection).document(TestHousemateActivity.CLIENTS_DOC)
-            .collection(homeActivity.clientIDCollection).document(TestHousemateActivity.SHOPPING_LIST)
+        clientIDCollectionDB.document(TestHousemateActivity.SHOPPING_LIST)
             .collection(TestHousemateActivity.SHOPPING_ITEMS_COLLECTION).document(itemName)
             .set(shoppingItemData)
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
+
     private fun addChoreItem(
         itemName: String,
         difficulty: Int,
@@ -80,16 +84,17 @@ class AddItemActivity : AppCompatActivity() {
         itemPriority: Int
     ) {
         val choresItemData = hashMapOf(
-            TestHousemateActivity.NAME_FIELD to itemName,
-            TestHousemateActivity.DIFFICULTY_FIELD to difficulty,
-            TestHousemateActivity.NEEDED_BY_FIELD to neededBy,
-            TestHousemateActivity.PRIORITY_FIELD to itemPriority
+            homeActivity.NAME_FIELD to itemName,
+            homeActivity.DIFFICULTY_FIELD to difficulty,
+            homeActivity.NEEDED_BY_FIELD to neededBy,
+            homeActivity.PRIORITY_FIELD to itemPriority,
+            homeActivity.COMPLETED_FIELD to false,
+            homeActivity.VOLUNTEER_FIELD to "",
+            homeActivity.ADDED_BY_FIELD to ""
         )
 
         // access the clientGroup, then the client, then the shopping item
-        db.collection(TestHousemateActivity.GENERAL_COLLECTION).document(TestHousemateActivity.GROUPS_DOC)
-            .collection(homeActivity.clientGroupIDCollection).document(TestHousemateActivity.CLIENTS_DOC)
-            .collection(homeActivity.clientIDCollection).document(TestHousemateActivity.CHORES_LIST)
+        clientIDCollectionDB.document(TestHousemateActivity.CHORES_LIST)
             .collection(TestHousemateActivity.CHORE_ITEMS_COLLECTION).document(itemName)
             .set(choresItemData)
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
@@ -99,9 +104,9 @@ class AddItemActivity : AppCompatActivity() {
     // CLICK LISTENERS //
     private fun buttonsOnClick() {
         addItemButton.setOnClickListener {
-            // add item data to the database
+            // add shopping item
             // check if the name is filled for each. Only send info if it's filled.
-            if (i1shoppingItemName.text != null) {
+            if (i1shoppingItemName.text.toString() != "") {
                 val shoppingPriority = when (true) {
                     i1shoppingPriority1.isChecked -> 1
                     i1shoppingPriority2.isChecked -> 2
@@ -118,7 +123,9 @@ class AddItemActivity : AppCompatActivity() {
                 )
             }
 
-            if (i1choresItemName.text != null) {
+            // add chore item
+            if (i1choresItemName.text.toString() != "") {
+                Log.d(TAG, "buttonsOnClick: ${i1choresItemName.text}")
                 val choreDifficulty = when (true) {
                     i1choresDifficulty1.isChecked -> 1
                     i1choresDifficulty2.isChecked -> 2
@@ -138,6 +145,10 @@ class AddItemActivity : AppCompatActivity() {
                     chorePriority
                 )
             }
+
+            // go to home activity
+            val gotoHomeScreen = Intent(this, TestHousemateActivity::class.java)
+            startActivity(gotoHomeScreen)
         }
     }
 
