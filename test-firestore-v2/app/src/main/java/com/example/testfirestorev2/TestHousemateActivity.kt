@@ -1,5 +1,6 @@
 package com.example.testfirestorev2
 
+import android.content.ContentValues
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,12 +8,14 @@ import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 // todo:
-// -set up database
+// - completed, volunteer, added by
 // -make/get client group id
 // -make/get client id
 
@@ -20,6 +23,7 @@ class TestHousemateActivity : AppCompatActivity() {
 
     private val db = Firebase.firestore
     private lateinit var toAddItemActivity: Button
+    private lateinit var clientIDCollectionDB: CollectionReference
 
     private var threeShoppingItemsNames = mutableListOf<String>()
     private var threeChoreItemsNames = mutableListOf<String>()
@@ -77,7 +81,6 @@ class TestHousemateActivity : AppCompatActivity() {
     private lateinit var i3choresPriorityText: TextView
     private lateinit var i3choresAddedByText: TextView
 
-    // todo: initialize these soon
     private lateinit var shoppingItIsDoneList: List<CheckBox>
     private lateinit var shoppingItemQtyList: List<TextView>
     private lateinit var shoppingItemNameList: List<TextView>
@@ -105,11 +108,10 @@ class TestHousemateActivity : AppCompatActivity() {
         const val GROUPS_DOC = "groupIDs"
         const val CLIENTS_DOC = "clientIDs"
         const val SHOPPING_LIST = "shoppingList"
-        const val SHOPPING_ITEMS_COLLECTION = "shoppingitems"
+        const val SHOPPING_ITEMS_COLLECTION = "shoppingItems"
         const val CHORES_LIST = "choresList"
         const val CHORE_ITEMS_COLLECTION = "choreItems"
 
-        const val ID_FIELD = "id"
         const val NAME_FIELD = "name"
         const val QUANTITY_FIELD = "quantity"
         const val ADDED_BY_FIELD = "added_by"
@@ -128,50 +130,63 @@ class TestHousemateActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test_housemate)
 
         bindWidgetIDs()
-        buttonsOnClick()
+        widgetEventListeners()
         populateUIWidgetsList()
         get3ItemsFromDB()
         populateTheListItemsUI()
-        setUpRealtimeFetching()
     }
 
     // SETUP FUNCTIONS //
     private fun setUpRealtimeFetching() {
-        val clientIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
-            .collection(clientGroupIDCollection).document(CLIENTS_DOC)
-            .collection(clientIDCollection)
-        // todo: possible bug, I'm assuming that by setting up the collection once,
-        //  the app will listen to the remote db forever (until the activity is destroyed).
+        Log.d(TAG, "setUpRealtimeFetching: called")
         // get 3 items in shopping list
-        // for each item in the list of items (use for loop)
-        for (item in threeShoppingItems) {
-            val thisItemName = item[NAME_FIELD].toString()      //this might be other than a string (Any)
+        Log.d(TAG, "setUpRealtimeFetching: threeShoppingItems size: ${threeShoppingItems.size}")
+        for (i in 0 until threeShoppingItems.size) {
+            Log.d(TAG, "setUpRealtimeFetching: shopping loop called i = $i || size = ${threeShoppingItems.size}")
             clientIDCollectionDB.document(SHOPPING_LIST)
-                .collection(SHOPPING_ITEMS_COLLECTION).document(thisItemName)
+                .collection(SHOPPING_ITEMS_COLLECTION)
+                .document(threeShoppingItemsNames[i])
                 .addSnapshotListener { snapshot, e ->
                     if (e != null) {
-                        Log.d(TAG, "setUpRealtimeFetching: DB Listen Fail.", e)
+                        Log.d(TAG, "setUpRealtimeFetching: DB Listen Fail in shopping.", e)
                         return@addSnapshotListener
                     }
                     if (snapshot != null && snapshot.exists()) {
-                        // todo: set this up
-                        // get 3 maps and set them to threeShoppingItems
-                        // I already have the names of the items, use them to overwritee the data
-                        threeShoppingItemsNames
-                        snapshot.data
-                        Log.d(TAG, "setUpRealtimeFetching: $thisItemName fetch successful.")
+                        // todo: set this up, then do it for chores list
+                        // get 3 item maps from db and set them to threeShoppingItems
+                        // I already have the names of the items, use them to overwrite the data
+                        // set the text widgets here
+                        threeShoppingItems[i] = snapshot.data as HashMap<String, Any>
+                        populateTheListItemsUI()
+                        Log.d(TAG, "setUpRealtimeFetching: ${threeShoppingItemsNames[i]} fetch successful.")
                     } else {
                         Log.d(TAG, "setUpRealtimeFetching: Data is null.")
                     }
                 }
         }
+        // get 3 items in chores list
+        for (i in 0 until threeChoreItems.size) {
+            Log.d(TAG, "setUpRealtimeFetching: shopping loop called i = $i || size = ${threeChoreItems.size}")
+            clientIDCollectionDB.document(CHORES_LIST)
+                .collection(CHORE_ITEMS_COLLECTION)
+                .document(threeChoreItemsNames[i])
+                .addSnapshotListener { snapshot, e ->
 
-//        // get 3 items in chores list
-//        for (item in threeChoreNames) {
-//            clientIDCollectionDB.document(CHORES_LIST)
-//                .collection(CHORE_ITEMS_COLLECTION).document(item)
-//        }
+                    if (e != null) {
+                        Log.d(TAG, "setUpRealtimeFetching: DB Listen Fail in chores.", e)
+                        return@addSnapshotListener
+                    }
+                    if (snapshot != null && snapshot.exists()) {
+                        // get 3 item maps from db and set them to threeChoreItems
+                        threeChoreItems[i] = snapshot.data as HashMap<String, Any>
+                        populateTheListItemsUI()
+                        Log.d(TAG, "setUpRealtimeFetching: ${threeChoreItemsNames[i]} fetch successful.")
+                    } else {
+                        Log.d(TAG, "setUpRealtimeFetching: Data is null.")
+                    }
 
+                }
+        }
         // todo: if I keep going with the code below, it'll replace the 2 for loops above,
         //  but it's more complicated and hard to read.
 //        val itemNamesLists = listOf<MutableList<String>>(threeShoppingNames, threeChoreNames)
@@ -198,29 +213,29 @@ class TestHousemateActivity : AppCompatActivity() {
 
     // SETUP FUNCTIONS //
     private fun get3ItemsFromDB() {
-        val clientIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
+        clientIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
             .collection(clientGroupIDCollection).document(CLIENTS_DOC)
             .collection(clientIDCollection)
-
         // add shopping items
         clientIDCollectionDB.document(SHOPPING_LIST)
             .collection(SHOPPING_ITEMS_COLLECTION)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    Log.d(TAG, "get3ItemNamesAndPopulateTheUI: ")
+                    Log.d(TAG, "get3ItemsFromDB: shopping called")
                     // add 3 items to the list and exit the get call
                     if (threeShoppingItems.size < 4) {
                         val thisItem = document.data as MutableMap<String, Any>
                         threeShoppingItemsNames.add(thisItem[NAME_FIELD] as String)
                         threeShoppingItems.add(thisItem)
+                        setUpRealtimeFetching()         // todo try to not repeat this 2ice
                     } else {
                         return@addOnSuccessListener
                     }
                 }
             }
             .addOnFailureListener{ e ->
-                Log.d(TAG, "Error getting documents: ", e)
+                Log.d(TAG, "Error getting documents: shopping ", e)
             }
 
         // add chore items
@@ -229,12 +244,13 @@ class TestHousemateActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    Log.d(TAG, "get3ItemNamesAndPopulateTheUI: called")
+                    Log.d(TAG, "get3ItemsFromDB: chores called")
                     // add 3 items to the list and exit the get call
                     if (threeChoreItems.size < 4) {
                         val thisItem = document.data as MutableMap<String, Any>
                         threeChoreItemsNames.add(thisItem[NAME_FIELD] as String)
                         threeChoreItems.add(thisItem)
+                        setUpRealtimeFetching()         // todo try to not repeat this 2ice
                     } else {
                         return@addOnSuccessListener
                     }
@@ -246,10 +262,89 @@ class TestHousemateActivity : AppCompatActivity() {
     }
 
     // CLICK LISTENERS //
-    private fun buttonsOnClick() {
+    private fun widgetEventListeners() {
         toAddItemActivity.setOnClickListener {
             val goToAddItem = Intent(this, AddItemActivity::class.java)
             startActivity(goToAddItem)
+        }
+        //todo: check if the list is that size (threeShoppingItemsNames.size > 0)
+        i1shoppingItIsDone.setOnClickListener {
+            if (threeShoppingItemsNames.size > 0) {
+                saveCompletedInputToDb(
+                    SHOPPING_LIST,
+                    SHOPPING_ITEMS_COLLECTION,
+                    threeShoppingItemsNames[0],
+                    i1shoppingItIsDone.isChecked
+                )
+            }
+        }
+        i2shoppingItIsDone.setOnClickListener {
+            if (threeShoppingItemsNames.size > 1) {
+                saveCompletedInputToDb(
+                    SHOPPING_LIST,
+                    SHOPPING_ITEMS_COLLECTION,
+                    threeShoppingItemsNames[1],
+                    i2shoppingItIsDone.isChecked
+                )
+            }
+        }
+        i3shoppingItIsDone.setOnClickListener {
+            if (threeShoppingItemsNames.size > 2) {
+                saveCompletedInputToDb(
+                    SHOPPING_LIST,
+                    SHOPPING_ITEMS_COLLECTION,
+                    threeShoppingItemsNames[2],
+                    i3shoppingItIsDone.isChecked
+                )
+            }
+        }
+        i1choresItIsDone.setOnClickListener {
+            if (threeChoreItemsNames.size > 0) {
+                saveCompletedInputToDb(
+                    CHORES_LIST,
+                    CHORE_ITEMS_COLLECTION,
+                    threeChoreItemsNames[0],
+                    i1choresItIsDone.isChecked
+                )
+            }
+        }
+        i2choresItIsDone.setOnClickListener {
+            if (threeChoreItemsNames.size > 1) {
+                saveCompletedInputToDb(
+                    CHORES_LIST,
+                    CHORE_ITEMS_COLLECTION,
+                    threeChoreItemsNames[1],
+                    i2choresItIsDone.isChecked
+                )
+            }
+        }
+        i3choresItIsDone.setOnClickListener {
+            if (threeChoreItemsNames.size > 2) {
+                saveCompletedInputToDb(
+                    CHORES_LIST,
+                    CHORE_ITEMS_COLLECTION,
+                    threeChoreItemsNames[2],
+                    i3choresItIsDone.isChecked
+                )
+            }
+        }
+        i1shoppingWhoIsGettingItText.doAfterTextChanged {
+            // todo: send the text to the local database, will probably cause a lot of queries
+        }
+        i2shoppingWhoIsGettingItText.doAfterTextChanged {
+            // todo: send the text to the local database, will probably cause a lot of queries
+        }
+        i3shoppingWhoIsGettingItText.doAfterTextChanged {
+            // todo: send the text to the local database, will probably cause a lot of queries
+        }
+        i1choresWhoIsDoingItText.doAfterTextChanged {
+            // todo: send the text to the local database, will probably cause a lot of queries
+        }
+        i2choresWhoIsDoingItText.doAfterTextChanged {
+            // todo: send the text to the local database, will probably cause a lot of queries
+        }
+        i3choresWhoIsDoingItText.doAfterTextChanged {
+            // todo: send the text to the local database, will probably cause a lot of queries
         }
     }
 
@@ -284,26 +379,60 @@ class TestHousemateActivity : AppCompatActivity() {
     private fun populateTheListItemsUI() {
         // shopping
         for (i in 0 until threeShoppingItems.size) {
-            shoppingItIsDoneList[i].isChecked = threeShoppingItems[i][COMPLETED_FIELD] as Boolean // should give a boolean value
-            shoppingItemQtyList[i].text = threeShoppingItems[i][QUANTITY_FIELD].toString()
-            shoppingItemNameList[i].text = threeShoppingItems[i][NAME_FIELD].toString()
-            shoppingWhenNeededDoneTextList[i].text = threeShoppingItems[i][NEEDED_BY_FIELD].toString()
-            shoppingWhereTextList[i].text = threeShoppingItems[i][PURCHASE_LOCATION_FIELD].toString()
-            shoppingCostTextList[i].text = threeShoppingItems[i][PRIORITY_FIELD].toString()
-            shoppingWhoIsGettingItTextList[i].setText(threeShoppingItems[i][VOLUNTEER_FIELD].toString())
-            shoppingPriorityTextList[i].text = threeShoppingItems[i][PRIORITY_FIELD].toString()
-            shoppingAddedByTextList[i].text = threeShoppingItems[i][ADDED_BY_FIELD].toString()
+            if (i < 3) {
+                shoppingItIsDoneList[i].isChecked =
+                    threeShoppingItems[i][COMPLETED_FIELD] as Boolean // should give a boolean value
+                shoppingItemQtyList[i].text = threeShoppingItems[i][QUANTITY_FIELD].toString()
+                shoppingItemNameList[i].text = threeShoppingItems[i][NAME_FIELD].toString()
+                shoppingWhenNeededDoneTextList[i].text =
+                    "by ${threeShoppingItems[i][NEEDED_BY_FIELD].toString()}"
+                shoppingWhereTextList[i].text =
+                    "at ${threeShoppingItems[i][PURCHASE_LOCATION_FIELD].toString()}"
+                shoppingCostTextList[i].text =
+                    "cost: ${threeShoppingItems[i][PRIORITY_FIELD].toString()}"
+                shoppingWhoIsGettingItTextList[i]
+                    .setText(threeShoppingItems[i][VOLUNTEER_FIELD].toString())
+                shoppingPriorityTextList[i].text =
+                    "priority ${threeShoppingItems[i][PRIORITY_FIELD].toString()}"
+                shoppingAddedByTextList[i].text =
+                    "added by ${threeShoppingItems[i][ADDED_BY_FIELD].toString()}"
+            }
         }
         //chores
         for (i in 0 until threeChoreItems.size) {
-            choresItIsDoneList[i].isChecked = threeChoreItems[i][COMPLETED_FIELD] as Boolean // should give a boolean value
-            choresItemNameList[i].text = threeChoreItems[i][NAME_FIELD].toString()
-            choresWhenNeededDoneTextList[i].text = threeChoreItems[i][NEEDED_BY_FIELD].toString()
-            choresDifficultyList[i].text = threeChoreItems[i][DIFFICULTY_FIELD].toString()
-            choresWhoIsDoingItTextList[i].setText(threeChoreItems[i][VOLUNTEER_FIELD].toString())
-            choresPriorityTextList[i].text = threeChoreItems[i][PRIORITY_FIELD].toString()
-            choresAddedByTextList[i].text = threeChoreItems[i][ADDED_BY_FIELD].toString()
+            if (i < 3) {
+                choresItIsDoneList[i].isChecked =
+                    threeChoreItems[i][COMPLETED_FIELD] as Boolean // should give a boolean value
+                choresItemNameList[i].text = threeChoreItems[i][NAME_FIELD].toString()
+                choresWhenNeededDoneTextList[i].text =
+                    "by ${threeChoreItems[i][NEEDED_BY_FIELD].toString()}"
+                choresDifficultyList[i].text =
+                    "difficulty: ${threeChoreItems[i][DIFFICULTY_FIELD].toString()}"
+                choresWhoIsDoingItTextList[i].setText(threeChoreItems[i][VOLUNTEER_FIELD].toString())
+                choresPriorityTextList[i].text =
+                    "priority ${threeChoreItems[i][PRIORITY_FIELD].toString()}"
+                choresAddedByTextList[i].text =
+                    "added by ${threeChoreItems[i][ADDED_BY_FIELD].toString()}"
+            }
         }
+    }
+
+    private fun saveCompletedInputToDb(itemList: String,
+                                       itemCollection: String,
+                                       docName: String,
+                                       completed: Boolean) {
+        // when and item is completed, let the db know
+        // parameters: chores/shopping list, chores/shopping collection, document to edit
+        // itemList = SHOPPING_LIST
+        // itemCollection = SHOPPING_ITEMS_COLLECTION
+        // docName = "bread"
+        // completed = completed or not
+        clientIDCollectionDB.document(itemList)
+            .collection(itemCollection)
+            .document(docName)
+            .update(COMPLETED_FIELD, completed)
+            .addOnSuccessListener { Log.d(ContentValues.TAG, "Doc successfully updated!") }
+            .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error updating doc", e) }
     }
 
     // SETUP FUNCTIONS //

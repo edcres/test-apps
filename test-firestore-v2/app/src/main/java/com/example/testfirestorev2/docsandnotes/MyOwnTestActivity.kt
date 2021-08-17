@@ -46,7 +46,7 @@ class MyOwnTestActivity : AppCompatActivity() {
                 }
                 if (snapshot != null && snapshot.exists()) {
                     Log.d(TAG, "setUpRealtimeFetching: ${snapshot.data}")
-                    // todo: set the textview to the data
+                    // todo: also set the data to the textView (make it an edittext)
                     val rTDataFromDb = snapshot.data as Map<String, Any>
                     val dataForText = rTDataFromDb["state"]
                     realtimeTextView.text = dataForText.toString()
