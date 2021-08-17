@@ -270,7 +270,7 @@ class TestHousemateActivity : AppCompatActivity() {
         //todo: check if the list is that size (threeShoppingItemsNames.size > 0)
         i1shoppingItIsDone.setOnClickListener {
             if (threeShoppingItemsNames.size > 0) {
-                saveCompletedInputToDb(
+                sendCompletionInputToDb(
                     SHOPPING_LIST,
                     SHOPPING_ITEMS_COLLECTION,
                     threeShoppingItemsNames[0],
@@ -280,7 +280,7 @@ class TestHousemateActivity : AppCompatActivity() {
         }
         i2shoppingItIsDone.setOnClickListener {
             if (threeShoppingItemsNames.size > 1) {
-                saveCompletedInputToDb(
+                sendCompletionInputToDb(
                     SHOPPING_LIST,
                     SHOPPING_ITEMS_COLLECTION,
                     threeShoppingItemsNames[1],
@@ -290,7 +290,7 @@ class TestHousemateActivity : AppCompatActivity() {
         }
         i3shoppingItIsDone.setOnClickListener {
             if (threeShoppingItemsNames.size > 2) {
-                saveCompletedInputToDb(
+                sendCompletionInputToDb(
                     SHOPPING_LIST,
                     SHOPPING_ITEMS_COLLECTION,
                     threeShoppingItemsNames[2],
@@ -300,7 +300,7 @@ class TestHousemateActivity : AppCompatActivity() {
         }
         i1choresItIsDone.setOnClickListener {
             if (threeChoreItemsNames.size > 0) {
-                saveCompletedInputToDb(
+                sendCompletionInputToDb(
                     CHORES_LIST,
                     CHORE_ITEMS_COLLECTION,
                     threeChoreItemsNames[0],
@@ -310,7 +310,7 @@ class TestHousemateActivity : AppCompatActivity() {
         }
         i2choresItIsDone.setOnClickListener {
             if (threeChoreItemsNames.size > 1) {
-                saveCompletedInputToDb(
+                sendCompletionInputToDb(
                     CHORES_LIST,
                     CHORE_ITEMS_COLLECTION,
                     threeChoreItemsNames[1],
@@ -320,7 +320,7 @@ class TestHousemateActivity : AppCompatActivity() {
         }
         i3choresItIsDone.setOnClickListener {
             if (threeChoreItemsNames.size > 2) {
-                saveCompletedInputToDb(
+                sendCompletionInputToDb(
                     CHORES_LIST,
                     CHORE_ITEMS_COLLECTION,
                     threeChoreItemsNames[2],
@@ -328,23 +328,66 @@ class TestHousemateActivity : AppCompatActivity() {
                 )
             }
         }
+        // todo: possible bug: if user deletes everything in the box, value might be null
         i1shoppingWhoIsGettingItText.doAfterTextChanged {
-            // todo: send the text to the local database, will probably cause a lot of queries
+            if (threeShoppingItemsNames.size > 0) {
+                sendVolunteerInputToDb(
+                    SHOPPING_LIST,
+                    SHOPPING_ITEMS_COLLECTION,
+                    threeShoppingItemsNames[0],
+                    i1shoppingWhoIsGettingItText.text.toString()
+                )
+            }
         }
         i2shoppingWhoIsGettingItText.doAfterTextChanged {
-            // todo: send the text to the local database, will probably cause a lot of queries
+            if (threeShoppingItemsNames.size > 1) {
+                sendVolunteerInputToDb(
+                    SHOPPING_LIST,
+                    SHOPPING_ITEMS_COLLECTION,
+                    threeShoppingItemsNames[1],
+                    i2shoppingWhoIsGettingItText.text.toString()
+                )
+            }
         }
         i3shoppingWhoIsGettingItText.doAfterTextChanged {
-            // todo: send the text to the local database, will probably cause a lot of queries
+            if (threeShoppingItemsNames.size > 2) {
+                sendVolunteerInputToDb(
+                    SHOPPING_LIST,
+                    SHOPPING_ITEMS_COLLECTION,
+                    threeShoppingItemsNames[2],
+                    i3shoppingWhoIsGettingItText.text.toString()
+                )
+            }
         }
         i1choresWhoIsDoingItText.doAfterTextChanged {
-            // todo: send the text to the local database, will probably cause a lot of queries
+            if (threeChoreItemsNames.size > 0) {
+                sendVolunteerInputToDb(
+                    CHORES_LIST,
+                    CHORE_ITEMS_COLLECTION,
+                    threeShoppingItemsNames[0],
+                    i1choresWhoIsDoingItText.text.toString()
+                )
+            }
         }
         i2choresWhoIsDoingItText.doAfterTextChanged {
-            // todo: send the text to the local database, will probably cause a lot of queries
+            if (threeChoreItemsNames.size > 1) {
+                sendVolunteerInputToDb(
+                    CHORES_LIST,
+                    CHORE_ITEMS_COLLECTION,
+                    threeShoppingItemsNames[1],
+                    i2choresWhoIsDoingItText.text.toString()
+                )
+            }
         }
         i3choresWhoIsDoingItText.doAfterTextChanged {
-            // todo: send the text to the local database, will probably cause a lot of queries
+            if (threeChoreItemsNames.size > 2) {
+                sendVolunteerInputToDb(
+                    CHORES_LIST,
+                    CHORE_ITEMS_COLLECTION,
+                    threeShoppingItemsNames[2],
+                    i3choresWhoIsDoingItText.text.toString()
+                )
+            }
         }
     }
 
@@ -417,22 +460,29 @@ class TestHousemateActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveCompletedInputToDb(itemList: String,
-                                       itemCollection: String,
-                                       docName: String,
-                                       completed: Boolean) {
+    private fun sendCompletionInputToDb(
+        itemList: String,
+        itemCollection: String,
+        docName: String,
+        completed: Boolean) {
         // when and item is completed, let the db know
-        // parameters: chores/shopping list, chores/shopping collection, document to edit
-        // itemList = SHOPPING_LIST
-        // itemCollection = SHOPPING_ITEMS_COLLECTION
-        // docName = "bread"
-        // completed = completed or not
         clientIDCollectionDB.document(itemList)
             .collection(itemCollection)
             .document(docName)
             .update(COMPLETED_FIELD, completed)
             .addOnSuccessListener { Log.d(ContentValues.TAG, "Doc successfully updated!") }
             .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error updating doc", e) }
+    }
+
+    private fun sendVolunteerInputToDb(
+        itemList: String,
+        itemCollection: String,
+        docName: String,
+        volunteerName: String) {
+        clientIDCollectionDB.document(itemList)
+            .collection(itemCollection)
+            .document(docName)
+            .update(VOLUNTEER_FIELD, volunteerName)
     }
 
     // SETUP FUNCTIONS //
