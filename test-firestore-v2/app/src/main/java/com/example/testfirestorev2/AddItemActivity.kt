@@ -8,10 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlin.math.log
 
 class AddItemActivity : AppCompatActivity() {
 
@@ -110,7 +112,6 @@ class AddItemActivity : AppCompatActivity() {
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 
-    //todo
     @SuppressLint("ApplySharedPref")
     private fun sendNameOfClientToSP(clientName: String) {
         val spEditor: SharedPreferences.Editor = sharedPref.edit()
@@ -121,10 +122,57 @@ class AddItemActivity : AppCompatActivity() {
         return sharedPref.getString(clientNameSPTag, null)
     }
 
+    private fun addItems(clientName: String?) {
+        // add shopping item
+        // check if the name is filled for each. Only send info if it's filled.
+        if (i1shoppingItemName.text.toString() != "") {
+            val shoppingPriority = when (true) {
+                i1shoppingPriority1.isChecked -> 1
+                i1shoppingPriority2.isChecked -> 2
+                i1shoppingPriority1.isChecked -> 3
+                else -> 0
+            }
+            addShoppingItem(
+                i1shoppingItemName.text.toString(),
+                i1shoppingItemQty.text.toString().toDouble(),
+                i1shoppingCostText.text.toString().toDouble(),
+                i1shoppingWhereText.text.toString(),
+                i1shoppingWhenNeededDoneText.text.toString(),
+                shoppingPriority,
+                clientName!!
+            )
+        }
+        // add chore item
+        if (i1choresItemName.text.toString() != "") {
+            Log.d(TAG, "buttonsOnClick: ${i1choresItemName.text}")
+            val choreDifficulty = when (true) {
+                i1choresDifficulty1.isChecked -> 1
+                i1choresDifficulty2.isChecked -> 2
+                i1choresDifficulty3.isChecked -> 3
+                else -> 0
+            }
+            val chorePriority = when (true) {
+                i1choresPriority1.isChecked -> 1
+                i1choresPriority2.isChecked -> 2
+                i1choresPriority3.isChecked -> 3
+                else -> 0
+            }
+            addChoreItem(
+                i1choresItemName.text.toString(),
+                choreDifficulty,
+                i1choresWhenNeededDoneText.text.toString(),
+                chorePriority,
+                clientName!!
+            )
+        }
+        // go to home activity
+        val gotoHomeScreen = Intent(this, TestHousemateActivity::class.java)
+        startActivity(gotoHomeScreen)
+    }
+
     // CLICK LISTENERS //
     private fun buttonsOnClick() {
         addItemButton.setOnClickListener {
-            // todo: pop-up dialog box and ask user for their name:
             // -check if client name is saved in shared preferences.
             // -if it is add that as a property in the db item
             // ----
@@ -132,109 +180,30 @@ class AddItemActivity : AppCompatActivity() {
             // -then add that as a property in the db item
             var clientName = getNameOfClientFromSP()
             if (clientName == null) {
-                // todo: pop up the dialog box and tell the user to write their name
-                // -give them an option to say anonymous
-
+                Log.d(TAG, "buttonsOnClick: clientName pt1 = $clientName")
+                val nameInputDialog = MaterialAlertDialogBuilder(this)
                 val customAlertDialogView = LayoutInflater.from(this)
                     .inflate(R.layout.name_dialog_box, null, false)
-                val inputNameDialog = customAlertDialogView
-                    .findViewById<EditText>(R.id.input_name_dialog)
-//                val anonymousBtn = customAlertDialogView.findViewById<Button>(R.id.anonymous_btn)
-//                val acceptButton = customAlertDialogView.findViewById<Button>(R.id.accept_button)
-
-                val nameInputDialog = MaterialAlertDialogBuilder(this)
+                val inputNameDialog: EditText = customAlertDialogView.findViewById(R.id.input_name_dialog)
                 nameInputDialog.setView(customAlertDialogView)
                     .setPositiveButton("Accept") { dialog, _ ->
                         clientName = inputNameDialog.text.toString()
                         sendNameOfClientToSP(clientName!!)
                         dialog.dismiss()
+                        addItems(clientName)
                     }
                     .setNeutralButton("Anonymous") { dialog, _ ->
                         clientName = "anonymous"
                         sendNameOfClientToSP(clientName!!)
                         dialog.dismiss()
+                        addItems(clientName)
                     }
                     .show()
-
-
-
-
-
-
-//                    .setTitle("Type your name.")
-//                    //.setMessage(resources.getString(R.string.supporting_text))
-//                    .setNeutralButton("Anonymous") { dialog, which ->
-//                        clientName = "anonymous"
-//                    }
-////                    .setNegativeButton(resources.getString(R.string.decline)) { dialog, which ->
-////                        // Respond to negative button press
-////                    }
-//                    .setMessage()
-//                    .setPositiveButton("Accept") { dialog, which ->
-//                    }
-//                    .show()
-
-
-
-
-
-
-
-
-
+                Log.d(TAG, "buttonsOnClick: prob doesn't happen concurrently.")
+            } else {
+                addItems(clientName)
             }
-
-            // add shopping item
-            // check if the name is filled for each. Only send info if it's filled.
-            if (i1shoppingItemName.text.toString() != "") {
-                val shoppingPriority = when (true) {
-                    i1shoppingPriority1.isChecked -> 1
-                    i1shoppingPriority2.isChecked -> 2
-                    i1shoppingPriority1.isChecked -> 3
-                    else -> 0
-                }
-
-                //todo: add 'added by through here'
-                addShoppingItem(
-                    i1shoppingItemName.text.toString(),
-                    i1shoppingItemQty.text.toString().toDouble(),
-                    i1shoppingCostText.text.toString().toDouble(),
-                    i1shoppingWhereText.text.toString(),
-                    i1shoppingWhenNeededDoneText.text.toString(),
-                    shoppingPriority,
-                    clientName!!
-                )
-            }
-
-            // add chore item
-            if (i1choresItemName.text.toString() != "") {
-                Log.d(TAG, "buttonsOnClick: ${i1choresItemName.text}")
-                val choreDifficulty = when (true) {
-                    i1choresDifficulty1.isChecked -> 1
-                    i1choresDifficulty2.isChecked -> 2
-                    i1choresDifficulty3.isChecked -> 3
-                    else -> 0
-                }
-                val chorePriority = when (true) {
-                    i1choresPriority1.isChecked -> 1
-                    i1choresPriority2.isChecked -> 2
-                    i1choresPriority3.isChecked -> 3
-                    else -> 0
-                }
-
-                //todo: add 'added by through here'
-                addChoreItem(
-                    i1choresItemName.text.toString(),
-                    choreDifficulty,
-                    i1choresWhenNeededDoneText.text.toString(),
-                    chorePriority,
-                    clientName!!
-                )
-            }
-
-            // go to home activity
-            val gotoHomeScreen = Intent(this, TestHousemateActivity::class.java)
-            startActivity(gotoHomeScreen)
+            Log.d(TAG, "buttonsOnClick: the rest happens anyways")
         }
     }
 

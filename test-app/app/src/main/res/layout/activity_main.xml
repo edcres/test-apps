@@ -1,70 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activities.MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/mainActivityAppBarLayout"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/test_dialog_btn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:liftOnScroll="true">
+        android:text="pop up dialog"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/mainActivityTopAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:menu="@menu/this_toolbar"
-            app:titleTextColor="@color/black"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+<!--<androidx.coordinatorlayout.widget.CoordinatorLayout-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    tools:context=".ui.activities.MainActivity">-->
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/mainTabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:background="@color/purple_200"
-            app:tabTextColor="@color/purple_500"
-            app:tabIndicatorColor="@color/purple_700"
-            android:outlineSpotShadowColor="@color/white"
-            app:tabSelectedTextColor="@color/black"
-            app:tabMode="scrollable"
-            app:tabContentStart="56dp">
+<!--    <com.google.android.material.appbar.AppBarLayout-->
+<!--        android:id="@+id/mainActivityAppBarLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:liftOnScroll="true">-->
 
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/mainTabLayoutAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="All" />
+<!--        <com.google.android.material.appbar.MaterialToolbar-->
+<!--            android:id="@+id/mainActivityTopAppBar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize"-->
+<!--            app:layout_scrollFlags="scroll|enterAlways|snap"-->
+<!--            app:menu="@menu/this_toolbar"-->
+<!--            app:titleTextColor="@color/black"-->
+<!--            style="@style/Widget.MaterialComponents.Toolbar.Primary"/>-->
 
-        </com.google.android.material.tabs.TabLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+<!--        <com.google.android.material.tabs.TabLayout-->
+<!--            android:id="@+id/mainTabLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="32dp"-->
+<!--            android:background="@color/purple_200"-->
+<!--            app:tabTextColor="@color/purple_500"-->
+<!--            app:tabIndicatorColor="@color/purple_700"-->
+<!--            android:outlineSpotShadowColor="@color/white"-->
+<!--            app:tabSelectedTextColor="@color/black"-->
+<!--            app:tabMode="scrollable"-->
+<!--            app:tabContentStart="56dp">-->
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+<!--            <com.google.android.material.tabs.TabItem-->
+<!--                android:id="@+id/mainTabLayoutAll"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="All" />-->
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+<!--        </com.google.android.material.tabs.TabLayout>-->
+<!--    </com.google.android.material.appbar.AppBarLayout>-->
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/workoutsRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:listitem="@layout/recycler_item"
-                android:layout_margin="8dp"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+<!--    <androidx.core.widget.NestedScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
 
-        </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:orientation="vertical"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
 
-        <!-- Scrollable content -->
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/workoutsRecyclerView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                tools:listitem="@layout/recycler_item"-->
+<!--                android:layout_margin="8dp"-->
+<!--                app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
 
-    </androidx.core.widget.NestedScrollView>
+<!--        </LinearLayout>-->
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+<!--        &lt;!&ndash; Scrollable content &ndash;&gt;-->
+
+<!--    </androidx.core.widget.NestedScrollView>-->
+
+<!--</androidx.coordinatorlayout.widget.CoordinatorLayout>-->
