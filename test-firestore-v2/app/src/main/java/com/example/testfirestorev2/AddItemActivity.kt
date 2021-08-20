@@ -1,15 +1,23 @@
 package com.example.testfirestorev2
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.widget.*
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class AddItemActivity : AppCompatActivity() {
 
+    private val sharedPreferenceTag = "TestHousemateActySP"
+    private lateinit var sharedPref: SharedPreferences
+    private val clientNameSPTag = "Client Name"
     private val homeActivity = TestHousemateActivity
     private val db = Firebase.firestore
     private lateinit var addItemButton: Button
@@ -43,6 +51,7 @@ class AddItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item)
 
+        initiateVars()
         bindUIWidgets()
         buttonsOnClick()
     }
@@ -54,9 +63,9 @@ class AddItemActivity : AppCompatActivity() {
         itemCost: Double,
         purchaseLocation: String,
         neededBy: String,   // try and make this a date
-        itemPriority: Int
+        itemPriority: Int,
+        addedBy: String
     ) {
-
         val shoppingItemData = hashMapOf(
             homeActivity.NAME_FIELD to itemName,
             homeActivity.QUANTITY_FIELD to itemQuantity,
@@ -66,9 +75,8 @@ class AddItemActivity : AppCompatActivity() {
             homeActivity.PRIORITY_FIELD to itemPriority,
             homeActivity.COMPLETED_FIELD to false,
             homeActivity.VOLUNTEER_FIELD to "",
-            homeActivity.ADDED_BY_FIELD to ""
+            homeActivity.ADDED_BY_FIELD to addedBy
         )
-
         // access the clientGroup, then the client, then the shopping item
         clientIDCollectionDB.document(TestHousemateActivity.SHOPPING_LIST)
             .collection(TestHousemateActivity.SHOPPING_ITEMS_COLLECTION).document(itemName)
@@ -81,7 +89,8 @@ class AddItemActivity : AppCompatActivity() {
         itemName: String,
         difficulty: Int,
         neededBy: String,   // try and make this a date
-        itemPriority: Int
+        itemPriority: Int,
+        addedBy: String
     ) {
         val choresItemData = hashMapOf(
             homeActivity.NAME_FIELD to itemName,
@@ -90,7 +99,7 @@ class AddItemActivity : AppCompatActivity() {
             homeActivity.PRIORITY_FIELD to itemPriority,
             homeActivity.COMPLETED_FIELD to false,
             homeActivity.VOLUNTEER_FIELD to "",
-            homeActivity.ADDED_BY_FIELD to ""
+            homeActivity.ADDED_BY_FIELD to addedBy
         )
 
         // access the clientGroup, then the client, then the shopping item
@@ -101,9 +110,80 @@ class AddItemActivity : AppCompatActivity() {
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 
+    //todo
+    @SuppressLint("ApplySharedPref")
+    private fun sendNameOfClientToSP(clientName: String) {
+        val spEditor: SharedPreferences.Editor = sharedPref.edit()
+        spEditor.putString(clientNameSPTag, clientName).commit()
+    }
+
+    private fun getNameOfClientFromSP(): String? {
+        return sharedPref.getString(clientNameSPTag, null)
+    }
+
     // CLICK LISTENERS //
     private fun buttonsOnClick() {
         addItemButton.setOnClickListener {
+            // todo: pop-up dialog box and ask user for their name:
+            // -check if client name is saved in shared preferences.
+            // -if it is add that as a property in the db item
+            // ----
+            // -if not true, add it to shared preferences
+            // -then add that as a property in the db item
+            var clientName = getNameOfClientFromSP()
+            if (clientName == null) {
+                // todo: pop up the dialog box and tell the user to write their name
+                // -give them an option to say anonymous
+
+                val customAlertDialogView = LayoutInflater.from(this)
+                    .inflate(R.layout.name_dialog_box, null, false)
+                val inputNameDialog = customAlertDialogView
+                    .findViewById<EditText>(R.id.input_name_dialog)
+//                val anonymousBtn = customAlertDialogView.findViewById<Button>(R.id.anonymous_btn)
+//                val acceptButton = customAlertDialogView.findViewById<Button>(R.id.accept_button)
+
+                val nameInputDialog = MaterialAlertDialogBuilder(this)
+                nameInputDialog.setView(customAlertDialogView)
+                    .setPositiveButton("Accept") { dialog, _ ->
+                        clientName = inputNameDialog.text.toString()
+                        sendNameOfClientToSP(clientName!!)
+                        dialog.dismiss()
+                    }
+                    .setNeutralButton("Anonymous") { dialog, _ ->
+                        clientName = "anonymous"
+                        sendNameOfClientToSP(clientName!!)
+                        dialog.dismiss()
+                    }
+                    .show()
+
+
+
+
+
+
+//                    .setTitle("Type your name.")
+//                    //.setMessage(resources.getString(R.string.supporting_text))
+//                    .setNeutralButton("Anonymous") { dialog, which ->
+//                        clientName = "anonymous"
+//                    }
+////                    .setNegativeButton(resources.getString(R.string.decline)) { dialog, which ->
+////                        // Respond to negative button press
+////                    }
+//                    .setMessage()
+//                    .setPositiveButton("Accept") { dialog, which ->
+//                    }
+//                    .show()
+
+
+
+
+
+
+
+
+
+            }
+
             // add shopping item
             // check if the name is filled for each. Only send info if it's filled.
             if (i1shoppingItemName.text.toString() != "") {
@@ -113,13 +193,16 @@ class AddItemActivity : AppCompatActivity() {
                     i1shoppingPriority1.isChecked -> 3
                     else -> 0
                 }
+
+                //todo: add 'added by through here'
                 addShoppingItem(
                     i1shoppingItemName.text.toString(),
                     i1shoppingItemQty.text.toString().toDouble(),
                     i1shoppingCostText.text.toString().toDouble(),
                     i1shoppingWhereText.text.toString(),
                     i1shoppingWhenNeededDoneText.text.toString(),
-                    shoppingPriority
+                    shoppingPriority,
+                    clientName!!
                 )
             }
 
@@ -138,11 +221,14 @@ class AddItemActivity : AppCompatActivity() {
                     i1choresPriority3.isChecked -> 3
                     else -> 0
                 }
+
+                //todo: add 'added by through here'
                 addChoreItem(
                     i1choresItemName.text.toString(),
                     choreDifficulty,
                     i1choresWhenNeededDoneText.text.toString(),
-                    chorePriority
+                    chorePriority,
+                    clientName!!
                 )
             }
 
@@ -153,6 +239,9 @@ class AddItemActivity : AppCompatActivity() {
     }
 
     // SET UP FUNCTIONS //
+    private fun initiateVars() {
+        sharedPref = this.getSharedPreferences(sharedPreferenceTag, Context.MODE_PRIVATE)
+    }
     private fun bindUIWidgets() {
         addItemButton = findViewById(R.id.add_item_button)
 

@@ -1,7 +1,10 @@
 package com.example.testfirestorev2
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +18,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 // todo:
-// - completed, volunteer, added by
+// -completed, volunteer, added by
 // -make/get client group id
 // -make/get client id
 
@@ -121,7 +124,6 @@ class TestHousemateActivity : AppCompatActivity() {
         const val NEEDED_BY_FIELD = "needed_by"
         const val VOLUNTEER_FIELD = "volunteer"
         const val PRIORITY_FIELD = "priority"
-
         const val DIFFICULTY_FIELD = "difficulty"
     }
 
@@ -152,10 +154,7 @@ class TestHousemateActivity : AppCompatActivity() {
                         return@addSnapshotListener
                     }
                     if (snapshot != null && snapshot.exists()) {
-                        // todo: set this up, then do it for chores list
-                        // get 3 item maps from db and set them to threeShoppingItems
-                        // I already have the names of the items, use them to overwrite the data
-                        // set the text widgets here
+                        // Get 3 item maps from db and set them to threeShoppingItems
                         threeShoppingItems[i] = snapshot.data as HashMap<String, Any>
                         populateTheListItemsUI()
                         Log.d(TAG, "setUpRealtimeFetching: ${threeShoppingItemsNames[i]} fetch successful.")
@@ -267,7 +266,6 @@ class TestHousemateActivity : AppCompatActivity() {
             val goToAddItem = Intent(this, AddItemActivity::class.java)
             startActivity(goToAddItem)
         }
-        //todo: check if the list is that size (threeShoppingItemsNames.size > 0)
         i1shoppingItIsDone.setOnClickListener {
             if (threeShoppingItemsNames.size > 0) {
                 sendCompletionInputToDb(
@@ -329,6 +327,7 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
         // todo: possible bug: if user deletes everything in the box, value might be null
+        // todo: possible bug: if user types too fast, app might crash bc of concurrency issues
         i1shoppingWhoIsGettingItText.doAfterTextChanged {
             if (threeShoppingItemsNames.size > 0) {
                 sendVolunteerInputToDb(
