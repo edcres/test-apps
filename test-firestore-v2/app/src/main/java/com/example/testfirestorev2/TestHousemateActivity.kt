@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
@@ -133,10 +134,10 @@ class TestHousemateActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test_housemate)
 
         bindWidgetIDs()
-        widgetEventListeners()
         populateUIWidgetsList()
         get3ItemsFromDB()
         populateTheListItemsUI()
+        widgetEventListeners()
     }
 
     // SETUP FUNCTIONS //
@@ -267,6 +268,7 @@ class TestHousemateActivity : AppCompatActivity() {
             val goToAddItem = Intent(this, AddItemActivity::class.java)
             startActivity(goToAddItem)
         }
+        //completed
         i1shoppingItIsDone.setOnClickListener {
             if (threeShoppingItemsNames.size > 0) {
                 sendCompletionInputToDb(
@@ -327,66 +329,100 @@ class TestHousemateActivity : AppCompatActivity() {
                 )
             }
         }
-        // todo: possible bug: if user deletes everything in the box, value might be null
-        // todo: possible bug: if user types too fast, app might crash bc of concurrency issues
-        i1shoppingWhoIsGettingItText.doAfterTextChanged {
-            if (threeShoppingItemsNames.size > 0) {
-                sendVolunteerInputToDb(
-                    SHOPPING_LIST,
-                    SHOPPING_ITEMS_COLLECTION,
-                    threeShoppingItemsNames[0],
-                    i1shoppingWhoIsGettingItText.text.toString()
-                )
+        // volunteer
+        i1shoppingWhoIsGettingItText.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                if (threeShoppingItemsNames.size > 0) {
+                    sendVolunteerInputToDb(
+                        SHOPPING_LIST,
+                        SHOPPING_ITEMS_COLLECTION,
+                        threeShoppingItemsNames[0],
+                        i1shoppingWhoIsGettingItText.text.toString()
+                    )
+                }
+                true
+            } else {
+                false
             }
         }
-        i2shoppingWhoIsGettingItText.doAfterTextChanged {
-            if (threeShoppingItemsNames.size > 1) {
-                sendVolunteerInputToDb(
-                    SHOPPING_LIST,
-                    SHOPPING_ITEMS_COLLECTION,
-                    threeShoppingItemsNames[1],
-                    i2shoppingWhoIsGettingItText.text.toString()
-                )
+        i2shoppingWhoIsGettingItText.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                if (threeShoppingItemsNames.size > 1) {
+                    sendVolunteerInputToDb(
+                        SHOPPING_LIST,
+                        SHOPPING_ITEMS_COLLECTION,
+                        threeShoppingItemsNames[1],
+                        i2shoppingWhoIsGettingItText.text.toString()
+                    )
+                }
+                true
+            } else {
+                false
             }
         }
-        i3shoppingWhoIsGettingItText.doAfterTextChanged {
-            if (threeShoppingItemsNames.size > 2) {
-                sendVolunteerInputToDb(
-                    SHOPPING_LIST,
-                    SHOPPING_ITEMS_COLLECTION,
-                    threeShoppingItemsNames[2],
-                    i3shoppingWhoIsGettingItText.text.toString()
-                )
+        i3shoppingWhoIsGettingItText.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                if (threeShoppingItemsNames.size > 2) {
+                    sendVolunteerInputToDb(
+                        SHOPPING_LIST,
+                        SHOPPING_ITEMS_COLLECTION,
+                        threeShoppingItemsNames[2],
+                        i3shoppingWhoIsGettingItText.text.toString()
+                    )
+                }
+                true
+            } else {
+                false
             }
         }
-        i1choresWhoIsDoingItText.doAfterTextChanged {
-            if (threeChoreItemsNames.size > 0) {
-                sendVolunteerInputToDb(
-                    CHORES_LIST,
-                    CHORE_ITEMS_COLLECTION,
-                    threeShoppingItemsNames[0],
-                    i1choresWhoIsDoingItText.text.toString()
-                )
+
+        i1choresWhoIsDoingItText.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                if (threeChoreItemsNames.size > 0) {
+                    sendVolunteerInputToDb(
+                        CHORES_LIST,
+                        CHORE_ITEMS_COLLECTION,
+                        threeChoreItemsNames[0],
+                        i1choresWhoIsDoingItText.text.toString()
+                    )
+                }
+                true
+            } else {
+                false
             }
         }
-        i2choresWhoIsDoingItText.doAfterTextChanged {
-            if (threeChoreItemsNames.size > 1) {
-                sendVolunteerInputToDb(
-                    CHORES_LIST,
-                    CHORE_ITEMS_COLLECTION,
-                    threeShoppingItemsNames[1],
-                    i2choresWhoIsDoingItText.text.toString()
-                )
+        i2choresWhoIsDoingItText.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+
+                if (threeChoreItemsNames.size > 1) {
+                    sendVolunteerInputToDb(
+                        CHORES_LIST,
+                        CHORE_ITEMS_COLLECTION,
+                        threeChoreItemsNames[1],
+                        i2choresWhoIsDoingItText.text.toString()
+                    )
+                }
+
+                true
+            } else {
+                false
             }
         }
-        i3choresWhoIsDoingItText.doAfterTextChanged {
-            if (threeChoreItemsNames.size > 2) {
-                sendVolunteerInputToDb(
-                    CHORES_LIST,
-                    CHORE_ITEMS_COLLECTION,
-                    threeShoppingItemsNames[2],
-                    i3choresWhoIsDoingItText.text.toString()
-                )
+        i3choresWhoIsDoingItText.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+
+                if (threeChoreItemsNames.size > 2) {
+                    sendVolunteerInputToDb(
+                        CHORES_LIST,
+                        CHORE_ITEMS_COLLECTION,
+                        threeChoreItemsNames[2],
+                        i3choresWhoIsDoingItText.text.toString()
+                    )
+                }
+
+                true
+            } else {
+                false
             }
         }
     }
@@ -478,7 +514,8 @@ class TestHousemateActivity : AppCompatActivity() {
         itemList: String,
         itemCollection: String,
         docName: String,
-        volunteerName: String) {
+        volunteerName: String
+    ) {
         clientIDCollectionDB.document(itemList)
             .collection(itemCollection)
             .document(docName)
