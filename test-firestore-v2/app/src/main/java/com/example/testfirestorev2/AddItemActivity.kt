@@ -25,8 +25,8 @@ class AddItemActivity : AppCompatActivity() {
     private lateinit var addItemButton: Button
     private val TAG = "AddItemActivityTAG"
     private val clientIDCollectionDB = db.collection(TestHousemateActivity.GENERAL_COLLECTION)
-        .document(TestHousemateActivity.GROUPS_DOC).collection(homeActivity.clientGroupIDCollection)
-        .document(TestHousemateActivity.CLIENTS_DOC).collection(homeActivity.clientIDCollection)
+        .document(TestHousemateActivity.GROUPS_DOC).collection(homeActivity.clientGroupIDCollection!!)
+        .document(TestHousemateActivity.CLIENTS_DOC).collection(homeActivity.clientIDCollection!!)
 
     private lateinit var i1shoppingItemQty: TextView
     private lateinit var i1shoppingItemName: TextView

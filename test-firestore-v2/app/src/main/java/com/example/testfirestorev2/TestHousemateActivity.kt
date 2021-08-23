@@ -9,26 +9,32 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.TextView
-import androidx.core.widget.doAfterTextChanged
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 // todo:
-// -completed, volunteer, added by
 // -make/get client group id
 // -make/get client id
+// - fo authentication
+
+// todo: give feedback to user when volunteer name is changed
 
 class TestHousemateActivity : AppCompatActivity() {
 
     private val db = Firebase.firestore
     private lateinit var toAddItemActivity: Button
     private lateinit var clientIDCollectionDB: CollectionReference
+
+    private val sharedPreferenceTag = "TestHousemateActySP"
+    private lateinit var sharedPref: SharedPreferences
 
     private var threeShoppingItemsNames = mutableListOf<String>()
     private var threeChoreItemsNames = mutableListOf<String>()
@@ -105,9 +111,6 @@ class TestHousemateActivity : AppCompatActivity() {
     private lateinit var choresAddedByTextList: List<TextView>
 
     companion object {
-        var clientGroupIDCollection = "abcd1234"
-        var clientIDCollection = "${clientGroupIDCollection}abcd1234"
-
         const val TAG = "TestHousemateActyTAG"
         const val GENERAL_COLLECTION = "generalCollection"
         const val GROUPS_DOC = "groupIDs"
@@ -116,6 +119,9 @@ class TestHousemateActivity : AppCompatActivity() {
         const val SHOPPING_ITEMS_COLLECTION = "shoppingItems"
         const val CHORES_LIST = "choresList"
         const val CHORE_ITEMS_COLLECTION = "choreItems"
+
+        var clientGroupIDCollection: String? = "abcd1234"
+        var clientIDCollection: String? = "${clientGroupIDCollection}abcd1234"
 
         const val NAME_FIELD = "name"
         const val QUANTITY_FIELD = "quantity"
@@ -133,133 +139,13 @@ class TestHousemateActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_housemate)
 
+        sharedPref = this.getSharedPreferences(sharedPreferenceTag, Context.MODE_PRIVATE)
+        setUpDatabaseIDs()
         bindWidgetIDs()
         populateUIWidgetsList()
         get3ItemsFromDB()
         populateTheListItemsUI()
         widgetEventListeners()
-    }
-
-    // SETUP FUNCTIONS //
-    private fun setUpRealtimeFetching() {
-        Log.d(TAG, "setUpRealtimeFetching: called")
-        // get 3 items in shopping list
-        Log.d(TAG, "setUpRealtimeFetching: threeShoppingItems size: ${threeShoppingItems.size}")
-        for (i in 0 until threeShoppingItems.size) {
-            Log.d(TAG, "setUpRealtimeFetching: shopping loop called i = $i || size = ${threeShoppingItems.size}")
-            clientIDCollectionDB.document(SHOPPING_LIST)
-                .collection(SHOPPING_ITEMS_COLLECTION)
-                .document(threeShoppingItemsNames[i])
-                .addSnapshotListener { snapshot, e ->
-                    if (e != null) {
-                        Log.d(TAG, "setUpRealtimeFetching: DB Listen Fail in shopping.", e)
-                        return@addSnapshotListener
-                    }
-                    if (snapshot != null && snapshot.exists()) {
-                        // Get 3 item maps from db and set them to threeShoppingItems
-                        threeShoppingItems[i] = snapshot.data as HashMap<String, Any>
-                        populateTheListItemsUI()
-                        Log.d(TAG, "setUpRealtimeFetching: ${threeShoppingItemsNames[i]} fetch successful.")
-                    } else {
-                        Log.d(TAG, "setUpRealtimeFetching: Data is null.")
-                    }
-                }
-        }
-        // get 3 items in chores list
-        for (i in 0 until threeChoreItems.size) {
-            Log.d(TAG, "setUpRealtimeFetching: shopping loop called i = $i || size = ${threeChoreItems.size}")
-            clientIDCollectionDB.document(CHORES_LIST)
-                .collection(CHORE_ITEMS_COLLECTION)
-                .document(threeChoreItemsNames[i])
-                .addSnapshotListener { snapshot, e ->
-
-                    if (e != null) {
-                        Log.d(TAG, "setUpRealtimeFetching: DB Listen Fail in chores.", e)
-                        return@addSnapshotListener
-                    }
-                    if (snapshot != null && snapshot.exists()) {
-                        // get 3 item maps from db and set them to threeChoreItems
-                        threeChoreItems[i] = snapshot.data as HashMap<String, Any>
-                        populateTheListItemsUI()
-                        Log.d(TAG, "setUpRealtimeFetching: ${threeChoreItemsNames[i]} fetch successful.")
-                    } else {
-                        Log.d(TAG, "setUpRealtimeFetching: Data is null.")
-                    }
-
-                }
-        }
-        // todo: if I keep going with the code below, it'll replace the 2 for loops above,
-        //  but it's more complicated and hard to read.
-//        val itemNamesLists = listOf<MutableList<String>>(threeShoppingNames, threeChoreNames)
-//        val listsDocuments = listOf<String>(SHOPPING_LIST, CHORES_LIST)
-//        val listsCollections = listOf<String>(SHOPPING_ITEMS_COLLECTION, CHORE_ITEMS_COLLECTION)
-//        for (i in 0 until itemNamesLists.size) {
-//            for (item in threeShoppingNames) {
-//                clientIDCollectionDB.document(listsDocuments[i])
-//                    .collection(listsCollections[i]).document(item)
-//                    .addSnapshotListener { snapshot, e ->
-//                        if (e != null) {
-//                            Log.d(TAG, "setUpRealtimeFetching: DB Listen Fail.", e)
-//                            return@addSnapshotListener
-//                        }
-//                        if (snapshot != null && snapshot.exists()) {
-//                            Log.d(TAG, "setUpRealtimeFetching: Fetch successful.")
-//                        } else {
-//                            Log.d(TAG, "setUpRealtimeFetching: Data is null.")
-//                        }
-//                    }
-//            }
-//        }
-    }
-
-    // SETUP FUNCTIONS //
-    private fun get3ItemsFromDB() {
-        clientIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
-            .collection(clientGroupIDCollection).document(CLIENTS_DOC)
-            .collection(clientIDCollection)
-        // add shopping items
-        clientIDCollectionDB.document(SHOPPING_LIST)
-            .collection(SHOPPING_ITEMS_COLLECTION)
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d(TAG, "get3ItemsFromDB: shopping called")
-                    // add 3 items to the list and exit the get call
-                    if (threeShoppingItems.size < 4) {
-                        val thisItem = document.data as MutableMap<String, Any>
-                        threeShoppingItemsNames.add(thisItem[NAME_FIELD] as String)
-                        threeShoppingItems.add(thisItem)
-                        setUpRealtimeFetching()         // todo try to not repeat this 2ice
-                    } else {
-                        return@addOnSuccessListener
-                    }
-                }
-            }
-            .addOnFailureListener{ e ->
-                Log.d(TAG, "Error getting documents: shopping ", e)
-            }
-
-        // add chore items
-        clientIDCollectionDB.document(CHORES_LIST)
-            .collection(CHORE_ITEMS_COLLECTION)
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d(TAG, "get3ItemsFromDB: chores called")
-                    // add 3 items to the list and exit the get call
-                    if (threeChoreItems.size < 4) {
-                        val thisItem = document.data as MutableMap<String, Any>
-                        threeChoreItemsNames.add(thisItem[NAME_FIELD] as String)
-                        threeChoreItems.add(thisItem)
-                        setUpRealtimeFetching()         // todo try to not repeat this 2ice
-                    } else {
-                        return@addOnSuccessListener
-                    }
-                }
-            }
-            .addOnFailureListener{ e ->
-                Log.d(TAG, "Error getting documents: ", e)
-            }
     }
 
     // CLICK LISTENERS //
@@ -428,6 +314,55 @@ class TestHousemateActivity : AppCompatActivity() {
     }
 
     // HELPER FUNCTIONS //
+    private fun get3ItemsFromDB() {
+        clientIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
+            .collection(clientGroupIDCollection!!).document(CLIENTS_DOC)
+            .collection(clientIDCollection)
+        // add shopping items
+        clientIDCollectionDB.document(SHOPPING_LIST)
+            .collection(SHOPPING_ITEMS_COLLECTION)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d(TAG, "get3ItemsFromDB: shopping called")
+                    // add 3 items to the list and exit the get call
+                    if (threeShoppingItems.size < 4) {
+                        val thisItem = document.data as MutableMap<String, Any>
+                        threeShoppingItemsNames.add(thisItem[NAME_FIELD] as String)
+                        threeShoppingItems.add(thisItem)
+                        setUpRealtimeFetching()         // todo try to not repeat this 2ice
+                    } else {
+                        return@addOnSuccessListener
+                    }
+                }
+            }
+            .addOnFailureListener{ e ->
+                Log.d(TAG, "Error getting documents: shopping ", e)
+            }
+
+        // add chore items
+        clientIDCollectionDB.document(CHORES_LIST)
+            .collection(CHORE_ITEMS_COLLECTION)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d(TAG, "get3ItemsFromDB: chores called")
+                    // add 3 items to the list and exit the get call
+                    if (threeChoreItems.size < 4) {
+                        val thisItem = document.data as MutableMap<String, Any>
+                        threeChoreItemsNames.add(thisItem[NAME_FIELD] as String)
+                        threeChoreItems.add(thisItem)
+                        setUpRealtimeFetching()         // todo try to not repeat this 2ice
+                    } else {
+                        return@addOnSuccessListener
+                    }
+                }
+            }
+            .addOnFailureListener{ e ->
+                Log.d(TAG, "Error getting documents: ", e)
+            }
+    }
+
     private fun populateUIWidgetsList() {
         shoppingItIsDoneList = listOf(i1shoppingItIsDone, i2shoppingItIsDone, i3shoppingItIsDone)
         shoppingItemQtyList = listOf(i1shoppingItemQty, i2shoppingItemQty, i3shoppingItemQty)
@@ -496,6 +431,26 @@ class TestHousemateActivity : AppCompatActivity() {
         }
     }
 
+    private fun makeDialogBoxAndSetGroupID() {
+        val nameInputDialog = MaterialAlertDialogBuilder(this)
+        val customAlertDialogView = LayoutInflater.from(this)
+            .inflate(R.layout.name_dialog_box, null, false)
+        val inputNameDialog: EditText = customAlertDialogView.findViewById(R.id.input_name_dialog)
+        nameInputDialog.setView(customAlertDialogView)
+            .setTitle("Your group ID")
+            .setPositiveButton("Accept") { dialog, _ ->
+                clientGroupIDCollection = inputNameDialog.text.toString()
+                // todo: check if the new one exists in the remote database,
+                //  if not, try again
+                dialog.dismiss()
+            }
+            .setNegativeButton("New Group") { dialog, _ ->
+                clientGroupIDCollection = generateClientGroupID()
+                dialog.dismiss()
+            }
+            .show()
+    }
+
     private fun sendCompletionInputToDb(
         itemList: String,
         itemCollection: String,
@@ -522,7 +477,111 @@ class TestHousemateActivity : AppCompatActivity() {
             .update(VOLUNTEER_FIELD, volunteerName)
     }
 
+    @SuppressLint("ApplySharedPref")
+    private fun sendIdToSP(theTag: String, theID: String) {
+        // groupID or clientID
+        val spEditor: SharedPreferences.Editor = sharedPref.edit()
+        spEditor.putString(theTag, theID).commit()
+    }
+
+    private fun getIdFromSP(theTag: String): String? {
+        return sharedPref.getString(theTag, null)
+    }
+
     // SETUP FUNCTIONS //
+    private fun setUpDatabaseIDs() {
+        val groupIdSPTag = "group ID"
+        val clientIdSPTag = "Client ID"
+        // todo:
+        // try to get the groupId from shared preferences
+        clientGroupIDCollection = getIdFromSP(groupIdSPTag)
+        // if null, in a dialog box ask user what their groupID is,
+        if(clientGroupIDCollection == null) {
+            makeDialogBoxAndSetGroupID()
+            sendIdToSP(groupIdSPTag, clientGroupIDCollection!!)
+        }
+        // try to get the clientID from shared preferences
+        clientIDCollection = getIdFromSP(clientIdSPTag)
+        // you need a groupID to have a clientID
+        if(clientIDCollection == null) {
+            if(clientGroupIDCollection != null) {
+                clientIDCollection = generateClientID(clientGroupIDCollection!!)
+            }
+        }
+    }
+
+    private fun setUpRealtimeFetching() {
+        Log.d(TAG, "setUpRealtimeFetching: called")
+        // get 3 items in shopping list
+        Log.d(TAG, "setUpRealtimeFetching: threeShoppingItems size: ${threeShoppingItems.size}")
+        for (i in 0 until threeShoppingItems.size) {
+            Log.d(TAG, "setUpRealtimeFetching: shopping loop called i = $i ||" +
+                    " size = ${threeShoppingItems.size}")
+            clientIDCollectionDB.document(SHOPPING_LIST)
+                .collection(SHOPPING_ITEMS_COLLECTION)
+                .document(threeShoppingItemsNames[i])
+                .addSnapshotListener { snapshot, e ->
+                    if (e != null) {
+                        Log.d(TAG, "setUpRealtimeFetching: DB Listen Fail in shopping.", e)
+                        return@addSnapshotListener
+                    }
+                    if (snapshot != null && snapshot.exists()) {
+                        // Get 3 item maps from db and set them to threeShoppingItems
+                        threeShoppingItems[i] = snapshot.data as HashMap<String, Any>
+                        populateTheListItemsUI()
+                        Log.d(TAG, "setUpRealtimeFetching: ${threeShoppingItemsNames[i]} fetch successful.")
+                    } else {
+                        Log.d(TAG, "setUpRealtimeFetching: Data is null.")
+                    }
+                }
+        }
+        // get 3 items in chores list
+        for (i in 0 until threeChoreItems.size) {
+            Log.d(TAG, "setUpRealtimeFetching: shopping loop called i = $i || size = ${threeChoreItems.size}")
+            clientIDCollectionDB.document(CHORES_LIST)
+                .collection(CHORE_ITEMS_COLLECTION)
+                .document(threeChoreItemsNames[i])
+                .addSnapshotListener { snapshot, e ->
+
+                    if (e != null) {
+                        Log.d(TAG, "setUpRealtimeFetching: DB Listen Fail in chores.", e)
+                        return@addSnapshotListener
+                    }
+                    if (snapshot != null && snapshot.exists()) {
+                        // get 3 item maps from db and set them to threeChoreItems
+                        threeChoreItems[i] = snapshot.data as HashMap<String, Any>
+                        populateTheListItemsUI()
+                        Log.d(TAG, "setUpRealtimeFetching: ${threeChoreItemsNames[i]} fetch successful.")
+                    } else {
+                        Log.d(TAG, "setUpRealtimeFetching: Data is null.")
+                    }
+
+                }
+        }
+        // todo: if I keep going with the code below, it'll replace the 2 for loops above,
+        //  but it's more complicated and hard to read.
+//        val itemNamesLists = listOf<MutableList<String>>(threeShoppingNames, threeChoreNames)
+//        val listsDocuments = listOf<String>(SHOPPING_LIST, CHORES_LIST)
+//        val listsCollections = listOf<String>(SHOPPING_ITEMS_COLLECTION, CHORE_ITEMS_COLLECTION)
+//        for (i in 0 until itemNamesLists.size) {
+//            for (item in threeShoppingNames) {
+//                clientIDCollectionDB.document(listsDocuments[i])
+//                    .collection(listsCollections[i]).document(item)
+//                    .addSnapshotListener { snapshot, e ->
+//                        if (e != null) {
+//                            Log.d(TAG, "setUpRealtimeFetching: DB Listen Fail.", e)
+//                            return@addSnapshotListener
+//                        }
+//                        if (snapshot != null && snapshot.exists()) {
+//                            Log.d(TAG, "setUpRealtimeFetching: Fetch successful.")
+//                        } else {
+//                            Log.d(TAG, "setUpRealtimeFetching: Data is null.")
+//                        }
+//                    }
+//            }
+//        }
+    }
+
     private fun bindWidgetIDs() {
         toAddItemActivity = findViewById(R.id.to_add_item_activity)
 
