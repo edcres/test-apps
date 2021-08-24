@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.ktx.firestore
@@ -23,7 +22,7 @@ class AddItemActivity : AppCompatActivity() {
     private val homeActivity = TestHousemateActivity
     private val db = Firebase.firestore
     private lateinit var addItemButton: Button
-    private val TAG = "AddItemActivityTAG"
+    private val activityTAG = "AddItemActivityTAG"
     private val clientIDCollectionDB = db.collection(TestHousemateActivity.GENERAL_COLLECTION)
         .document(TestHousemateActivity.GROUPS_DOC).collection(homeActivity.clientGroupIDCollection!!)
         .document(TestHousemateActivity.CLIENTS_DOC).collection(homeActivity.clientIDCollection!!)
@@ -83,8 +82,8 @@ class AddItemActivity : AppCompatActivity() {
         clientIDCollectionDB.document(TestHousemateActivity.SHOPPING_LIST)
             .collection(TestHousemateActivity.SHOPPING_ITEMS_COLLECTION).document(itemName)
             .set(shoppingItemData)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+            .addOnSuccessListener { Log.d(activityTAG, "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w(activityTAG, "Error writing document", e) }
     }
 
     private fun addChoreItem(
@@ -108,8 +107,8 @@ class AddItemActivity : AppCompatActivity() {
         clientIDCollectionDB.document(TestHousemateActivity.CHORES_LIST)
             .collection(TestHousemateActivity.CHORE_ITEMS_COLLECTION).document(itemName)
             .set(choresItemData)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+            .addOnSuccessListener { Log.d(activityTAG, "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w(activityTAG, "Error writing document", e) }
     }
 
     @SuppressLint("ApplySharedPref")
@@ -144,7 +143,7 @@ class AddItemActivity : AppCompatActivity() {
         }
         // add chore item
         if (i1choresItemName.text.toString() != "") {
-            Log.d(TAG, "buttonsOnClick: ${i1choresItemName.text}")
+            Log.d(activityTAG, "buttonsOnClick: ${i1choresItemName.text}")
             val choreDifficulty = when (true) {
                 i1choresDifficulty1.isChecked -> 1
                 i1choresDifficulty2.isChecked -> 2
@@ -169,7 +168,7 @@ class AddItemActivity : AppCompatActivity() {
         val gotoHomeScreen = Intent(this, TestHousemateActivity::class.java)
         startActivity(gotoHomeScreen)
     }
-
+    // HELPER FUNCTIONS //
     // CLICK LISTENERS //
     private fun buttonsOnClick() {
         addItemButton.setOnClickListener {
@@ -180,7 +179,7 @@ class AddItemActivity : AppCompatActivity() {
             // -then add that as a property in the db item
             var clientName = getNameOfClientFromSP()
             if (clientName == null) {
-                Log.d(TAG, "buttonsOnClick: clientName pt1 = $clientName")
+                Log.d(activityTAG, "buttonsOnClick: clientName pt1 = $clientName")
                 val nameInputDialog = MaterialAlertDialogBuilder(this)
                 val customAlertDialogView = LayoutInflater.from(this)
                     .inflate(R.layout.name_dialog_box, null, false)
@@ -199,14 +198,14 @@ class AddItemActivity : AppCompatActivity() {
                         addItems(clientName)
                     }
                     .show()
-                Log.d(TAG, "buttonsOnClick: prob doesn't happen concurrently.")
+                Log.d(activityTAG, "buttonsOnClick: prob doesn't happen concurrently.")
             } else {
                 addItems(clientName)
             }
-            Log.d(TAG, "buttonsOnClick: the rest happens anyways")
+            Log.d(activityTAG, "buttonsOnClick: the rest happens anyways")
         }
     }
-
+    // CLICK LISTENERS //
     // SET UP FUNCTIONS //
     private fun initiateVars() {
         sharedPref = this.getSharedPreferences(sharedPreferenceTag, Context.MODE_PRIVATE)
@@ -235,4 +234,5 @@ class AddItemActivity : AppCompatActivity() {
         i1choresPriority2 = findViewById(R.id.chores_priority_button_2)
         i1choresPriority3 = findViewById(R.id.chores_priority_button_3)
     }
+    // SET UP FUNCTIONS //
 }

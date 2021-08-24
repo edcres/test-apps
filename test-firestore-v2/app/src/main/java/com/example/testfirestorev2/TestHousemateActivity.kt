@@ -24,6 +24,7 @@ import com.google.firebase.ktx.Firebase
 // -make/get client group id
 // -make/get client id
 // - fo authentication
+// start this database with a '00000000asdfg' groupID before users start using the app
 
 // todo: give feedback to user when volunteer name is changed
 
@@ -312,12 +313,12 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
     }
-
+    // CLICK LISTENERS //
     // HELPER FUNCTIONS //
     private fun get3ItemsFromDB() {
         clientIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
             .collection(clientGroupIDCollection!!).document(CLIENTS_DOC)
-            .collection(clientIDCollection)
+            .collection(clientIDCollection!!)
         // add shopping items
         clientIDCollectionDB.document(SHOPPING_LIST)
             .collection(SHOPPING_ITEMS_COLLECTION)
@@ -487,12 +488,11 @@ class TestHousemateActivity : AppCompatActivity() {
     private fun getIdFromSP(theTag: String): String? {
         return sharedPref.getString(theTag, null)
     }
-
+    // HELPER FUNCTIONS //
     // SETUP FUNCTIONS //
     private fun setUpDatabaseIDs() {
         val groupIdSPTag = "group ID"
         val clientIdSPTag = "Client ID"
-        // todo:
         // try to get the groupId from shared preferences
         clientGroupIDCollection = getIdFromSP(groupIdSPTag)
         // if null, in a dialog box ask user what their groupID is,
@@ -506,6 +506,7 @@ class TestHousemateActivity : AppCompatActivity() {
         if(clientIDCollection == null) {
             if(clientGroupIDCollection != null) {
                 clientIDCollection = generateClientID(clientGroupIDCollection!!)
+                sendIdToSP(clientIdSPTag, clientIDCollection!!)
             }
         }
     }
@@ -639,4 +640,5 @@ class TestHousemateActivity : AppCompatActivity() {
         i3choresPriorityText = findViewById(R.id.i3chores_priority_text)
         i3choresAddedByText = findViewById(R.id.i3chores_added_by_text)
     }
+    // SETUP FUNCTIONS //
 }
