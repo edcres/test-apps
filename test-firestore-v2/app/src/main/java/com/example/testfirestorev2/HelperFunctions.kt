@@ -1,5 +1,6 @@
 package com.example.testfirestorev2
 
+import android.content.ContentValues
 import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -18,8 +19,8 @@ fun generateClientGroupID(): String? {
         .get()
         .addOnSuccessListener { document ->
             if (document != null) {
-                val groupIDsDoc = document.data as Map<String, Any>
-                oldID = groupIDsDoc[lastGroupAddedField] as String
+                val groupIdDoc = document.data as Map<String, Any>
+                oldID = groupIdDoc[lastGroupAddedField] as String
                 newID = add1AndScrambleLetters(oldID)
                 // Add the new id to the database as the last id added
                 db.collection(testHousemateActivity.GENERAL_COLLECTION)
@@ -27,36 +28,64 @@ fun generateClientGroupID(): String? {
                     .update(lastGroupAddedField, newID)
                     .addOnSuccessListener { dbQueryDone = true }
                     .addOnFailureListener { e ->
-                        Log.d("DB Query", "Error updating doc", e)
+                        Log.d("DB Query", "Error updating group doc", e)
                         dbQueryDone = true
                     }
             } else {
                 dbQueryDone = true
             }
         }
-        .addOnFailureListener { _ ->
+        .addOnFailureListener {
             dbQueryDone = true
         }
     while (!dbQueryDone) { /* wait until db query is completed in a different thread */ }
     return newID
 }
 
-fun generateClientID(groupID: String): String {
+fun generateClientID(groupID: String): String? {
+    val lastClientAddedField = "last client added"
     val db = Firebase.firestore
     val testHousemateActivity = TestHousemateActivity
+    var dbQueryDone = false
     var oldID: String
-    // todo
-    // get the latest clientID from the group, set 'oldID' to this
-    db.collection(testHousemateActivity.GENERAL_COLLECTION)
+    var newID: String? = null
+    val clientsDocDb = db.collection(testHousemateActivity.GENERAL_COLLECTION)
         .document(testHousemateActivity.GROUPS_DOC)
         .collection(groupID)
         .document(testHousemateActivity.CLIENTS_DOC)
-        .get()
-
-    var newClientID = add1AndScrambleLetters(oldID)
+    // get the latest clientID from the db, set 'oldID' to this
+    clientsDocDb.get()
+        .addOnSuccessListener { document ->
+            if (document != null) {
+                val clientIdDoc = document.data as Map<String, Any>
+                oldID = clientIdDoc[lastClientAddedField] as String
+                newID = add1AndScrambleLetters(oldID)
+                // Add the new id to the database as the last id added
+                clientsDocDb.update(lastClientAddedField, newID)
+                    .addOnSuccessListener {
+                        dbQueryDone = true
+                    }
+                    .addOnFailureListener { e ->
+                        Log.d("DB Query", "Error updating client doc", e)
+                        dbQueryDone = true
+                    }
+            } else {
+                // the document will be null for the first member in the group
+                //  -there is no client id to get, make a new clientID and add it to the db
+                val firstClientID = add1AndScrambleLetters("00000000asdfg")
+                val firstDocData = hashMapOf<String, Any>(lastClientAddedField to firstClientID)
+                clientsDocDb.set(firstDocData)
+                    .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!") }
+                    .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
+                dbQueryDone = true
+            }
+        }
+        .addOnFailureListener {
+            dbQueryDone = true
+        }
     // "$groupID + 00000001asdfg"
-    newClientID = "$groupID$newClientID"
-    return newClientID
+    while (!dbQueryDone) { /* wait until db query is completed in a different thread */ }
+    return newID
 }
 
 fun add1AndScrambleLetters(oldID: String): String {
