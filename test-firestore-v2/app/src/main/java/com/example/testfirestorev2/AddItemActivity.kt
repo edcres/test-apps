@@ -23,9 +23,10 @@ class AddItemActivity : AppCompatActivity() {
     private val db = Firebase.firestore
     private lateinit var addItemButton: Button
     private val activityTAG = "AddItemActivityTAG"
-    private val clientIDCollectionDB = db.collection(TestHousemateActivity.GENERAL_COLLECTION)
-        .document(TestHousemateActivity.GROUPS_DOC).collection(homeActivity.clientGroupIDCollection!!)
-        .document(TestHousemateActivity.CLIENTS_DOC).collection(homeActivity.clientIDCollection!!)
+    private val testHousemateActivity = TestHousemateActivity
+    private val clientIDCollectionDB = db.collection(testHousemateActivity.GENERAL_COLLECTION)
+        .document(testHousemateActivity.GROUPS_DOC).collection(homeActivity.clientGroupIDCollection!!)
+        .document(testHousemateActivity.CLIENTS_DOC).collection(homeActivity.clientIDCollection!!)
 
     private lateinit var i1shoppingItemQty: TextView
     private lateinit var i1shoppingItemName: TextView
@@ -79,8 +80,8 @@ class AddItemActivity : AppCompatActivity() {
             homeActivity.ADDED_BY_FIELD to addedBy
         )
         // access the clientGroup, then the client, then the shopping item
-        clientIDCollectionDB.document(TestHousemateActivity.SHOPPING_LIST)
-            .collection(TestHousemateActivity.SHOPPING_ITEMS_COLLECTION).document(itemName)
+        clientIDCollectionDB.document(testHousemateActivity.SHOPPING_LIST)
+            .collection(testHousemateActivity.SHOPPING_ITEMS_COLLECTION).document(itemName)
             .set(shoppingItemData)
             .addOnSuccessListener { Log.d(activityTAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(activityTAG, "Error writing document", e) }
@@ -104,8 +105,8 @@ class AddItemActivity : AppCompatActivity() {
         )
 
         // access the clientGroup, then the client, then the shopping item
-        clientIDCollectionDB.document(TestHousemateActivity.CHORES_LIST)
-            .collection(TestHousemateActivity.CHORE_ITEMS_COLLECTION).document(itemName)
+        clientIDCollectionDB.document(testHousemateActivity.CHORES_LIST)
+            .collection(testHousemateActivity.CHORE_ITEMS_COLLECTION).document(itemName)
             .set(choresItemData)
             .addOnSuccessListener { Log.d(activityTAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(activityTAG, "Error writing document", e) }

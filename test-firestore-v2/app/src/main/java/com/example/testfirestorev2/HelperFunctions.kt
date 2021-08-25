@@ -1,33 +1,65 @@
 package com.example.testfirestorev2
 
-fun generateClientGroupID(): String {
-    var oldID: String
-    // todo
-    // 00000001asdfg
-    // 00000002fagsd
-    // 00000003sgdfa
-    // .
-    // .
-    // .
+import android.util.Log
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
-    // todo: get the latest groupID from the remote db (ie. 00000001asdfg)
-    // -add +1 on the numbers and scramble the letters (make it the new groupID)
-    val newID = add1AndScrambleLetters(oldID)
+fun generateClientGroupID(): String? {
+    val lastGroupAddedField = "last group added"
+    val db = Firebase.firestore
+    val testHousemateActivity = TestHousemateActivity
+    var dbQueryDone = false
+    var oldID: String
+    var newID: String? = null
+    // ie. 00000001asdfg, 00000002fagsd, 00000003sgdfa ...
+    // Get the latest groupID from the remote db (ie. 00000001asdfg)
+    db.collection(testHousemateActivity.GENERAL_COLLECTION)
+        .document(testHousemateActivity.GROUPS_DOC)
+        .get()
+        .addOnSuccessListener { document ->
+            if (document != null) {
+                val groupIDsDoc = document.data as Map<String, Any>
+                oldID = groupIDsDoc[lastGroupAddedField] as String
+                newID = add1AndScrambleLetters(oldID)
+                // Add the new id to the database as the last id added
+                db.collection(testHousemateActivity.GENERAL_COLLECTION)
+                    .document(testHousemateActivity.GROUPS_DOC)
+                    .update(lastGroupAddedField, newID)
+                    .addOnSuccessListener { dbQueryDone = true }
+                    .addOnFailureListener { e ->
+                        Log.d("DB Query", "Error updating doc", e)
+                        dbQueryDone = true
+                    }
+            } else {
+                dbQueryDone = true
+            }
+        }
+        .addOnFailureListener { _ ->
+            dbQueryDone = true
+        }
+    while (!dbQueryDone) { /* wait until db query is completed in a different thread */ }
     return newID
 }
 
 fun generateClientID(groupID: String): String {
+    val db = Firebase.firestore
+    val testHousemateActivity = TestHousemateActivity
     var oldID: String
-    var newClientID: String
     // todo
     // get the latest clientID from the group, set 'oldID' to this
-    newClientID = add1AndScrambleLetters(oldID)
+    db.collection(testHousemateActivity.GENERAL_COLLECTION)
+        .document(testHousemateActivity.GROUPS_DOC)
+        .collection(groupID)
+        .document(testHousemateActivity.CLIENTS_DOC)
+        .get()
+
+    var newClientID = add1AndScrambleLetters(oldID)
     // "$groupID + 00000001asdfg"
     newClientID = "$groupID$newClientID"
     return newClientID
 }
 
-private fun add1AndScrambleLetters(oldID: String): String {
+fun add1AndScrambleLetters(oldID: String): String {
     val lettersToScramble = "asdfg"
     val newID: String
     var scrambledLetters: String = ""
