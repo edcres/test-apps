@@ -14,9 +14,12 @@ fun add1AndScrambleLetters(oldID: String): String {
     for (i in 1..5) {
         scrambledLetters = "$scrambledLetters${lettersToScramble.random()}"
     }
-
-    // Get the numbers (first 8 characters) of the 'oldID' string
-    var idPosition = oldID.toCharArray(0, 7).toString().toInt()
+    // Get the fist 8 digits of 'oldID'
+    var oldID8Digits = ""
+    for (i in 0..7) {
+        oldID8Digits = "$oldID8Digits${oldID[i]}"
+    }
+    var idPosition = oldID8Digits.toInt()
     // turn to int and add 1 and make it 8 characters (by filing the first characters with 0s)
     idPosition++
     var idPositionString = idPosition.toString()

@@ -186,6 +186,7 @@ class AddItemActivity : AppCompatActivity() {
                     .inflate(R.layout.name_dialog_box, null, false)
                 val inputNameDialog: EditText = customAlertDialogView.findViewById(R.id.input_name_dialog)
                 nameInputDialog.setView(customAlertDialogView)
+                    .setTitle("Type your name")
                     .setPositiveButton("Accept") { dialog, _ ->
                         clientName = inputNameDialog.text.toString()
                         sendNameOfClientToSP(clientName!!)
