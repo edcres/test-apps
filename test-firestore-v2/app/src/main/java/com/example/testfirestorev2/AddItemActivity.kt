@@ -22,7 +22,7 @@ class AddItemActivity : AppCompatActivity() {
     private val homeActivity = TestHousemateActivity
     private val db = Firebase.firestore
     private lateinit var addItemButton: Button
-    private val activityTAG = "AddItemActivityTAG"
+    private val activityTAG = "AddItemActyTAG"
     private val testHousemateActivity = TestHousemateActivity
     private val clientIDCollectionDB = db.collection(testHousemateActivity.GENERAL_COLLECTION)
         .document(testHousemateActivity.GROUPS_DOC).collection(homeActivity.clientGroupIDCollection!!)

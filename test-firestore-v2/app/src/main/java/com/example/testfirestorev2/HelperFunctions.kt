@@ -6,10 +6,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 fun generateClientGroupID(): String? {
+    Log.d("Acty", "generateClientGroupID: called")
     val lastGroupAddedField = "last group added"
     val db = Firebase.firestore
     val testHousemateActivity = TestHousemateActivity
-    var dbQueryDone = false
     var oldID: String
     var newID: String? = null
     // ie. 00000001asdfg, 00000002fagsd, 00000003sgdfa ...
@@ -26,27 +26,22 @@ fun generateClientGroupID(): String? {
                 db.collection(testHousemateActivity.GENERAL_COLLECTION)
                     .document(testHousemateActivity.GROUPS_DOC)
                     .update(lastGroupAddedField, newID)
-                    .addOnSuccessListener { dbQueryDone = true }
+                    .addOnSuccessListener {
+                        Log.d("Acty", "generateClientGroupID: lastGroupAddedField updated")
+                    }
                     .addOnFailureListener { e ->
                         Log.d("DB Query", "Error updating group doc", e)
-                        dbQueryDone = true
                     }
-            } else {
-                dbQueryDone = true
             }
         }
-        .addOnFailureListener {
-            dbQueryDone = true
-        }
-    while (!dbQueryDone) { /* wait until db query is completed in a different thread */ }
     return newID
 }
 
-fun generateClientID(groupID: String): String? {
+fun generateClientID(groupID: String) {
+    // todo fix concurrency issues here, put this function in the 'TestHmtActy'
     val lastClientAddedField = "last client added"
     val db = Firebase.firestore
     val testHousemateActivity = TestHousemateActivity
-    var dbQueryDone = false
     var oldID: String
     var newID: String? = null
     val clientsDocDb = db.collection(testHousemateActivity.GENERAL_COLLECTION)
@@ -63,11 +58,9 @@ fun generateClientID(groupID: String): String? {
                 // Add the new id to the database as the last id added
                 clientsDocDb.update(lastClientAddedField, newID)
                     .addOnSuccessListener {
-                        dbQueryDone = true
                     }
                     .addOnFailureListener { e ->
                         Log.d("DB Query", "Error updating client doc", e)
-                        dbQueryDone = true
                     }
             } else {
                 // the document will be null for the first member in the group
@@ -77,15 +70,11 @@ fun generateClientID(groupID: String): String? {
                 clientsDocDb.set(firstDocData)
                     .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!") }
                     .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
-                dbQueryDone = true
             }
         }
         .addOnFailureListener {
-            dbQueryDone = true
         }
     // "$groupID + 00000001asdfg"
-    while (!dbQueryDone) { /* wait until db query is completed in a different thread */ }
-    return newID
 }
 
 fun add1AndScrambleLetters(oldID: String): String {

@@ -20,6 +20,8 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
+// NOTICE: for the app to work, the DB has to be already set up with at least 1 group
+
 // todo:
 // -make/get client group id
 // -make/get client id
@@ -121,8 +123,8 @@ class TestHousemateActivity : AppCompatActivity() {
         const val CHORES_LIST = "choresList"
         const val CHORE_ITEMS_COLLECTION = "choreItems"
 
-        var clientGroupIDCollection: String? = "abcd1234"
-        var clientIDCollection: String? = "${clientGroupIDCollection}abcd1234"
+        var clientGroupIDCollection: String? = null
+        var clientIDCollection: String? = null
 
         const val NAME_FIELD = "name"
         const val QUANTITY_FIELD = "quantity"
@@ -141,11 +143,9 @@ class TestHousemateActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test_housemate)
 
         sharedPref = this.getSharedPreferences(sharedPreferenceTag, Context.MODE_PRIVATE)
-        setUpDatabaseIDs()
+        setUpDatabaseIDsAndFetchData()
         bindWidgetIDs()
         populateUIWidgetsList()
-        get3ItemsFromDB()
-        populateTheListItemsUI()
         widgetEventListeners()
     }
 
@@ -317,7 +317,8 @@ class TestHousemateActivity : AppCompatActivity() {
     // HELPER FUNCTIONS //
     private fun get3ItemsFromDB() {
         clientIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
-            .collection(clientGroupIDCollection!!).document(CLIENTS_DOC)
+            .collection(clientGroupIDCollection!!)
+            .document(CLIENTS_DOC)
             .collection(clientIDCollection!!)
         // add shopping items
         clientIDCollectionDB.document(SHOPPING_LIST)
@@ -432,7 +433,7 @@ class TestHousemateActivity : AppCompatActivity() {
         }
     }
 
-    private fun makeDialogBoxAndSetGroupID() {
+    private fun makeDialogBoxAndSetGroupID(groupIdSPTag: String) {
         val nameInputDialog = MaterialAlertDialogBuilder(this)
         val customAlertDialogView = LayoutInflater.from(this)
             .inflate(R.layout.name_dialog_box, null, false)
@@ -443,10 +444,15 @@ class TestHousemateActivity : AppCompatActivity() {
                 clientGroupIDCollection = inputNameDialog.text.toString()
                 // todo: check if the new one exists in the remote database,
                 //  if not, try again
+                sendIdToSP(groupIdSPTag, clientGroupIDCollection!!)
+                get3ItemsFromDB()
+                populateTheListItemsUI()
                 dialog.dismiss()
             }
             .setNegativeButton("New Group") { dialog, _ ->
-                clientGroupIDCollection = generateClientGroupID()
+                Log.d(TAG, "makeDialogBoxAndSetGroupID: negative button called")
+                generateClientGroupID(groupIdSPTag)
+                getClientID(groupIdSPTag)
                 dialog.dismiss()
             }
             .show()
@@ -488,18 +494,39 @@ class TestHousemateActivity : AppCompatActivity() {
     private fun getIdFromSP(theTag: String): String? {
         return sharedPref.getString(theTag, null)
     }
-    // HELPER FUNCTIONS //
-    // SETUP FUNCTIONS //
-    private fun setUpDatabaseIDs() {
-        val groupIdSPTag = "group ID"
-        val clientIdSPTag = "Client ID"
-        // try to get the groupId from shared preferences
-        clientGroupIDCollection = getIdFromSP(groupIdSPTag)
-        // if null, in a dialog box ask user what their groupID is,
-        if(clientGroupIDCollection == null) {
-            makeDialogBoxAndSetGroupID()
-            sendIdToSP(groupIdSPTag, clientGroupIDCollection!!)
-        }
+
+    private fun generateClientGroupID(groupIdSPTag: String) {
+        Log.d("Acty", "generateClientGroupID: called")
+        val lastGroupAddedField = "last group added"
+        var oldID: String
+        // ie. 00000001asdfg, 00000002fagsd, 00000003sgdfa ...
+        // Get the latest groupID from the remote db (ie. 00000001asdfg)
+        db.collection(GENERAL_COLLECTION)
+            .document(GROUPS_DOC)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    val groupIdDoc = document.data as Map<String, Any>
+                    oldID = groupIdDoc[lastGroupAddedField] as String
+                    clientGroupIDCollection = add1AndScrambleLetters(oldID)
+                    // Add the new id to the database as the last id added
+                    db.collection(GENERAL_COLLECTION)
+                        .document(GROUPS_DOC)
+                        .update(lastGroupAddedField, clientGroupIDCollection)
+                        .addOnSuccessListener {
+                            Log.d("Acty", "generateClientGroupID: lastGroupAddedField updated")
+                            sendIdToSP(groupIdSPTag, clientGroupIDCollection!!)
+                            // these below will probably not be needed if the db is empty
+//                            get3ItemsFromDB()
+//                            populateTheListItemsUI()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.d("DB Query", "Error updating group doc", e)
+                        }
+                }
+            }
+    }
+    private fun getClientID(clientIdSPTag: String) {
         // try to get the clientID from shared preferences
         clientIDCollection = getIdFromSP(clientIdSPTag)
         // you need a groupID to have a clientID
@@ -508,6 +535,23 @@ class TestHousemateActivity : AppCompatActivity() {
                 clientIDCollection = generateClientID(clientGroupIDCollection!!)
                 sendIdToSP(clientIdSPTag, clientIDCollection!!)
             }
+        }
+        // todo: code after this will run concurrently, fix it
+    }
+    // HELPER FUNCTIONS //
+    // SETUP FUNCTIONS //
+    private fun setUpDatabaseIDsAndFetchData() {
+        val groupIdSPTag = "group ID"
+        val clientIdSPTag = "Client ID"
+        // try to get the groupId from shared preferences
+        clientGroupIDCollection = getIdFromSP(groupIdSPTag)
+        // if null, in a dialog box ask user what their groupID is,
+        if(clientGroupIDCollection == null) {
+            makeDialogBoxAndSetGroupID(groupIdSPTag)
+        } else {
+            get3ItemsFromDB()
+            populateTheListItemsUI()
+            getClientID(clientIdSPTag)
         }
     }
 
