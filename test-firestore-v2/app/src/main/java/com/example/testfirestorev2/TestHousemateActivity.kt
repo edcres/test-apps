@@ -501,8 +501,7 @@ class TestHousemateActivity : AppCompatActivity() {
         var oldID: String
         // ie. 00000001asdfg, 00000002fagsd, 00000003sgdfa ...
         // Get the latest groupID from the remote db (ie. 00000001asdfg)
-        db.collection(GENERAL_COLLECTION)
-            .document(GROUPS_DOC)
+        db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
             .get()
             .addOnSuccessListener { document ->
                 if (document != null) {
@@ -526,17 +525,57 @@ class TestHousemateActivity : AppCompatActivity() {
                 }
             }
     }
+    private fun generateClientID(clientIdSPTag: String, groupID: String) {
+        // todo
+        val lastClientAddedField = "last client added"
+        var oldID: String
+        var newID: String? = null
+        // "$groupID + 00000001asdfg"
+        val clientsDocDb = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
+            .collection(groupID).document(CLIENTS_DOC)
+        // get the latest clientID from the db, set 'oldID' to this
+        clientsDocDb.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    // If there's already another user
+                    val clientIdDoc = document.data as Map<String, Any>
+                    oldID = clientIdDoc[lastClientAddedField] as String
+                    newID = add1AndScrambleLetters(oldID)
+                    // Add the new id to the database as the last id added
+                    clientsDocDb.update(lastClientAddedField, newID)
+                        .addOnSuccessListener {
+                            clientIDCollection = newID
+                            sendIdToSP(clientIdSPTag, clientIDCollection!!)
+                        }
+                        .addOnFailureListener { e ->
+                            Log.d("DB Query", "Error updating client doc", e)
+                        }
+                } else {
+                    // the document will be null for the first member in the group
+                    //  -there is no client id to get, make a new clientID and add it to the db
+                    newID = add1AndScrambleLetters("00000000asdfg")
+                    val firstDocData = hashMapOf<String, Any>(lastClientAddedField to newID!!)
+                    clientsDocDb.set(firstDocData)
+                        .addOnSuccessListener {
+                            Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!")
+                            clientIDCollection = newID
+                            sendIdToSP(clientIdSPTag, clientIDCollection!!)
+                        }
+                        .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
+                }
+            }
+            .addOnFailureListener {
+            }
+    }
     private fun getClientID(clientIdSPTag: String) {
         // try to get the clientID from shared preferences
         clientIDCollection = getIdFromSP(clientIdSPTag)
         // you need a groupID to have a clientID
         if(clientIDCollection == null) {
             if(clientGroupIDCollection != null) {
-                clientIDCollection = generateClientID(clientGroupIDCollection!!)
-                sendIdToSP(clientIdSPTag, clientIDCollection!!)
+                generateClientID(clientIdSPTag, clientGroupIDCollection!!)
             }
         }
-        // todo: code after this will run concurrently, fix it
     }
     // HELPER FUNCTIONS //
     // SETUP FUNCTIONS //
