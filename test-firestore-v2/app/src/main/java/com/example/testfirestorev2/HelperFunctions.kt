@@ -9,7 +9,6 @@ fun add1AndScrambleLetters(oldID: String): String {
     val lettersToScramble = "asdfg"
     val newID: String
     var scrambledLetters: String = ""
-
     // Add random letters to the String
     for (i in 1..5) {
         scrambledLetters = "$scrambledLetters${lettersToScramble.random()}"
@@ -24,7 +23,7 @@ fun add1AndScrambleLetters(oldID: String): String {
     idPosition++
     var idPositionString = idPosition.toString()
     while (idPositionString.length < 8) {
-        idPositionString = "0$idPosition"
+        idPositionString = "0$idPositionString"
     }
     newID = "$idPositionString$scrambledLetters"
 

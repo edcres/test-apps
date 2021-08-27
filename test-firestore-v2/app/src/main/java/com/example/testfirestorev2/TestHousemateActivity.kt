@@ -443,7 +443,7 @@ class TestHousemateActivity : AppCompatActivity() {
             .setPositiveButton("Accept") { dialog, _ ->
                 clientGroupIDCollection = inputNameDialog.text.toString()
                 // todo: check if the new one exists in the remote database,
-                //  if not, try again
+                //  - if not, try again with a different dialog (dismiss this one).
                 sendIdToSP(groupIdSPTag, clientGroupIDCollection!!)
                 get3ItemsFromDB()
                 populateTheListItemsUI()
@@ -452,7 +452,8 @@ class TestHousemateActivity : AppCompatActivity() {
             .setNegativeButton("New Group") { dialog, _ ->
                 Log.d(TAG, "makeDialogBoxAndSetGroupID: negative button called")
                 generateClientGroupID(groupIdSPTag)
-                getClientID(groupIdSPTag)
+                // todo: when the group id is pushed to the grouIDs document,
+                //  start the collection for that group
                 dialog.dismiss()
             }
             .show()
@@ -507,8 +508,24 @@ class TestHousemateActivity : AppCompatActivity() {
                 if (document != null) {
                     val groupIdDoc = document.data as Map<String, Any>
                     oldID = groupIdDoc[lastGroupAddedField] as String
+
+
+
+
+
+                    Log.d(TAG, "generateClientGroupID: oldID: $oldID") // todo: delete this line
+                    Log.d(TAG, "generateClientGroupID: groupID $clientGroupIDCollection") // todo: delete this line
+
+
                     clientGroupIDCollection = add1AndScrambleLetters(oldID)
                     // Add the new id to the database as the last id added
+                    Log.d(TAG, "generateClientGroupID: $clientGroupIDCollection")
+
+
+
+
+
+
                     db.collection(GENERAL_COLLECTION)
                         .document(GROUPS_DOC)
                         .update(lastGroupAddedField, clientGroupIDCollection)
@@ -518,12 +535,16 @@ class TestHousemateActivity : AppCompatActivity() {
                             // these below will probably not be needed if the db is empty
 //                            get3ItemsFromDB()
 //                            populateTheListItemsUI()
+                            getClientID(groupIdSPTag)
                         }
                         .addOnFailureListener { e ->
-                            Log.d("DB Query", "Error updating group doc", e)
+                            Log.d("DB Query", "Error updating groupIDs doc", e)
                         }
+                } else {
+                    Log.d(TAG, "generateClientGroupID: groupIDs document is null")
                 }
             }
+            .addOnFailureListener { e -> Log.d(TAG, "generateClientGroupID: database fetch failed", e) }
     }
     private fun generateClientID(clientIdSPTag: String, groupID: String) {
         // todo
@@ -568,6 +589,7 @@ class TestHousemateActivity : AppCompatActivity() {
             }
     }
     private fun getClientID(clientIdSPTag: String) {
+        Log.d(TAG, "getClientID: called")
         // try to get the clientID from shared preferences
         clientIDCollection = getIdFromSP(clientIdSPTag)
         // you need a groupID to have a clientID
