@@ -20,13 +20,13 @@ class AddItemActivity : AppCompatActivity() {
     private lateinit var sharedPref: SharedPreferences
     private val clientNameSPTag = "Client Name"
     private val homeActivity = TestHousemateActivity
-    private val db = Firebase.firestore
     private lateinit var addItemButton: Button
     private val activityTAG = "AddItemActyTAG"
     private val testHousemateActivity = TestHousemateActivity
+    private val db = Firebase.firestore
     private val clientIDCollectionDB = db.collection(testHousemateActivity.GENERAL_COLLECTION)
         .document(testHousemateActivity.GROUPS_DOC).collection(homeActivity.clientGroupIDCollection!!)
-        .document(testHousemateActivity.CLIENTS_DOC).collection(homeActivity.clientIDCollection!!)
+//        .document(testHousemateActivity.CLIENTS_DOC).collection(homeActivity.clientIDCollection!!)
 
     private lateinit var i1shoppingItemQty: TextView
     private lateinit var i1shoppingItemName: TextView

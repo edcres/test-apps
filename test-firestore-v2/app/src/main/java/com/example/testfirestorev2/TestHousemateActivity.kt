@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -38,6 +39,8 @@ class TestHousemateActivity : AppCompatActivity() {
 
     private val sharedPreferenceTag = "TestHousemateActySP"
     private lateinit var sharedPref: SharedPreferences
+    private val groupIdSPTag = "group ID"
+    private val clientIdSPTag = "Client ID"
 
     private var threeShoppingItemsNames = mutableListOf<String>()
     private var threeChoreItemsNames = mutableListOf<String>()
@@ -114,8 +117,10 @@ class TestHousemateActivity : AppCompatActivity() {
     private lateinit var choresAddedByTextList: List<TextView>
 
     companion object {
-        const val TAG = "TestHousemateActyTAG"
         const val GENERAL_COLLECTION = "generalCollection"
+
+        //todo: make these db tags either camelCase or _. Preferably _
+        const val TAG = "TestHousemateActyTAG"
         const val GROUPS_DOC = "groupIDs"
         const val CLIENTS_DOC = "clientIDs"
         const val SHOPPING_LIST = "shoppingList"
@@ -142,7 +147,11 @@ class TestHousemateActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_housemate)
 
+
         sharedPref = this.getSharedPreferences(sharedPreferenceTag, Context.MODE_PRIVATE)
+        sharedPref.edit().clear().commit()  // todo: delete this
+
+
         setUpDatabaseIDsAndFetchData()
         bindWidgetIDs()
         populateUIWidgetsList()
@@ -318,8 +327,8 @@ class TestHousemateActivity : AppCompatActivity() {
     private fun get3ItemsFromDB() {
         clientIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
             .collection(clientGroupIDCollection!!)
-            .document(CLIENTS_DOC)
-            .collection(clientIDCollection!!)
+//            .document(CLIENTS_DOC)
+//            .collection(clientIDCollection!!)
         // add shopping items
         clientIDCollectionDB.document(SHOPPING_LIST)
             .collection(SHOPPING_ITEMS_COLLECTION)
@@ -433,7 +442,7 @@ class TestHousemateActivity : AppCompatActivity() {
         }
     }
 
-    private fun makeDialogBoxAndSetGroupID(groupIdSPTag: String) {
+    private fun makeDialogBoxAndSetGroupID() {
         val nameInputDialog = MaterialAlertDialogBuilder(this)
         val customAlertDialogView = LayoutInflater.from(this)
             .inflate(R.layout.name_dialog_box, null, false)
@@ -444,16 +453,14 @@ class TestHousemateActivity : AppCompatActivity() {
                 clientGroupIDCollection = inputNameDialog.text.toString()
                 // todo: check if the new one exists in the remote database,
                 //  - if not, try again with a different dialog (dismiss this one).
-                sendIdToSP(groupIdSPTag, clientGroupIDCollection!!)
+                sendIdToSP(groupIdSPTag,clientGroupIDCollection!!)
                 get3ItemsFromDB()
                 populateTheListItemsUI()
                 dialog.dismiss()
             }
             .setNegativeButton("New Group") { dialog, _ ->
                 Log.d(TAG, "makeDialogBoxAndSetGroupID: negative button called")
-                generateClientGroupID(groupIdSPTag)
-                // todo: when the group id is pushed to the grouIDs document,
-                //  start the collection for that group
+                generateClientGroupID()
                 dialog.dismiss()
             }
             .show()
@@ -496,7 +503,7 @@ class TestHousemateActivity : AppCompatActivity() {
         return sharedPref.getString(theTag, null)
     }
 
-    private fun generateClientGroupID(groupIdSPTag: String) {
+    private fun generateClientGroupID() {
         Log.d("Acty", "generateClientGroupID: called")
         val lastGroupAddedField = "last group added"
         var oldID: String
@@ -508,34 +515,16 @@ class TestHousemateActivity : AppCompatActivity() {
                 if (document != null) {
                     val groupIdDoc = document.data as Map<String, Any>
                     oldID = groupIdDoc[lastGroupAddedField] as String
-
-
-
-
-
-                    Log.d(TAG, "generateClientGroupID: oldID: $oldID") // todo: delete this line
-                    Log.d(TAG, "generateClientGroupID: groupID $clientGroupIDCollection") // todo: delete this line
-
-
                     clientGroupIDCollection = add1AndScrambleLetters(oldID)
                     // Add the new id to the database as the last id added
                     Log.d(TAG, "generateClientGroupID: $clientGroupIDCollection")
-
-
-
-
-
-
                     db.collection(GENERAL_COLLECTION)
                         .document(GROUPS_DOC)
                         .update(lastGroupAddedField, clientGroupIDCollection)
                         .addOnSuccessListener {
                             Log.d("Acty", "generateClientGroupID: lastGroupAddedField updated")
                             sendIdToSP(groupIdSPTag, clientGroupIDCollection!!)
-                            // these below will probably not be needed if the db is empty
-//                            get3ItemsFromDB()
-//                            populateTheListItemsUI()
-                            getClientID(groupIdSPTag)
+                            getClientID()
                         }
                         .addOnFailureListener { e ->
                             Log.d("DB Query", "Error updating groupIDs doc", e)
@@ -546,7 +535,7 @@ class TestHousemateActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e -> Log.d(TAG, "generateClientGroupID: database fetch failed", e) }
     }
-    private fun generateClientID(clientIdSPTag: String, groupID: String) {
+    private fun generateClientID(groupID: String) {
         // todo
         val lastClientAddedField = "last client added"
         var oldID: String
@@ -557,7 +546,7 @@ class TestHousemateActivity : AppCompatActivity() {
         // get the latest clientID from the db, set 'oldID' to this
         clientsDocDb.get()
             .addOnSuccessListener { document ->
-                if (document != null) {
+                if (document.data != null) {
                     // If there's already another user
                     val clientIdDoc = document.data as Map<String, Any>
                     oldID = clientIdDoc[lastClientAddedField] as String
@@ -567,6 +556,8 @@ class TestHousemateActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             clientIDCollection = newID
                             sendIdToSP(clientIdSPTag, clientIDCollection!!)
+
+                            // todo: send ID to the DB (already done)
                         }
                         .addOnFailureListener { e ->
                             Log.d("DB Query", "Error updating client doc", e)
@@ -581,38 +572,41 @@ class TestHousemateActivity : AppCompatActivity() {
                             Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!")
                             clientIDCollection = newID
                             sendIdToSP(clientIdSPTag, clientIDCollection!!)
+                            // todo: send ID to the DB (already done)
                         }
                         .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
                 }
             }
             .addOnFailureListener {
+
             }
     }
-    private fun getClientID(clientIdSPTag: String) {
+    private fun getClientID() {
         Log.d(TAG, "getClientID: called")
         // try to get the clientID from shared preferences
         clientIDCollection = getIdFromSP(clientIdSPTag)
+        Log.d(TAG, "getClientID: clientIDCollection: $clientIDCollection")
         // you need a groupID to have a clientID
         if(clientIDCollection == null) {
+            Log.d(TAG, "getClientID: clientIDCollection: $clientIDCollection")
             if(clientGroupIDCollection != null) {
-                generateClientID(clientIdSPTag, clientGroupIDCollection!!)
+                Log.d(TAG, "getClientID: clientGroupIDCollection: $clientGroupIDCollection")
+                generateClientID(clientGroupIDCollection!!)
             }
         }
     }
     // HELPER FUNCTIONS //
     // SETUP FUNCTIONS //
     private fun setUpDatabaseIDsAndFetchData() {
-        val groupIdSPTag = "group ID"
-        val clientIdSPTag = "Client ID"
         // try to get the groupId from shared preferences
         clientGroupIDCollection = getIdFromSP(groupIdSPTag)
         // if null, in a dialog box ask user what their groupID is,
         if(clientGroupIDCollection == null) {
-            makeDialogBoxAndSetGroupID(groupIdSPTag)
+            makeDialogBoxAndSetGroupID()
         } else {
             get3ItemsFromDB()
             populateTheListItemsUI()
-            getClientID(clientIdSPTag)
+            getClientID()
         }
     }
 
