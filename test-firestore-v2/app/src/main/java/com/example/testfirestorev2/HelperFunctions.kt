@@ -1,14 +1,16 @@
 package com.example.testfirestorev2
 
-import android.content.ContentValues
-import android.util.Log
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import android.content.Context
+import android.widget.Toast
+
+fun displayToastMessage(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
 
 fun add1AndScrambleLetters(oldID: String): String {
     val lettersToScramble = "asdfg"
     val newID: String
-    var scrambledLetters: String = ""
+    var scrambledLetters = ""
     // Add random letters to the String
     for (i in 1..5) {
         scrambledLetters = "$scrambledLetters${lettersToScramble.random()}"

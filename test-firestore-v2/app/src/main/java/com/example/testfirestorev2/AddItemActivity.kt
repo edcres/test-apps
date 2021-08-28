@@ -1,6 +1,7 @@
 package com.example.testfirestorev2
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,9 +13,9 @@ import android.widget.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlin.math.log
+import java.util.*
 
-class AddItemActivity : AppCompatActivity() {
+class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
     private val sharedPreferenceTag = "TestHousemateActySP"
     private lateinit var sharedPref: SharedPreferences
@@ -27,9 +28,18 @@ class AddItemActivity : AppCompatActivity() {
     private val clientIDCollectionDB = db.collection(testHousemateActivity.GENERAL_COLLECTION)
         .document(testHousemateActivity.GROUPS_DOC).collection(homeActivity.clientGroupIDCollection!!)
 
+    // for date picker
+    var day = 0
+    var month = 0
+    var year = 0
+    var savedDay = 0
+    var savedMonth = 0
+    var savedYear = 0
+    var lastDateBtnClicked: String? = null
+
     private lateinit var i1shoppingItemQty: TextView
     private lateinit var i1shoppingItemName: TextView
-    private lateinit var i1shoppingWhenNeededDoneText: TextView
+    private lateinit var i1shoppingWhenNeededDoneBtn: Button
     private lateinit var i1shoppingWhereText: TextView
     private lateinit var i1shoppingCostText: TextView
     private lateinit var i1shoppingPriorityText: RadioGroup
@@ -38,7 +48,7 @@ class AddItemActivity : AppCompatActivity() {
     private lateinit var i1shoppingPriority3: RadioButton
 
     private lateinit var i1choresItemName: TextView
-    private lateinit var i1choresWhenNeededDoneText: TextView
+    private lateinit var i1choresWhenNeededDoneBtn: Button
     private lateinit var i1choresDifficulty: RadioGroup
     private lateinit var i1choresDifficulty1: RadioButton
     private lateinit var i1choresDifficulty2: RadioButton
@@ -55,6 +65,27 @@ class AddItemActivity : AppCompatActivity() {
         initiateVars()
         bindUIWidgets()
         buttonsOnClick()
+    }
+
+    // HELPER //
+    private fun getDateTimeCalendar() {
+        val calendar = Calendar.getInstance()
+        day = calendar.get(Calendar.DAY_OF_MONTH)
+        month = calendar.get(Calendar.MONTH)
+        year = calendar.get(Calendar.YEAR)
+    }
+    // HELPER //
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        savedDay = dayOfMonth
+        savedMonth = month
+        savedYear = year
+        val txtToDisplay = "$dayOfMonth/$month/$year"
+        if (lastDateBtnClicked == testHousemateActivity.SHOPPING_LIST) {
+            i1shoppingWhenNeededDoneBtn.text = txtToDisplay
+        } else if (lastDateBtnClicked == testHousemateActivity.CHORES_LIST) {
+            i1choresWhenNeededDoneBtn.text = txtToDisplay
+        }
     }
 
     // HELPER FUNCTIONS //
@@ -89,7 +120,7 @@ class AddItemActivity : AppCompatActivity() {
     private fun addChoreItem(
         itemName: String,
         difficulty: Int,
-        neededBy: String,   // try and make this a date
+        neededBy: String,   // todo: make this a date
         itemPriority: Int,
         addedBy: String
     ) {
@@ -136,7 +167,7 @@ class AddItemActivity : AppCompatActivity() {
                 i1shoppingItemQty.text.toString().toDouble(),
                 i1shoppingCostText.text.toString().toDouble(),
                 i1shoppingWhereText.text.toString(),
-                i1shoppingWhenNeededDoneText.text.toString(),
+                i1shoppingWhenNeededDoneBtn.text.toString(),
                 shoppingPriority,
                 clientName!!
             )
@@ -159,7 +190,7 @@ class AddItemActivity : AppCompatActivity() {
             addChoreItem(
                 i1choresItemName.text.toString(),
                 choreDifficulty,
-                i1choresWhenNeededDoneText.text.toString(),
+                i1choresWhenNeededDoneBtn.text.toString(),
                 chorePriority,
                 clientName!!
             )
@@ -171,6 +202,18 @@ class AddItemActivity : AppCompatActivity() {
     // HELPER FUNCTIONS //
     // CLICK LISTENERS //
     private fun buttonsOnClick() {
+        // todo:
+        i1shoppingWhenNeededDoneBtn.setOnClickListener {
+            getDateTimeCalendar()
+            lastDateBtnClicked = testHousemateActivity.SHOPPING_LIST
+            DatePickerDialog(this, this, year, month, day).show()
+        }
+        i1choresWhenNeededDoneBtn.setOnClickListener {
+            getDateTimeCalendar()
+            lastDateBtnClicked = testHousemateActivity.CHORES_LIST
+            DatePickerDialog(this, this, year, month, day).show()
+        }
+
         addItemButton.setOnClickListener {
             // -check if client name is saved in shared preferences.
             // -if it is add that as a property in the db item
@@ -216,7 +259,7 @@ class AddItemActivity : AppCompatActivity() {
 
         i1shoppingItemName = findViewById(R.id.item_add1Shopping_item_name)
         i1shoppingItemQty = findViewById(R.id.add1Shopping_item_qty)
-        i1shoppingWhenNeededDoneText = findViewById(R.id.add1Shopping_when_needed_done_text)
+        i1shoppingWhenNeededDoneBtn = findViewById(R.id.add1Shopping_when_needed_done_text)
         i1shoppingWhereText = findViewById(R.id.add1Shopping_where_text)
         i1shoppingCostText = findViewById(R.id.add1Shopping_cost_text)
         i1shoppingPriorityText = findViewById(R.id.add1Shopping_priority_text)
@@ -225,7 +268,7 @@ class AddItemActivity : AppCompatActivity() {
         i1shoppingPriority3 = findViewById(R.id.shopPriority_button_3)
 
         i1choresItemName = findViewById(R.id.add1Chores_item_name)
-        i1choresWhenNeededDoneText = findViewById(R.id.add1Chores_when_needed_done_text)
+        i1choresWhenNeededDoneBtn = findViewById(R.id.add1Chores_when_needed_done_text)
         i1choresDifficulty = findViewById(R.id.add1Chores_difficulty)
         i1choresDifficulty1 = findViewById(R.id.chores_difficulty_button_1)
         i1choresDifficulty2 = findViewById(R.id.chores_difficulty_button_2)
