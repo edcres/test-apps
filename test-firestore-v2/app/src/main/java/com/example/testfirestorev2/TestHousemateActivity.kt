@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -35,11 +34,11 @@ class TestHousemateActivity : AppCompatActivity() {
 
     private val db = Firebase.firestore
     private lateinit var toAddItemActivity: Button
-    private lateinit var clientIDCollectionDB: CollectionReference
+    private lateinit var groupIDCollectionDB: CollectionReference
 
     private val sharedPreferenceTag = "TestHousemateActySP"
     private lateinit var sharedPref: SharedPreferences
-    private val groupIdSPTag = "group ID"
+    private val groupIdSPTag = "Group ID"
     private val clientIdSPTag = "Client ID"
 
     private var threeShoppingItemsNames = mutableListOf<String>()
@@ -117,27 +116,27 @@ class TestHousemateActivity : AppCompatActivity() {
     private lateinit var choresAddedByTextList: List<TextView>
 
     companion object {
-        const val GENERAL_COLLECTION = "generalCollection"
+        const val GENERAL_COLLECTION = "General Collection"
 
         //todo: make these db tags either camelCase or _. Preferably _
         const val TAG = "TestHousemateActyTAG"
-        const val GROUPS_DOC = "groupIDs"
-        const val CLIENTS_DOC = "clientIDs"
-        const val SHOPPING_LIST = "shoppingList"
-        const val SHOPPING_ITEMS_COLLECTION = "shoppingItems"
-        const val CHORES_LIST = "choresList"
-        const val CHORE_ITEMS_COLLECTION = "choreItems"
+        const val GROUPS_DOC = "Group IDs"
+        const val CLIENTS_DOC = "Client IDs"
+        const val SHOPPING_LIST = "Shopping List"
+        const val SHOPPING_ITEMS_COLLECTION = "Shopping Items"
+        const val CHORES_LIST = "Chores List"
+        const val CHORE_ITEMS_COLLECTION = "Chore Items"
 
         var clientGroupIDCollection: String? = null
         var clientIDCollection: String? = null
 
         const val NAME_FIELD = "name"
         const val QUANTITY_FIELD = "quantity"
-        const val ADDED_BY_FIELD = "added_by"
+        const val ADDED_BY_FIELD = "added by"
         const val COMPLETED_FIELD = "completed"
         const val COST_FIELD = "cost"
-        const val PURCHASE_LOCATION_FIELD = "purchase_location"
-        const val NEEDED_BY_FIELD = "needed_by"
+        const val PURCHASE_LOCATION_FIELD = "purchase location"
+        const val NEEDED_BY_FIELD = "needed by"
         const val VOLUNTEER_FIELD = "volunteer"
         const val PRIORITY_FIELD = "priority"
         const val DIFFICULTY_FIELD = "difficulty"
@@ -149,7 +148,7 @@ class TestHousemateActivity : AppCompatActivity() {
 
 
         sharedPref = this.getSharedPreferences(sharedPreferenceTag, Context.MODE_PRIVATE)
-        sharedPref.edit().clear().commit()  // todo: delete this
+        sharedPref.edit().clear().commit()  // todo: delete this (it's only for testing)
 
 
         setUpDatabaseIDsAndFetchData()
@@ -325,12 +324,10 @@ class TestHousemateActivity : AppCompatActivity() {
     // CLICK LISTENERS //
     // HELPER FUNCTIONS //
     private fun get3ItemsFromDB() {
-        clientIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
+        groupIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
             .collection(clientGroupIDCollection!!)
-//            .document(CLIENTS_DOC)
-//            .collection(clientIDCollection!!)
         // add shopping items
-        clientIDCollectionDB.document(SHOPPING_LIST)
+        groupIDCollectionDB.document(SHOPPING_LIST)
             .collection(SHOPPING_ITEMS_COLLECTION)
             .get()
             .addOnSuccessListener { result ->
@@ -352,7 +349,7 @@ class TestHousemateActivity : AppCompatActivity() {
             }
 
         // add chore items
-        clientIDCollectionDB.document(CHORES_LIST)
+        groupIDCollectionDB.document(CHORES_LIST)
             .collection(CHORE_ITEMS_COLLECTION)
             .get()
             .addOnSuccessListener { result ->
@@ -472,7 +469,7 @@ class TestHousemateActivity : AppCompatActivity() {
         docName: String,
         completed: Boolean) {
         // when and item is completed, let the db know
-        clientIDCollectionDB.document(itemList)
+        groupIDCollectionDB.document(itemList)
             .collection(itemCollection)
             .document(docName)
             .update(COMPLETED_FIELD, completed)
@@ -486,7 +483,7 @@ class TestHousemateActivity : AppCompatActivity() {
         docName: String,
         volunteerName: String
     ) {
-        clientIDCollectionDB.document(itemList)
+        groupIDCollectionDB.document(itemList)
             .collection(itemCollection)
             .document(docName)
             .update(VOLUNTEER_FIELD, volunteerName)
@@ -536,7 +533,6 @@ class TestHousemateActivity : AppCompatActivity() {
             .addOnFailureListener { e -> Log.d(TAG, "generateClientGroupID: database fetch failed", e) }
     }
     private fun generateClientID(groupID: String) {
-        // todo
         val lastClientAddedField = "last client added"
         var oldID: String
         var newID: String? = null
@@ -556,8 +552,6 @@ class TestHousemateActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             clientIDCollection = newID
                             sendIdToSP(clientIdSPTag, clientIDCollection!!)
-
-                            // todo: send ID to the DB (already done)
                         }
                         .addOnFailureListener { e ->
                             Log.d("DB Query", "Error updating client doc", e)
@@ -572,7 +566,6 @@ class TestHousemateActivity : AppCompatActivity() {
                             Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!")
                             clientIDCollection = newID
                             sendIdToSP(clientIdSPTag, clientIDCollection!!)
-                            // todo: send ID to the DB (already done)
                         }
                         .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
                 }
@@ -585,12 +578,9 @@ class TestHousemateActivity : AppCompatActivity() {
         Log.d(TAG, "getClientID: called")
         // try to get the clientID from shared preferences
         clientIDCollection = getIdFromSP(clientIdSPTag)
-        Log.d(TAG, "getClientID: clientIDCollection: $clientIDCollection")
         // you need a groupID to have a clientID
         if(clientIDCollection == null) {
-            Log.d(TAG, "getClientID: clientIDCollection: $clientIDCollection")
             if(clientGroupIDCollection != null) {
-                Log.d(TAG, "getClientID: clientGroupIDCollection: $clientGroupIDCollection")
                 generateClientID(clientGroupIDCollection!!)
             }
         }
@@ -617,7 +607,7 @@ class TestHousemateActivity : AppCompatActivity() {
         for (i in 0 until threeShoppingItems.size) {
             Log.d(TAG, "setUpRealtimeFetching: shopping loop called i = $i ||" +
                     " size = ${threeShoppingItems.size}")
-            clientIDCollectionDB.document(SHOPPING_LIST)
+            groupIDCollectionDB.document(SHOPPING_LIST)
                 .collection(SHOPPING_ITEMS_COLLECTION)
                 .document(threeShoppingItemsNames[i])
                 .addSnapshotListener { snapshot, e ->
@@ -638,7 +628,7 @@ class TestHousemateActivity : AppCompatActivity() {
         // get 3 items in chores list
         for (i in 0 until threeChoreItems.size) {
             Log.d(TAG, "setUpRealtimeFetching: shopping loop called i = $i || size = ${threeChoreItems.size}")
-            clientIDCollectionDB.document(CHORES_LIST)
+            groupIDCollectionDB.document(CHORES_LIST)
                 .collection(CHORE_ITEMS_COLLECTION)
                 .document(threeChoreItemsNames[i])
                 .addSnapshotListener { snapshot, e ->

@@ -26,7 +26,6 @@ class AddItemActivity : AppCompatActivity() {
     private val db = Firebase.firestore
     private val clientIDCollectionDB = db.collection(testHousemateActivity.GENERAL_COLLECTION)
         .document(testHousemateActivity.GROUPS_DOC).collection(homeActivity.clientGroupIDCollection!!)
-//        .document(testHousemateActivity.CLIENTS_DOC).collection(homeActivity.clientIDCollection!!)
 
     private lateinit var i1shoppingItemQty: TextView
     private lateinit var i1shoppingItemName: TextView
