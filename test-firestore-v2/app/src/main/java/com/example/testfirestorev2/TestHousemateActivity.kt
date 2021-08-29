@@ -156,9 +156,11 @@ class TestHousemateActivity : AppCompatActivity() {
     // CLICK LISTENERS //
     @SuppressLint("ApplySharedPref")
     private fun widgetEventListeners() {
+        val completedToastMessage = "completed"
         exitGroupBtn.setOnClickListener {
             // deletes: groupID, clientID, and addedBy name
             sharedPref.edit().clear().commit()
+            displayToastMessage(this, "Removed from group")
         }
         toAddItemActivityBtn.setOnClickListener {
             val goToAddItem = Intent(this, AddItemActivity::class.java)
@@ -166,6 +168,7 @@ class TestHousemateActivity : AppCompatActivity() {
         }
         //completed
         i1shoppingItIsDone.setOnClickListener {
+            displayToastMessage(this, completedToastMessage)
             if (threeShoppingItemsNames.size > 0) {
                 sendCompletionInputToDb(
                     SHOPPING_LIST_DOC,
@@ -176,6 +179,7 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
         i2shoppingItIsDone.setOnClickListener {
+            displayToastMessage(this, completedToastMessage)
             if (threeShoppingItemsNames.size > 1) {
                 sendCompletionInputToDb(
                     SHOPPING_LIST_DOC,
@@ -186,6 +190,7 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
         i3shoppingItIsDone.setOnClickListener {
+            displayToastMessage(this, completedToastMessage)
             if (threeShoppingItemsNames.size > 2) {
                 sendCompletionInputToDb(
                     SHOPPING_LIST_DOC,
@@ -196,6 +201,7 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
         i1choresItIsDone.setOnClickListener {
+            displayToastMessage(this, completedToastMessage)
             if (threeChoreItemsNames.size > 0) {
                 sendCompletionInputToDb(
                     CHORES_LIST_DOC,
@@ -206,6 +212,7 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
         i2choresItIsDone.setOnClickListener {
+            displayToastMessage(this, completedToastMessage)
             if (threeChoreItemsNames.size > 1) {
                 sendCompletionInputToDb(
                     CHORES_LIST_DOC,
@@ -216,6 +223,7 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
         i3choresItIsDone.setOnClickListener {
+            displayToastMessage(this, completedToastMessage)
             if (threeChoreItemsNames.size > 2) {
                 sendCompletionInputToDb(
                     CHORES_LIST_DOC,
