@@ -1,7 +1,6 @@
 package com.example.testfirestorev2
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -23,6 +22,7 @@ import kotlin.collections.HashMap
 // NOTICE: for the app to work, the DB has to be already set up with at least 1 group
 
 // todo:
+// -display the groupID somewhere in the UI
 // -make/get client group id
 // -make/get client id
 // - fo authentication
@@ -120,11 +120,11 @@ class TestHousemateActivity : AppCompatActivity() {
         const val TAG = "TestHousemateActyTAG"
 
         const val GENERAL_COLLECTION = "General Collection"
-        const val GROUPS_DOC = "Group IDs"
-        const val CLIENTS_DOC = "Client IDs"
-        const val SHOPPING_LIST = "Shopping List"
+        const val GROUP_IDS_DOC = "Group IDs"
+        const val CLIENT_IDS_DOC = "Client IDs"
+        const val SHOPPING_LIST_DOC = "Shopping List"
         const val SHOPPING_ITEMS_COLLECTION = "Shopping Items"
-        const val CHORES_LIST = "Chores List"
+        const val CHORES_LIST_DOC = "Chores List"
         const val CHORE_ITEMS_COLLECTION = "Chore Items"
 
         var clientGroupIDCollection: String? = null
@@ -168,7 +168,7 @@ class TestHousemateActivity : AppCompatActivity() {
         i1shoppingItIsDone.setOnClickListener {
             if (threeShoppingItemsNames.size > 0) {
                 sendCompletionInputToDb(
-                    SHOPPING_LIST,
+                    SHOPPING_LIST_DOC,
                     SHOPPING_ITEMS_COLLECTION,
                     threeShoppingItemsNames[0],
                     i1shoppingItIsDone.isChecked
@@ -178,7 +178,7 @@ class TestHousemateActivity : AppCompatActivity() {
         i2shoppingItIsDone.setOnClickListener {
             if (threeShoppingItemsNames.size > 1) {
                 sendCompletionInputToDb(
-                    SHOPPING_LIST,
+                    SHOPPING_LIST_DOC,
                     SHOPPING_ITEMS_COLLECTION,
                     threeShoppingItemsNames[1],
                     i2shoppingItIsDone.isChecked
@@ -188,7 +188,7 @@ class TestHousemateActivity : AppCompatActivity() {
         i3shoppingItIsDone.setOnClickListener {
             if (threeShoppingItemsNames.size > 2) {
                 sendCompletionInputToDb(
-                    SHOPPING_LIST,
+                    SHOPPING_LIST_DOC,
                     SHOPPING_ITEMS_COLLECTION,
                     threeShoppingItemsNames[2],
                     i3shoppingItIsDone.isChecked
@@ -198,7 +198,7 @@ class TestHousemateActivity : AppCompatActivity() {
         i1choresItIsDone.setOnClickListener {
             if (threeChoreItemsNames.size > 0) {
                 sendCompletionInputToDb(
-                    CHORES_LIST,
+                    CHORES_LIST_DOC,
                     CHORE_ITEMS_COLLECTION,
                     threeChoreItemsNames[0],
                     i1choresItIsDone.isChecked
@@ -208,7 +208,7 @@ class TestHousemateActivity : AppCompatActivity() {
         i2choresItIsDone.setOnClickListener {
             if (threeChoreItemsNames.size > 1) {
                 sendCompletionInputToDb(
-                    CHORES_LIST,
+                    CHORES_LIST_DOC,
                     CHORE_ITEMS_COLLECTION,
                     threeChoreItemsNames[1],
                     i2choresItIsDone.isChecked
@@ -218,7 +218,7 @@ class TestHousemateActivity : AppCompatActivity() {
         i3choresItIsDone.setOnClickListener {
             if (threeChoreItemsNames.size > 2) {
                 sendCompletionInputToDb(
-                    CHORES_LIST,
+                    CHORES_LIST_DOC,
                     CHORE_ITEMS_COLLECTION,
                     threeChoreItemsNames[2],
                     i3choresItIsDone.isChecked
@@ -230,7 +230,7 @@ class TestHousemateActivity : AppCompatActivity() {
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                 if (threeShoppingItemsNames.size > 0) {
                     sendVolunteerInputToDb(
-                        SHOPPING_LIST,
+                        SHOPPING_LIST_DOC,
                         SHOPPING_ITEMS_COLLECTION,
                         threeShoppingItemsNames[0],
                         i1shoppingWhoIsGettingItText.text.toString()
@@ -245,7 +245,7 @@ class TestHousemateActivity : AppCompatActivity() {
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                 if (threeShoppingItemsNames.size > 1) {
                     sendVolunteerInputToDb(
-                        SHOPPING_LIST,
+                        SHOPPING_LIST_DOC,
                         SHOPPING_ITEMS_COLLECTION,
                         threeShoppingItemsNames[1],
                         i2shoppingWhoIsGettingItText.text.toString()
@@ -260,7 +260,7 @@ class TestHousemateActivity : AppCompatActivity() {
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                 if (threeShoppingItemsNames.size > 2) {
                     sendVolunteerInputToDb(
-                        SHOPPING_LIST,
+                        SHOPPING_LIST_DOC,
                         SHOPPING_ITEMS_COLLECTION,
                         threeShoppingItemsNames[2],
                         i3shoppingWhoIsGettingItText.text.toString()
@@ -276,7 +276,7 @@ class TestHousemateActivity : AppCompatActivity() {
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                 if (threeChoreItemsNames.size > 0) {
                     sendVolunteerInputToDb(
-                        CHORES_LIST,
+                        CHORES_LIST_DOC,
                         CHORE_ITEMS_COLLECTION,
                         threeChoreItemsNames[0],
                         i1choresWhoIsDoingItText.text.toString()
@@ -292,7 +292,7 @@ class TestHousemateActivity : AppCompatActivity() {
 
                 if (threeChoreItemsNames.size > 1) {
                     sendVolunteerInputToDb(
-                        CHORES_LIST,
+                        CHORES_LIST_DOC,
                         CHORE_ITEMS_COLLECTION,
                         threeChoreItemsNames[1],
                         i2choresWhoIsDoingItText.text.toString()
@@ -309,7 +309,7 @@ class TestHousemateActivity : AppCompatActivity() {
 
                 if (threeChoreItemsNames.size > 2) {
                     sendVolunteerInputToDb(
-                        CHORES_LIST,
+                        CHORES_LIST_DOC,
                         CHORE_ITEMS_COLLECTION,
                         threeChoreItemsNames[2],
                         i3choresWhoIsDoingItText.text.toString()
@@ -325,52 +325,59 @@ class TestHousemateActivity : AppCompatActivity() {
     // CLICK LISTENERS //
     // HELPER FUNCTIONS //
     private fun get3ItemsFromDB() {
-        groupIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
+        Log.d(TAG, "get3ItemsFromDB: called")
+        groupIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUP_IDS_DOC)
             .collection(clientGroupIDCollection!!)
-        // add shopping items
-        groupIDCollectionDB.document(SHOPPING_LIST)
-            .collection(SHOPPING_ITEMS_COLLECTION)
-            .get()
+        groupIDCollectionDB.document(CLIENT_IDS_DOC).get()
             .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d(TAG, "get3ItemsFromDB: shopping called")
-                    // add 3 items to the list and exit the get call
-                    if (threeShoppingItems.size < 4) {
-                        val thisItem = document.data as MutableMap<String, Any>
-                        threeShoppingItemsNames.add(thisItem[NAME_FIELD] as String)
-                        threeShoppingItems.add(thisItem)
-                        setUpRealtimeFetching()      // this happens twice, probably concurrently
-                    } else {
-                        // If the user input groupID is not in the db, ask for user input again
-                        displayToastMessage(this, "Group ID not found")
-                        makeDialogBoxAndSetGroupID()
-                        return@addOnSuccessListener
-                    }
+                Log.d(TAG, "get3ItemsFromDB: ID = $clientGroupIDCollection")
+                if (result.data == null) {
+                    // the group doesn't exists
+                    displayToastMessage(this, "Group ID not found")
+                    makeDialogBoxAndSetGroupID()
+                } else {
+                    // the group does exist
+                    // add shopping items
+                    groupIDCollectionDB.document(SHOPPING_LIST_DOC)
+                        .collection(SHOPPING_ITEMS_COLLECTION)
+                        .get()
+                        .addOnSuccessListener { shoppingResult ->
+                            Log.d(TAG, "get3ItemsFromDB: shopping called")
+                            for (document in shoppingResult) {
+                                // add 3 items to the list and exit the get call
+                                if (threeShoppingItems.size < 4) {
+                                    val thisItem = document.data as MutableMap<String, Any>
+                                    threeShoppingItemsNames.add(thisItem[NAME_FIELD] as String)
+                                    threeShoppingItems.add(thisItem)
+                                    // this happens twice, probably concurrently
+                                    setUpRealtimeFetching()
+                                }
+                            }
+                        }
+                        .addOnFailureListener{ e ->
+                            Log.d(TAG, "Error getting documents: shopping ", e)
+                        }
+                    // add chore items
+                    groupIDCollectionDB.document(CHORES_LIST_DOC)
+                        .collection(CHORE_ITEMS_COLLECTION)
+                        .get()
+                        .addOnSuccessListener { choresResult ->
+                            for (document in choresResult) {
+                                Log.d(TAG, "get3ItemsFromDB: chores called")
+                                // add 3 items to the list and exit the get call
+                                if (threeChoreItems.size < 4) {
+                                    val thisItem = document.data as MutableMap<String, Any>
+                                    threeChoreItemsNames.add(thisItem[NAME_FIELD] as String)
+                                    threeChoreItems.add(thisItem)
+                                    // this happens twice, probably concurrently
+                                    setUpRealtimeFetching()
+                                }
+                            }
+                        }
+                        .addOnFailureListener{ e ->
+                            Log.d(TAG, "Error getting documents: ", e)
+                        }
                 }
-            }
-            .addOnFailureListener{ e ->
-                Log.d(TAG, "Error getting documents: shopping ", e)
-            }
-        // add chore items
-        groupIDCollectionDB.document(CHORES_LIST)
-            .collection(CHORE_ITEMS_COLLECTION)
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d(TAG, "get3ItemsFromDB: chores called")
-                    // add 3 items to the list and exit the get call
-                    if (threeChoreItems.size < 4) {
-                        val thisItem = document.data as MutableMap<String, Any>
-                        threeChoreItemsNames.add(thisItem[NAME_FIELD] as String)
-                        threeChoreItems.add(thisItem)
-                        setUpRealtimeFetching()     // this happens twice, probably concurrently
-                    } else {
-                        return@addOnSuccessListener
-                    }
-                }
-            }
-            .addOnFailureListener{ e ->
-                Log.d(TAG, "Error getting documents: ", e)
             }
     }
 
@@ -450,6 +457,7 @@ class TestHousemateActivity : AppCompatActivity() {
             .setTitle("Your group ID")
             .setPositiveButton("Accept") { dialog, _ ->
                 clientGroupIDCollection = inputNameDialog.text.toString()
+                Log.d(TAG, "makeDialogBoxAndSetGroupID: accept clicked $clientGroupIDCollection")
                 sendIdToSP(groupIdSPTag, clientGroupIDCollection!!)
                 get3ItemsFromDB()
                 populateTheListItemsUI()
@@ -509,7 +517,7 @@ class TestHousemateActivity : AppCompatActivity() {
         var oldID: String
         // ie. 00000001asdfg, 00000002fagsd, 00000003sgdfa ...
         // Get the latest groupID from the remote db (ie. 00000001asdfg)
-        db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
+        db.collection(GENERAL_COLLECTION).document(GROUP_IDS_DOC)
             .get()
             .addOnSuccessListener { document ->
                 if (document != null) {
@@ -519,10 +527,10 @@ class TestHousemateActivity : AppCompatActivity() {
                     // Add the new id to the database as the last id added
                     Log.d(TAG, "generateClientGroupID: $clientGroupIDCollection")
                     db.collection(GENERAL_COLLECTION)
-                        .document(GROUPS_DOC)
+                        .document(GROUP_IDS_DOC)
                         .update(lastGroupAddedField, clientGroupIDCollection)
                         .addOnSuccessListener {
-                            Log.d("Acty", "generateClientGroupID: lastGroupAddedField updated")
+                            Log.d("Acty","generateClientGroupID: lastGroupAddedField updated")
                             sendIdToSP(groupIdSPTag, clientGroupIDCollection!!)
                             getClientID()
                         }
@@ -533,15 +541,15 @@ class TestHousemateActivity : AppCompatActivity() {
                     Log.d(TAG, "generateClientGroupID: groupIDs document is null")
                 }
             }
-            .addOnFailureListener { e -> Log.d(TAG, "generateClientGroupID: database fetch failed", e) }
+            .addOnFailureListener{e->Log.d(TAG,"generateClientGroupID: database fetch failed",e)}
     }
     private fun generateClientID(groupID: String) {
         val lastClientAddedField = "last client added"
         var oldID: String
         var newID: String?
         // "$groupID + 00000001asdfg"
-        val clientsDocDb = db.collection(GENERAL_COLLECTION).document(GROUPS_DOC)
-            .collection(groupID).document(CLIENTS_DOC)
+        val clientsDocDb = db.collection(GENERAL_COLLECTION).document(GROUP_IDS_DOC)
+            .collection(groupID).document(CLIENT_IDS_DOC)
         // get the latest clientID from the db, set 'oldID' to this
         clientsDocDb.get()
             .addOnSuccessListener { document ->
@@ -570,11 +578,8 @@ class TestHousemateActivity : AppCompatActivity() {
                             clientIDCollection = newID
                             sendIdToSP(clientIdSPTag, clientIDCollection!!)
                         }
-                        .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error writing document", e) }
+                        .addOnFailureListener{e->Log.w(ContentValues.TAG, "Error writing document",e)}
                 }
-            }
-            .addOnFailureListener {
-
             }
     }
     private fun getClientID() {
@@ -607,7 +612,7 @@ class TestHousemateActivity : AppCompatActivity() {
         Log.d(TAG, "setUpRealtimeFetching: called")
         // get 3 items in shopping list
         for (i in 0 until threeShoppingItems.size) {
-            groupIDCollectionDB.document(SHOPPING_LIST)
+            groupIDCollectionDB.document(SHOPPING_LIST_DOC)
                 .collection(SHOPPING_ITEMS_COLLECTION)
                 .document(threeShoppingItemsNames[i])
                 .addSnapshotListener { snapshot, e ->
@@ -628,7 +633,7 @@ class TestHousemateActivity : AppCompatActivity() {
         }
         // get 3 items in chores list
         for (i in 0 until threeChoreItems.size) {
-            groupIDCollectionDB.document(CHORES_LIST)
+            groupIDCollectionDB.document(CHORES_LIST_DOC)
                 .collection(CHORE_ITEMS_COLLECTION)
                 .document(threeChoreItemsNames[i])
                 .addSnapshotListener { snapshot, e ->

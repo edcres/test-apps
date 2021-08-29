@@ -26,16 +26,13 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
     private val testHousemateActivity = TestHousemateActivity
     private val db = Firebase.firestore
     private val clientIDCollectionDB = db.collection(testHousemateActivity.GENERAL_COLLECTION)
-        .document(testHousemateActivity.GROUPS_DOC).collection(homeActivity.clientGroupIDCollection!!)
+        .document(testHousemateActivity.GROUP_IDS_DOC).collection(homeActivity.clientGroupIDCollection!!)
 
     // for date picker
-    var day = 0
-    var month = 0
-    var year = 0
-    var savedDay = 0
-    var savedMonth = 0
-    var savedYear = 0
-    var lastDateBtnClicked: String? = null
+    private var day = 0
+    private var month = 0
+    private var year = 0
+    private var lastDateBtnClicked: String? = null
 
     private lateinit var i1shoppingItemQty: TextView
     private lateinit var i1shoppingItemName: TextView
@@ -77,13 +74,10 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
     // HELPER //
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        savedDay = dayOfMonth
-        savedMonth = month
-        savedYear = year
-        val txtToDisplay = "$dayOfMonth/$month/$year"
-        if (lastDateBtnClicked == testHousemateActivity.SHOPPING_LIST) {
+        val txtToDisplay = "$dayOfMonth/${month+1}/$year"
+        if (lastDateBtnClicked == testHousemateActivity.SHOPPING_LIST_DOC) {
             i1shoppingWhenNeededDoneBtn.text = txtToDisplay
-        } else if (lastDateBtnClicked == testHousemateActivity.CHORES_LIST) {
+        } else if (lastDateBtnClicked == testHousemateActivity.CHORES_LIST_DOC) {
             i1choresWhenNeededDoneBtn.text = txtToDisplay
         }
     }
@@ -110,7 +104,7 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
             homeActivity.ADDED_BY_FIELD to addedBy
         )
         // access the clientGroup, then the client, then the shopping item
-        clientIDCollectionDB.document(testHousemateActivity.SHOPPING_LIST)
+        clientIDCollectionDB.document(testHousemateActivity.SHOPPING_LIST_DOC)
             .collection(testHousemateActivity.SHOPPING_ITEMS_COLLECTION).document(itemName)
             .set(shoppingItemData)
             .addOnSuccessListener { Log.d(activityTAG, "DocumentSnapshot successfully written!") }
@@ -135,7 +129,7 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
         )
 
         // access the clientGroup, then the client, then the shopping item
-        clientIDCollectionDB.document(testHousemateActivity.CHORES_LIST)
+        clientIDCollectionDB.document(testHousemateActivity.CHORES_LIST_DOC)
             .collection(testHousemateActivity.CHORE_ITEMS_COLLECTION).document(itemName)
             .set(choresItemData)
             .addOnSuccessListener { Log.d(activityTAG, "DocumentSnapshot successfully written!") }
@@ -205,12 +199,12 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
         // todo:
         i1shoppingWhenNeededDoneBtn.setOnClickListener {
             getDateTimeCalendar()
-            lastDateBtnClicked = testHousemateActivity.SHOPPING_LIST
+            lastDateBtnClicked = testHousemateActivity.SHOPPING_LIST_DOC
             DatePickerDialog(this, this, year, month, day).show()
         }
         i1choresWhenNeededDoneBtn.setOnClickListener {
             getDateTimeCalendar()
-            lastDateBtnClicked = testHousemateActivity.CHORES_LIST
+            lastDateBtnClicked = testHousemateActivity.CHORES_LIST_DOC
             DatePickerDialog(this, this, year, month, day).show()
         }
 
