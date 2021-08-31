@@ -37,8 +37,8 @@ class TestHousemateActivity : AppCompatActivity() {
     private lateinit var toAddItemActivityBtn: Button
     private lateinit var groupIDCollectionDB: CollectionReference
 
-    private val sharedPreferenceTag = "TestHousemateActySP"
     private lateinit var sharedPref: SharedPreferences
+    private val mainSharedPrefTag = "TestHousemateActySP"
     private val groupIdSPTag = "Group ID"
     private val clientIdSPTag = "Client ID"
 
@@ -146,7 +146,7 @@ class TestHousemateActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_housemate)
 
-        sharedPref = this.getSharedPreferences(sharedPreferenceTag, Context.MODE_PRIVATE)
+        sharedPref = this.getSharedPreferences(mainSharedPrefTag, Context.MODE_PRIVATE)
         setUpDatabaseIDsAndFetchData()
         bindWidgetIDs()
         populateUIWidgetsList()
@@ -159,7 +159,7 @@ class TestHousemateActivity : AppCompatActivity() {
         val completedToastMessage = "completed"
         exitGroupBtn.setOnClickListener {
             // deletes: groupID, clientID, and addedBy name
-            sharedPref.edit().clear().commit()
+            clearSP(sharedPref)
             displayToastMessage(this, "Removed from group")
         }
         toAddItemActivityBtn.setOnClickListener {
@@ -168,7 +168,9 @@ class TestHousemateActivity : AppCompatActivity() {
         }
         //completed
         i1shoppingItIsDone.setOnClickListener {
-            displayToastMessage(this, completedToastMessage)
+            if (i1shoppingItIsDone.isChecked) {
+                displayToastMessage(this, completedToastMessage)
+            }
             if (threeShoppingItemsNames.size > 0) {
                 sendCompletionInputToDb(
                     SHOPPING_LIST_DOC,
@@ -179,7 +181,9 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
         i2shoppingItIsDone.setOnClickListener {
-            displayToastMessage(this, completedToastMessage)
+            if (i2shoppingItIsDone.isChecked) {
+                displayToastMessage(this, completedToastMessage)
+            }
             if (threeShoppingItemsNames.size > 1) {
                 sendCompletionInputToDb(
                     SHOPPING_LIST_DOC,
@@ -190,7 +194,9 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
         i3shoppingItIsDone.setOnClickListener {
-            displayToastMessage(this, completedToastMessage)
+            if (i3shoppingItIsDone.isChecked) {
+                displayToastMessage(this, completedToastMessage)
+            }
             if (threeShoppingItemsNames.size > 2) {
                 sendCompletionInputToDb(
                     SHOPPING_LIST_DOC,
@@ -201,7 +207,9 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
         i1choresItIsDone.setOnClickListener {
-            displayToastMessage(this, completedToastMessage)
+            if (i1choresItIsDone.isChecked) {
+                displayToastMessage(this, completedToastMessage)
+            }
             if (threeChoreItemsNames.size > 0) {
                 sendCompletionInputToDb(
                     CHORES_LIST_DOC,
@@ -212,7 +220,9 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
         i2choresItIsDone.setOnClickListener {
-            displayToastMessage(this, completedToastMessage)
+            if (i2choresItIsDone.isChecked) {
+                displayToastMessage(this, completedToastMessage)
+            }
             if (threeChoreItemsNames.size > 1) {
                 sendCompletionInputToDb(
                     CHORES_LIST_DOC,
@@ -223,7 +233,9 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
         i3choresItIsDone.setOnClickListener {
-            displayToastMessage(this, completedToastMessage)
+            if (i3choresItIsDone.isChecked) {
+                displayToastMessage(this, completedToastMessage)
+            }
             if (threeChoreItemsNames.size > 2) {
                 sendCompletionInputToDb(
                     CHORES_LIST_DOC,
@@ -332,64 +344,8 @@ class TestHousemateActivity : AppCompatActivity() {
     }
     // CLICK LISTENERS //
     // HELPER FUNCTIONS //
-    private fun get3ItemsFromDB() {
-        Log.d(TAG, "get3ItemsFromDB: called")
-        groupIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUP_IDS_DOC)
-            .collection(clientGroupIDCollection!!)
-        groupIDCollectionDB.document(CLIENT_IDS_DOC).get()
-            .addOnSuccessListener { result ->
-                Log.d(TAG, "get3ItemsFromDB: ID = $clientGroupIDCollection")
-                if (result.data == null) {
-                    // the group doesn't exists
-                    displayToastMessage(this, "Group ID not found")
-                    makeDialogBoxAndSetGroupID()
-                } else {
-                    // the group does exist
-                    // add shopping items
-                    groupIDCollectionDB.document(SHOPPING_LIST_DOC)
-                        .collection(SHOPPING_ITEMS_COLLECTION)
-                        .get()
-                        .addOnSuccessListener { shoppingResult ->
-                            Log.d(TAG, "get3ItemsFromDB: shopping called")
-                            for (document in shoppingResult) {
-                                // add 3 items to the list and exit the get call
-                                if (threeShoppingItems.size < 4) {
-                                    val thisItem = document.data as MutableMap<String, Any>
-                                    threeShoppingItemsNames.add(thisItem[NAME_FIELD] as String)
-                                    threeShoppingItems.add(thisItem)
-                                    // this happens twice, probably concurrently
-                                    setUpRealtimeFetching()
-                                }
-                            }
-                        }
-                        .addOnFailureListener{ e ->
-                            Log.d(TAG, "Error getting documents: shopping ", e)
-                        }
-                    // add chore items
-                    groupIDCollectionDB.document(CHORES_LIST_DOC)
-                        .collection(CHORE_ITEMS_COLLECTION)
-                        .get()
-                        .addOnSuccessListener { choresResult ->
-                            for (document in choresResult) {
-                                Log.d(TAG, "get3ItemsFromDB: chores called")
-                                // add 3 items to the list and exit the get call
-                                if (threeChoreItems.size < 4) {
-                                    val thisItem = document.data as MutableMap<String, Any>
-                                    threeChoreItemsNames.add(thisItem[NAME_FIELD] as String)
-                                    threeChoreItems.add(thisItem)
-                                    // this happens twice, probably concurrently
-                                    setUpRealtimeFetching()
-                                }
-                            }
-                        }
-                        .addOnFailureListener{ e ->
-                            Log.d(TAG, "Error getting documents: ", e)
-                        }
-                }
-            }
-    }
-
     private fun populateUIWidgetsList() {
+        showGroupIdOnBtn()
         shoppingItIsDoneList = listOf(i1shoppingItIsDone, i2shoppingItIsDone, i3shoppingItIsDone)
         shoppingItemQtyList = listOf(i1shoppingItemQty, i2shoppingItemQty, i3shoppingItemQty)
         shoppingItemNameList = listOf(i1shoppingItemName, i2shoppingItemName, i3shoppingItemName)
@@ -466,9 +422,10 @@ class TestHousemateActivity : AppCompatActivity() {
             .setPositiveButton("Accept") { dialog, _ ->
                 clientGroupIDCollection = inputNameDialog.text.toString()
                 Log.d(TAG, "makeDialogBoxAndSetGroupID: accept clicked $clientGroupIDCollection")
-                sendIdToSP(groupIdSPTag, clientGroupIDCollection!!)
+                sendDataToSP(sharedPref, groupIdSPTag, clientGroupIDCollection!!)
                 get3ItemsFromDB()
                 populateTheListItemsUI()
+                showGroupIdOnBtn()
                 dialog.dismiss()
             }
             .setNegativeButton("New Group") { dialog, _ ->
@@ -477,6 +434,68 @@ class TestHousemateActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    private fun get3ItemsFromDB() {
+        Log.d(TAG, "get3ItemsFromDB: called")
+        groupIDCollectionDB = db.collection(GENERAL_COLLECTION).document(GROUP_IDS_DOC)
+            .collection(clientGroupIDCollection!!)
+        Log.d(TAG, "get3ItemsFromDB: groupID to fetch: $clientGroupIDCollection")
+        groupIDCollectionDB.document(CLIENT_IDS_DOC).get()
+            .addOnSuccessListener { result ->
+                Log.d(TAG, "get3ItemsFromDB: ID = $clientGroupIDCollection")
+                if (result.data == null) {
+                    // the group doesn't exists
+                    displayToastMessage(this, "Group ID not found")
+                    makeDialogBoxAndSetGroupID()
+                } else {
+                    Log.d(TAG, "get3ItemsFromDB: groupID found")
+                    // the group does exist
+                    // add shopping items
+                    groupIDCollectionDB.document(SHOPPING_LIST_DOC)
+                        .collection(SHOPPING_ITEMS_COLLECTION)
+                        .get()
+                        .addOnSuccessListener { shoppingResult ->
+                            Log.d(TAG, "get3ItemsFromDB: shopping called")
+                            for (document in shoppingResult) {
+                                // add 3 items to the list and exit the get call
+                                if (threeShoppingItems.size < 4) {
+                                    val thisItem = document.data as MutableMap<String, Any>
+                                    threeShoppingItemsNames.add(thisItem[NAME_FIELD] as String)
+                                    threeShoppingItems.add(thisItem)
+                                    // this happens twice, probably concurrently
+                                    setUpRealtimeFetching()
+                                }
+                            }
+                        }
+                        .addOnFailureListener{ e ->
+                            Log.d(TAG, "Error getting documents: shopping ", e)
+                        }
+                    // add chore items
+                    groupIDCollectionDB.document(CHORES_LIST_DOC)
+                        .collection(CHORE_ITEMS_COLLECTION)
+                        .get()
+                        .addOnSuccessListener { choresResult ->
+                            for (document in choresResult) {
+                                Log.d(TAG, "get3ItemsFromDB: chores called")
+                                // add 3 items to the list and exit the get call
+                                if (threeChoreItems.size < 4) {
+                                    val thisItem = document.data as MutableMap<String, Any>
+                                    threeChoreItemsNames.add(thisItem[NAME_FIELD] as String)
+                                    threeChoreItems.add(thisItem)
+                                    // this happens twice, probably concurrently
+                                    setUpRealtimeFetching()
+                                }
+                            }
+                        }
+                        .addOnFailureListener{ e ->
+                            Log.d(TAG, "Error fetching data: ", e)
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.d(TAG, "get3ItemsFromDB: db fetch failed", e)
+            }
     }
 
     private fun sendCompletionInputToDb(
@@ -508,17 +527,6 @@ class TestHousemateActivity : AppCompatActivity() {
             }
     }
 
-    @SuppressLint("ApplySharedPref")
-    private fun sendIdToSP(theTag: String, theID: String) {
-        // groupID or clientID
-        val spEditor: SharedPreferences.Editor = sharedPref.edit()
-        spEditor.putString(theTag, theID).commit()
-    }
-
-    private fun getIdFromSP(theTag: String): String? {
-        return sharedPref.getString(theTag, null)
-    }
-
     private fun generateClientGroupID() {
         Log.d("Acty", "generateClientGroupID: called")
         val lastGroupAddedField = "last group added"
@@ -539,7 +547,7 @@ class TestHousemateActivity : AppCompatActivity() {
                         .update(lastGroupAddedField, clientGroupIDCollection)
                         .addOnSuccessListener {
                             Log.d("Acty","generateClientGroupID: lastGroupAddedField updated")
-                            sendIdToSP(groupIdSPTag, clientGroupIDCollection!!)
+                            sendDataToSP(sharedPref, groupIdSPTag, clientGroupIDCollection!!)
                             getClientID()
                         }
                         .addOnFailureListener { e ->
@@ -550,6 +558,17 @@ class TestHousemateActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener{e->Log.d(TAG,"generateClientGroupID: database fetch failed",e)}
+    }
+    private fun getClientID() {
+        Log.d(TAG, "getClientID: called")
+        // try to get the clientID from shared preferences
+        clientIDCollection = getDataFromSP(sharedPref, clientIdSPTag)
+        // you need a groupID to have a clientID
+        if(clientIDCollection == null) {
+            if(clientGroupIDCollection != null) {
+                generateClientID(clientGroupIDCollection!!)
+            }
+        }
     }
     private fun generateClientID(groupID: String) {
         val lastClientAddedField = "last client added"
@@ -570,7 +589,7 @@ class TestHousemateActivity : AppCompatActivity() {
                     clientsDocDb.update(lastClientAddedField, newID)
                         .addOnSuccessListener {
                             clientIDCollection = newID
-                            sendIdToSP(clientIdSPTag, clientIDCollection!!)
+                            sendDataToSP(sharedPref, groupIdSPTag, clientIDCollection!!)
                         }
                         .addOnFailureListener { e ->
                             Log.d("DB Query", "Error updating client doc", e)
@@ -584,28 +603,23 @@ class TestHousemateActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!")
                             clientIDCollection = newID
-                            sendIdToSP(clientIdSPTag, clientIDCollection!!)
+                            sendDataToSP(sharedPref, clientIdSPTag, clientIDCollection!!)
                         }
                         .addOnFailureListener{e->Log.w(ContentValues.TAG, "Error writing document",e)}
                 }
             }
     }
-    private fun getClientID() {
-        Log.d(TAG, "getClientID: called")
-        // try to get the clientID from shared preferences
-        clientIDCollection = getIdFromSP(clientIdSPTag)
-        // you need a groupID to have a clientID
-        if(clientIDCollection == null) {
-            if(clientGroupIDCollection != null) {
-                generateClientID(clientGroupIDCollection!!)
-            }
+    private fun showGroupIdOnBtn() {
+        if (clientGroupIDCollection != null) {
+            val exitGroupBtnText = "${exitGroupBtn.text} $clientGroupIDCollection"
+            exitGroupBtn.text = exitGroupBtnText
         }
     }
     // HELPER FUNCTIONS //
     // SETUP FUNCTIONS //
     private fun setUpDatabaseIDsAndFetchData() {
         // try to get the groupId from shared preferences
-        clientGroupIDCollection = getIdFromSP(groupIdSPTag)
+        clientGroupIDCollection = getDataFromSP(sharedPref, groupIdSPTag)
         // if null, in a dialog box ask user what their groupID is,
         if(clientGroupIDCollection == null) {
             makeDialogBoxAndSetGroupID()

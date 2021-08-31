@@ -1,6 +1,5 @@
 package com.example.testfirestorev2
 
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
@@ -64,15 +63,7 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
         buttonsOnClick()
     }
 
-    // HELPER //
-    private fun getDateTimeCalendar() {
-        val calendar = Calendar.getInstance()
-        day = calendar.get(Calendar.DAY_OF_MONTH)
-        month = calendar.get(Calendar.MONTH)
-        year = calendar.get(Calendar.YEAR)
-    }
-    // HELPER //
-
+    // For date picker
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val txtToDisplay = "$dayOfMonth/${month+1}/$year"
         if (lastDateBtnClicked == testHousemateActivity.SHOPPING_LIST_DOC) {
@@ -136,16 +127,6 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
             .addOnFailureListener { e -> Log.w(activityTAG, "Error writing document", e) }
     }
 
-    @SuppressLint("ApplySharedPref")
-    private fun sendNameOfClientToSP(clientName: String) {
-        val spEditor: SharedPreferences.Editor = sharedPref.edit()
-        spEditor.putString(clientNameSPTag, clientName).commit()
-    }
-
-    private fun getNameOfClientFromSP(): String? {
-        return sharedPref.getString(clientNameSPTag, null)
-    }
-
     private fun addItems(clientName: String?) {
         // add shopping item
         // check if the name is filled for each. Only send info if it's filled.
@@ -193,10 +174,24 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
         val gotoHomeScreen = Intent(this, TestHousemateActivity::class.java)
         startActivity(gotoHomeScreen)
     }
+    private fun getDateTimeCalendar() {
+        val calendar = Calendar.getInstance()
+        day = calendar.get(Calendar.DAY_OF_MONTH)
+        month = calendar.get(Calendar.MONTH)
+        year = calendar.get(Calendar.YEAR)
+    }
+//    @SuppressLint("ApplySharedPref")
+//    private fun sendNameOfClientToSP(clientName: String) {
+//        val spEditor: SharedPreferences.Editor = sharedPref.edit()
+//        spEditor.putString(clientNameSPTag, clientName).commit()
+//    }
+//
+//    private fun getNameOfClientFromSP(): String? {
+//        return sharedPref.getString(clientNameSPTag, null)
+//    }
     // HELPER FUNCTIONS //
     // CLICK LISTENERS //
     private fun buttonsOnClick() {
-        // todo:
         i1shoppingWhenNeededDoneBtn.setOnClickListener {
             getDateTimeCalendar()
             lastDateBtnClicked = testHousemateActivity.SHOPPING_LIST_DOC
@@ -214,7 +209,7 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
             // ----
             // -if not true, add it to shared preferences
             // -then add that as a property in the db item
-            var clientName = getNameOfClientFromSP()
+            var clientName = getDataFromSP(sharedPref, clientNameSPTag) // getNameOfClientFromSP()
             if (clientName == null) {
                 Log.d(activityTAG, "buttonsOnClick: clientName pt1 = $clientName")
                 val nameInputDialog = MaterialAlertDialogBuilder(this)
@@ -225,13 +220,13 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
                     .setTitle("Type your name")
                     .setPositiveButton("Accept") { dialog, _ ->
                         clientName = inputNameDialog.text.toString()
-                        sendNameOfClientToSP(clientName!!)
+                        sendDataToSP(sharedPref, clientNameSPTag, clientName!!) // sendNameOfClientToSP(clientName!!)
                         dialog.dismiss()
                         addItems(clientName)
                     }
                     .setNeutralButton("Anonymous") { dialog, _ ->
                         clientName = "anonymous"
-                        sendNameOfClientToSP(clientName!!)
+                        sendDataToSP(sharedPref, clientNameSPTag, clientName!!)  // sendNameOfClientToSP(clientName!!)
                         dialog.dismiss()
                         addItems(clientName)
                     }
