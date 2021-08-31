@@ -25,10 +25,8 @@ import kotlin.collections.HashMap
 // -display the groupID somewhere in the UI
 // -make/get client group id
 // -make/get client id
-// - fo authentication
+// - for authentication
 // start this database with a '00000000asdfg' groupID before users start using the app
-
-// todo: give feedback to user when volunteer name is changed
 
 class TestHousemateActivity : AppCompatActivity() {
 

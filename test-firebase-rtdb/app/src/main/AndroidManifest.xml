@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestFirebaseRoomCache">
         <activity
-            android:name=".OrdersActivity"
+            android:name=".cutomerorders.OrdersActivity"
             android:exported="true" />
         <activity android:name=".basicconcepts.BasicsActivity" />
         <activity android:name=".MainActivity">

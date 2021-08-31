@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.testfirebaseroomcache.basicconcepts.BasicsActivity
+import com.example.testfirebaseroomcache.cutomerorders.OrdersActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 // Have a Firebase database with offline cache
