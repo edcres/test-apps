@@ -1,12 +1,11 @@
-package com.example.testfirebaseroomcache
+package com.example.testfirebaseroomcache.basicconcepts
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
-import com.example.testfirebaseroomcache.entities.PatientInfo
-import com.example.testfirebaseroomcache.entities.SicknessInfo
+import com.example.testfirebaseroomcache.R
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -14,7 +13,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_basics.*
-import kotlinx.android.synthetic.main.activity_main.*
 
 /*
 App Explanation:

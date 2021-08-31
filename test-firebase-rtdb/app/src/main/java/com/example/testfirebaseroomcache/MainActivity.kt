@@ -3,14 +3,7 @@ package com.example.testfirebaseroomcache
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Log
-import android.widget.Button
-import com.example.testfirebaseroomcache.entities.SicknessInfo
-import com.example.testfirebaseroomcache.entities.PatientInfo
-import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.example.testfirebaseroomcache.basicconcepts.BasicsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 // Have a Firebase database with offline cache
@@ -23,15 +16,18 @@ import kotlinx.android.synthetic.main.activity_main.*
 // add authentication
 
 class MainActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        buttonOnClick()
+        buttonsOnClick()
     }
 
-    private fun buttonOnClick() {
+    private fun buttonsOnClick() {
+        orders_db_btn.setOnClickListener {
+            val goToOrdersDB = Intent(this, OrdersActivity::class.java)
+            startActivity(goToOrdersDB)
+        }
         basics_db_btn.setOnClickListener {
             val goToSimpleDB = Intent(this, BasicsActivity::class.java)
             startActivity(goToSimpleDB)
