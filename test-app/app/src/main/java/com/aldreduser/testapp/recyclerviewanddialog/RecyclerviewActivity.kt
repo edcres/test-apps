@@ -1,4 +1,4 @@
-package com.aldreduser.testapp.ui.activities
+package com.aldreduser.testapp.recyclerviewanddialog
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,16 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.aldreduser.testapp.R
-import com.aldreduser.testapp.ui.adapters.TestRecyclerviewAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputLayout
-import kotlinx.android.synthetic.main.activity_main.*
 
-// https://www.youtube.com/watch?v=afl_i6uvvU0
-
-class MainActivity : AppCompatActivity() {
+class RecyclerviewActivity : AppCompatActivity() {
 
     private lateinit var materialAlertDialogBuilder: MaterialAlertDialogBuilder
     private lateinit var customAlertDialogView: View
@@ -25,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_recyclerview)
 
         materialAlertDialogBuilder = MaterialAlertDialogBuilder(this)
         testDialogBtn = findViewById(R.id.test_dialog_btn)
@@ -47,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         materialAlertDialogBuilder.setView(customAlertDialogView)
             .setPositiveButton("Accept") { dialog, _ ->
                 clientName = nameTextField.text.toString()
-                Log.d("TAG", "launchCustomAlertDialog: 1111 clientName = $clientName")
+                Log.d("TAG", "launchCustomAlertDialog: clientName = $clientName")
                 dialog.dismiss()
             }
             .setNeutralButton("Anonymous") { dialog, _ ->

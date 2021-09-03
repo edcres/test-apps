@@ -23,10 +23,18 @@ import com.google.firebase.ktx.Firebase
 //  -delete option
 // preview displays: order# || short note about the order || date added
 
+
+// have a list of order numbers inside the locations node
+// db.child(ORDERS_DB_NODE).child(LOCATION_NODE).child(locationID!!).child(orderNumber)
+
+// todo: setup some realtime fetch (the list of past orders)
+
 class OrdersActivity : AppCompatActivity() {
 
     private lateinit var sharedPref: SharedPreferences
     private val db = Firebase.database.reference
+
+    private lateinit var customerOrders: MutableList<CustomerOrder>
 
     private lateinit var orderNumTxt: TextView
     private lateinit var dateAddedTxt: TextView
@@ -50,7 +58,6 @@ class OrdersActivity : AppCompatActivity() {
         private const val DETAILS_FIELD = "Details"
         private const val NOTE_FIELD = "Note"
         private const val DATE_FIELD = "date added"
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +72,25 @@ class OrdersActivity : AppCompatActivity() {
     }
 
     // HELPER FUNCTIONS //
+    private fun doAfterIdFetch() {
+        // todo:
+        //  -get past orders list from db
+        //  -populate the past_orders_linear_layout
+        db.child(ORDERS_DB_NODE).child(LOCATION_NODE).child(locationID!!).child(orderNumber)
+            .get().addOnSuccessListener {
+                //todo:
+                // for each customer id {
+                customerOrders.add()
+                // add a widget with the order info to a list of these widgets
+                // }
+                // add the list of customer order widgets inside the past_orders_linear_layout
+                val textForBtn = "${removeLocationBtn.text} $locationID"
+                removeLocationBtn.text = textForBtn
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "doAfterIdFetch: Database fetch failed")
+            }
+    }
     private fun getDataFromSPAndSetUpUI() {
         // try to get from SP, if null, pop a dialog box
         locationID = sharedPref.getString(LOCATION_ID_SP_TAG, null)
@@ -73,17 +99,14 @@ class OrdersActivity : AppCompatActivity() {
             // pop a dialog box and have user type the location id
             makeDialogBoxAndSetLocationID()
         } else {
-            // todo:
-            //  get data from db
-            //  populate the UI
-            //  display store ID
+            doAfterIdFetch() // get data from db, populate UI, display store ID
         }
     }
     @SuppressLint("ApplySharedPref")
     private fun sendDataToSP(theLocationId: String, sPTag: String) {
         // save location id tp SP
         val spEditor: SharedPreferences.Editor = sharedPref.edit()
-        spEditor.putString(LOCATION_ID_SP_TAG, theLocationId).commit()
+        spEditor.putString(sPTag, theLocationId).commit()
     }
     @SuppressLint("ApplySharedPref")
     private fun clearSP() {
@@ -102,10 +125,7 @@ class OrdersActivity : AppCompatActivity() {
                 locationID = inputStringDialog.text.toString()
                 Log.d(TAG, "makeDialogBoxAndSetLocationID: accept clicked $locationID")
                 sendDataToSP(locationID!!, LOCATION_ID_SP_TAG)
-                // todo:
-                //  get data from db
-                //  populate the UI
-                //  display store ID
+                doAfterIdFetch()    // get data from db, populate UI, display store ID
                 dialog.dismiss()
             }
             .show()
@@ -131,6 +151,7 @@ class OrdersActivity : AppCompatActivity() {
         pastOrdersLinearLayt = findViewById(R.id.past_orders_linear_layout)
         removeLocationBtn = findViewById(R.id.remove_location_btn)
     }
+    @SuppressLint("SetTextI18n")
     private fun clickListeners() {
         saveOrderBtn.setOnClickListener {
             // Check if it already has one date, if not add a new one)
@@ -151,15 +172,36 @@ class OrdersActivity : AppCompatActivity() {
 
             // todo: send it to db
             // todo: get/generate order number
-            db.child(ORDERS_DB_NODE).child(LOCATION_NODE).child(locationID).child(orderNumber)
+            // Check if the 'order_num_txt' is empty, if yes generate a new order number.
+            //  If not, use 'order_num_txt.text.toString' to update that order# nose
+            if (orderNumTxt.text == "") {
+                // make a new order#
+                // check the last order in the database
+                // get the last 5 digits, add one and make it in the same format (H6872-74376)
+                // orderNumber =
+            } else {
+                orderNumber = orderNumTxt.text.toString()
+            }
+            db.child(ORDERS_DB_NODE).child(LOCATION_NODE).child(locationID!!).child(orderNumber)
                 .setValue(customerOrder)
         }
         removeOrderBtn.setOnClickListener {
-            // todo: remove that order from the db
-            orderNumTxt.text.toString()
+            orderNumber = orderNumTxt.text.toString()
+            if(orderNumber != "") {
+                db.child(ORDERS_DB_NODE).child(LOCATION_NODE).child(locationID!!)
+                    .child(orderNumber).removeValue()
+                    .addOnSuccessListener {
+                        // clear texts
+                        orderNumTxt.text = ""
+                        orderDetailsEdtTxt.setText("")
+                        orderNotesEdtTxt.setText("")
+                        dateAddedTxt.text = ""
+                    }
+            }
         }
         removeLocationBtn.setOnClickListener {
             clearSP()
+            removeLocationBtn.text = "Remove Location"
         }
     }
     // SETUP FUNCTIONS //

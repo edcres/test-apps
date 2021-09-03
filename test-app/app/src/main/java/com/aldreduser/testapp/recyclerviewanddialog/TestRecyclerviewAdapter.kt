@@ -1,4 +1,4 @@
-package com.aldreduser.testapp.ui.adapters
+package com.aldreduser.testapp.recyclerviewanddialog
 
 import android.view.LayoutInflater
 import android.view.View

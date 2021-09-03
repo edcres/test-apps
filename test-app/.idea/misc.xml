@@ -8,7 +8,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout/activity_add_widget_to_layout.xml" value="0.29583333333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/activity_recyclerview.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_view.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/recycler_item.xml" value="0.3098958333333333" />
       </map>
