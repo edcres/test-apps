@@ -13,7 +13,7 @@
             android:name=".addwidgettolayout.AddWidgetToLayoutActivity"
             android:exported="true" />
         <activity
-            android:name=".recyclerviewanddialog.RecyclerviewActivity" />
+            android:name=".basicrecyclerview.RecyclerviewActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

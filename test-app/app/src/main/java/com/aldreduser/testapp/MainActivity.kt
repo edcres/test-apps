@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.aldreduser.testapp.addwidgettolayout.AddWidgetToLayoutActivity
-import com.aldreduser.testapp.recyclerviewanddialog.RecyclerviewActivity
+import com.aldreduser.testapp.basicrecyclerview.RecyclerviewActivity
 
 // https://www.youtube.com/watch?v=afl_i6uvvU0
 

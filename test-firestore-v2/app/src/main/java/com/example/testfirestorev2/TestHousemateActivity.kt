@@ -441,6 +441,8 @@ class TestHousemateActivity : AppCompatActivity() {
         Log.d(TAG, "get3ItemsFromDB: groupID to fetch: $clientGroupIDCollection")
         groupIDCollectionDB.document(CLIENT_IDS_DOC).get()
             .addOnSuccessListener { result ->
+                // This db query is probably unnecessary , I'm doing 2 more specific
+                //  queries with this, and I'm actually using fetched data from those
                 Log.d(TAG, "get3ItemsFromDB: ID = $clientGroupIDCollection")
                 if (result.data == null) {
                     // the group doesn't exists
@@ -453,7 +455,7 @@ class TestHousemateActivity : AppCompatActivity() {
                     groupIDCollectionDB.document(SHOPPING_LIST_DOC)
                         .collection(SHOPPING_ITEMS_COLLECTION)
                         .get()
-                        .addOnSuccessListener { shoppingResult ->
+                            .addOnSuccessListener { shoppingResult ->
                             Log.d(TAG, "get3ItemsFromDB: shopping called")
                             for (document in shoppingResult) {
                                 // add 3 items to the list and exit the get call

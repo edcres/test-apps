@@ -15,16 +15,17 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/itemText"
+            android:id="@+id/item_text_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="80sp"
+            android:textSize="60sp"
             android:text="Item"/>
+
         <TextView
-            android:id="@+id/subItemText"
+            android:id="@+id/item_sub_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="40sp"
+            android:textSize="20sp"
             android:text="Sub item"/>
 
     </LinearLayout>

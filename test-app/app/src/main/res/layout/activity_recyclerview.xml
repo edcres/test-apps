@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".recyclerviewanddialog.RecyclerviewActivity">
+    tools:context=".basicrecyclerview.RecyclerviewActivity">
 
-    <Button
-        android:id="@+id/test_dialog_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="pop up dialog"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/basic_recyclerview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/recycler_item_1" />
 </androidx.constraintlayout.widget.ConstraintLayout>
