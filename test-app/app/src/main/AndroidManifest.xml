@@ -10,10 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestApp">
         <activity
-            android:name=".addwidgettolayout.AddWidgetToLayoutActivity"
+            android:name=".recyclerviewclicklistener.RecyclerClickListener"
             android:exported="true" />
         <activity
-            android:name=".basicrecyclerview.RecyclerviewActivity" />
+            android:name=".addwidgettolayout.AddWidgetToLayoutActivity"
+            android:exported="true" />
+        <activity android:name=".basicrecyclerview.RecyclerviewActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

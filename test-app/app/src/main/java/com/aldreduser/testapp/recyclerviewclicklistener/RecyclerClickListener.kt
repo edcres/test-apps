@@ -1,35 +1,34 @@
-package com.aldreduser.testapp.basicrecyclerview
+package com.aldreduser.testapp.recyclerviewclicklistener
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
 import android.widget.Button
-import android.widget.EditText
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aldreduser.testapp.R
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.activity_recyclerview.*
+import com.aldreduser.testapp.basicrecyclerview.BasicRecyclerItem
 import kotlin.random.Random
 
 // Explaining this activity:
 // -recyclerview with a predefined list of data
 // -the list is of object 'BasicRecyclerItem'
 // -the text of the main text is set here and the subtext is set in the adapter
+// -click listener on a recycler item (not the widgets inside the item)
 
-class RecyclerviewActivity : AppCompatActivity() {
+// https://www.youtube.com/watch?v=wKFJsrdiGS8
+
+class RecyclerClickListener : AppCompatActivity(), RecyclerClickListenerAdapter.OnItemClickListener {
 
     private lateinit var insertItemBtn: Button
     private lateinit var removeItemBtn: Button
     private lateinit var recyclerView: RecyclerView
     private val exampleList = fillUpRecyclerView(100)
-    private val recyclerAdapter = TestRecyclerviewAdapter(exampleList)
+    private val recyclerAdapter = RecyclerClickListenerAdapter(exampleList, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_recyclerview)
+        setContentView(R.layout.activity_recycler_click_listener)
 
         setUIWidgets()
 
@@ -37,6 +36,15 @@ class RecyclerviewActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         eventListeners()
+    }
+
+    // this is used by the recycler adapter to handle click eventsn
+    override fun onItemClick(position: Int) {
+        Toast.makeText(this, "Item position: $position clicked", Toast.LENGTH_SHORT)
+            .show()
+        val clickedItem = exampleList[position]
+        clickedItem.text1 = "Clicked"
+        recyclerAdapter.notifyItemChanged(position)
     }
 
     // CLICK LISTENERS //
