@@ -19,9 +19,6 @@ class MainActivity : AppCompatActivity() {
 
         binding?.apply {
             lifecycleOwner = this@MainActivity
-
         }
-
     }
-
 }
