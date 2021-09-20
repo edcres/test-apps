@@ -13,12 +13,14 @@ import kotlin.random.Random
 // Explaining this activity:
 // -recyclerview with a predefined list of data
 // -the list is of object 'BasicRecyclerItem'
+// -add and remove item features
 // -the text of the main text is set here and the subtext is set in the adapter
 // -click listener on a recycler item (not the widgets inside the item)
 
 // https://www.youtube.com/watch?v=wKFJsrdiGS8
 
-class RecyclerClickListener : AppCompatActivity(), RecyclerClickListenerAdapter.OnItemClickListener {
+class RecyclerClickListener
+    : AppCompatActivity(), RecyclerClickListenerAdapter.OnItemClickListener {
 
     private lateinit var insertItemBtn: Button
     private lateinit var removeItemBtn: Button
@@ -38,7 +40,7 @@ class RecyclerClickListener : AppCompatActivity(), RecyclerClickListenerAdapter.
         eventListeners()
     }
 
-    // this is used by the recycler adapter to handle click eventsn
+    // this is used by the recycler adapter to handle click events
     override fun onItemClick(position: Int) {
         Toast.makeText(this, "Item position: $position clicked", Toast.LENGTH_SHORT)
             .show()

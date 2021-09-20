@@ -17,6 +17,7 @@ import kotlin.random.Random
 // Explaining this activity:
 // -recyclerview with a predefined list of data
 // -the list is of object 'BasicRecyclerItem'
+// -add and remove item features
 // -the text of the main text is set here and the subtext is set in the adapter
 
 class RecyclerviewActivity : AppCompatActivity() {

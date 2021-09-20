@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestApp">
         <activity
+            android:name=".recyclerwidgetclick.RecyclerWidgetClickActivity"
+            android:exported="true" />
+        <activity
             android:name=".recyclerviewclicklistener.RecyclerClickListener"
             android:exported="true" />
         <activity

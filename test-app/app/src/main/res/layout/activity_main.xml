@@ -7,12 +7,28 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/recycler_widget_click_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recycler Widget OnClick"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/recycler_click_activity_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recyclerview OnClick"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recycler_widget_click_btn" />
+
+    <Button
         android:id="@+id/recyclerview_activity_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Basic Recyclerview"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/recycler_click_activity_btn" />
 
     <Button
         android:id="@+id/add_layout_widgets_activity_btn"

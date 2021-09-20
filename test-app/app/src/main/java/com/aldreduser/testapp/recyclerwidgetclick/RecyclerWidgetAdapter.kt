@@ -1,4 +1,4 @@
-package com.aldreduser.testapp.recyclerviewclicklistener
+package com.aldreduser.testapp.recyclerwidgetclick
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -9,22 +9,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aldreduser.testapp.R
 import com.aldreduser.testapp.basicrecyclerview.BasicRecyclerItem
 
-class RecyclerClickListenerAdapter(
+class RecyclerWidgetAdapter(
     private val itemsList: List<BasicRecyclerItem>,
     private val onItemClickListener: OnItemClickListener
-) : RecyclerView.Adapter<RecyclerClickListenerAdapter.ClickListenerViewHolder>() {
+) : RecyclerView.Adapter<RecyclerWidgetAdapter.ClickWidgetViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClickListenerViewHolder {
-        // 'LayoutInflater' turns .xml layout files into view objects
+    companion object {
+        private const val TAG = "RecyclerWidgetAdapter"
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
+            : ClickWidgetViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.recycler_item_1, parent, false)
 
-        return ClickListenerViewHolder(itemView)
+        return ClickWidgetViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: ClickListenerViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ClickWidgetViewHolder, position: Int) {
         val currentItem = itemsList[position]
-        val itemSubTextText = "position in recycler when added: $position"
+        val itemSubTextText = "position in recycler: $position"
 
         holder.itemText1.text = currentItem.text1
         holder.itemSubText.text = itemSubTextText
@@ -45,30 +49,34 @@ class RecyclerClickListenerAdapter(
     }
 
     // without 'inner' this would be a static class in Java
-    inner class ClickListenerViewHolder(itemView: View) :
+    inner class ClickWidgetViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        // 'itemView' is an instance of the .xml recycler item
+
         val itemText1: TextView = itemView.findViewById(R.id.item_text_1)
         val itemSubText: TextView = itemView.findViewById(R.id.item_sub_text)
 
-        // have click listeners here. These can be in onBindViewHolder but that's inefficient
         init {
-            itemView.setOnClickListener(this)
+            itemText1.setOnClickListener {
+                // In MVVM have a reference to the viewModel, and call a function to handle
+                    // the click event
+                val txtToDisplay = "Text was clicked."
+                itemSubText.text = txtToDisplay
+            }
         }
 
-        // Could use lambdas to handle clicks but this (interfaces) is simpler
         override fun onClick(v: View?) {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                // do this bc its possible to delete an item but click it before it's completely
-                    // animated off the recyclerview
+                // Do this if check bc its possible to delete an item but click it before
+                // it's completely animated off the recyclerview.
                 onItemClickListener.onItemClick(position)
             }
         }
+
     }
 
-    // this interface is implemented by the file that calls this adapter
     interface OnItemClickListener {
+        // Can pass more parameters and have the viewModel decide what to do with this data.
         fun onItemClick(position: Int)
     }
 }
