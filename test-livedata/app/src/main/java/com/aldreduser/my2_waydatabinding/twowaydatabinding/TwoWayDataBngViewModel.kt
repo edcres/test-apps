@@ -1,9 +1,9 @@
-package com.aldreduser.my2_waydatabinding
+package com.aldreduser.my2_waydatabinding.twowaydatabinding
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class MainViewModel : ViewModel() {
+class TwoWayDataBngViewModel : ViewModel() {
 
     val textDisplayed = MutableLiveData<String>()
 

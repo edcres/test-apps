@@ -1,24 +1,23 @@
-package com.aldreduser.my2_waydatabinding
+package com.aldreduser.my2_waydatabinding.twowaydatabinding
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import com.aldreduser.my2_waydatabinding.databinding.MainFragmentBinding
+import com.aldreduser.my2_waydatabinding.databinding.FragmentTwoWayBindingBinding
 
-class MainFragment : Fragment() {
+class TwoWayDataBngFragment : Fragment() {
 
-    private var binding: MainFragmentBinding? = null
-    private val mainViewModel: MainViewModel by activityViewModels()
+    private var binding: FragmentTwoWayBindingBinding? = null
+    private val twoWayDataBngViewModel: TwoWayDataBngViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val fragmentBinding = MainFragmentBinding.inflate(inflater, container, false)
+        val fragmentBinding = FragmentTwoWayBindingBinding.inflate(inflater, container, false)
         binding = fragmentBinding
         return fragmentBinding.root
     }
@@ -28,7 +27,7 @@ class MainFragment : Fragment() {
 
         binding?.apply {
             lifecycleOwner = viewLifecycleOwner
-            viewModel = mainViewModel
+            viewModel = twoWayDataBngViewModel
         }
     }
 

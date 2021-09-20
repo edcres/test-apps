@@ -7,13 +7,14 @@
 
         <variable
             name="viewModel"
-            type="com.aldreduser.my2_waydatabinding.MainViewModel" />
+            type="com.aldreduser.my2_waydatabinding.twowaydatabinding.TwoWayDataBngViewModel" />
     </data>
 
     <androidx.fragment.app.FragmentContainerView
-        android:name="com.aldreduser.my2_waydatabinding.MainFragment"
+        android:id="@+id/fragment_containerView"
+        android:name="com.aldreduser.my2_waydatabinding.twowaydatabinding.TwoWayDataBngFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/main_fragment" />
+        tools:layout="@layout/fragment_two_way_binding" />
 
 </layout>
