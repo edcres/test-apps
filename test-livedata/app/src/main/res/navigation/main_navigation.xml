@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/startingFragment">
+    <fragment
+        android:id="@+id/startingFragment"
+        android:name="com.aldreduser.my2_waydatabinding.StartingFragment"
+        android:label="fragment_starting"
+        tools:layout="@layout/fragment_starting" >
+        <action
+            android:id="@+id/action_startingFragment_to_twoWayDataBngFragment"
+            app:destination="@id/twoWayDataBngFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_basicObserverFragment"
+            app:destination="@id/basicObserverFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/twoWayDataBngFragment"
+        android:name="com.aldreduser.my2_waydatabinding.twowaydatabinding.TwoWayDataBngFragment"
+        android:label="fragment_two_way_data_bng"
+        tools:layout="@layout/fragment_two_way_binding"/>
+    <fragment
+        android:id="@+id/basicObserverFragment"
+        android:name="com.aldreduser.my2_waydatabinding.BasicObserverFragment"
+        android:label="fragment_basic_observer"
+        tools:layout="@layout/fragment_basic_observer" />
+</navigation>

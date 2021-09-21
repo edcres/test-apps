@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<!--<layout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools">-->
 
-    <data>
+<!--    <data>-->
 
-        <variable
-            name="viewModel"
-            type="com.aldreduser.my2_waydatabinding.twowaydatabinding.TwoWayDataBngViewModel" />
-    </data>
+<!--        <variable-->
+<!--            name="viewModel"-->
+<!--            type="com.aldreduser.my2_waydatabinding.twowaydatabinding.TwoWayDataBngViewModel" />-->
+<!--    </data>-->
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_containerView"
-        android:name="com.aldreduser.my2_waydatabinding.twowaydatabinding.TwoWayDataBngFragment"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_two_way_binding" />
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/main_navigation" />
 
-</layout>
+    <!--    <androidx.fragment.app.FragmentContainerView-->
+<!--        android:id="@+id/fragment_containerView"-->
+<!--        android:name="com.aldreduser.my2_waydatabinding.StartingFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:defaultNavHost="true"-->
+<!--        app:navGraph="@navigation/main_navigation"/>-->
+<!--&lt;!&ndash;    android:name="com.aldreduser.my2_waydatabinding.twowaydatabinding.TwoWayDataBngFragment"&ndash;&gt;-->
+<!--    &lt;!&ndash;    com/aldreduser/my2_waydatabinding/StartingFragment.kt&ndash;&gt;-->
+<!--</layout>-->

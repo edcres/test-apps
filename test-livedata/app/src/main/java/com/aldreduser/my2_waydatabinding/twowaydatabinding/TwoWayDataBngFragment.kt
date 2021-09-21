@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import com.aldreduser.my2_waydatabinding.databinding.ActivityMainBinding.inflate
 import com.aldreduser.my2_waydatabinding.databinding.FragmentTwoWayBindingBinding
 
 class TwoWayDataBngFragment : Fragment() {
