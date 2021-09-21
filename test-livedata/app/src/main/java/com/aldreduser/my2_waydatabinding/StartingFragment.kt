@@ -19,11 +19,15 @@ class StartingFragment : Fragment() {
 
         val twoWayBindingFragBtn = view.findViewById<Button>(R.id.two_way_binding_frag_btn)
         val basicObserverBtn = view.findViewById<Button>(R.id.basic_observer_btn)
+        val mutableLiveDataBtn = view.findViewById<Button>(R.id.mutable_live_data_btn)
         twoWayBindingFragBtn.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_startingFragment_to_twoWayDataBngFragment)
         }
         basicObserverBtn.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_startingFragment_to_basicObserverFragment)
+        }
+        mutableLiveDataBtn.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_startingFragment_to_mutableLivedataFragment)
         }
 
         return view

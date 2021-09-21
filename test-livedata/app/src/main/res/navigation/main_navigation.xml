@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_startingFragment_to_basicObserverFragment"
             app:destination="@id/basicObserverFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_mutableLivedataFragment"
+            app:destination="@id/mutableLivedataFragment" />
     </fragment>
     <fragment
         android:id="@+id/twoWayDataBngFragment"
@@ -23,7 +26,12 @@
         tools:layout="@layout/fragment_two_way_binding"/>
     <fragment
         android:id="@+id/basicObserverFragment"
-        android:name="com.aldreduser.my2_waydatabinding.BasicObserverFragment"
+        android:name="com.aldreduser.my2_waydatabinding.basicobserver.BasicObserverFragment"
         android:label="fragment_basic_observer"
         tools:layout="@layout/fragment_basic_observer" />
+    <fragment
+        android:id="@+id/mutableLivedataFragment"
+        android:name="com.aldreduser.my2_waydatabinding.mutablelivedata.MutableLivedataFragment"
+        android:label="fragment_mutable_livedata"
+        tools:layout="@layout/fragment_mutable_livedata" />
 </navigation>

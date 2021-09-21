@@ -3,7 +3,7 @@ package com.aldreduser.my2_waydatabinding
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import com.aldreduser.my2_waydatabinding.databinding.ActivityMainBinding
+//import com.aldreduser.my2_waydatabinding.databinding.ActivityMainBinding
 import com.aldreduser.my2_waydatabinding.twowaydatabinding.TwoWayDataBngViewModel
 
 class MainActivity : AppCompatActivity() {
