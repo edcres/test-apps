@@ -23,9 +23,7 @@ class MutableLivedataFragment : Fragment() {
 
     private lateinit var timer: CountDownTimer
     private val _seconds = MutableLiveData<Int>()   //private
-    fun seconds(): LiveData<Int>{       //public
-        return _seconds
-    }
+    val seconds: LiveData<Int> get() = _seconds     //public
     var finished = MutableLiveData<Boolean>()
 
     override fun onCreateView(
@@ -37,7 +35,7 @@ class MutableLivedataFragment : Fragment() {
         startTimer()
         val timerTxt = view.findViewById<TextView>(R.id.timer_txt)
 
-        seconds().observe(viewLifecycleOwner, Observer {
+        seconds.observe(viewLifecycleOwner, Observer {
             // 'it' refers to 'seconds()'
             timerTxt!!.text = it.toString()
         })

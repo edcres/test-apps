@@ -13,11 +13,11 @@
             android:id="@+id/action_startingFragment_to_twoWayDataBngFragment"
             app:destination="@id/twoWayDataBngFragment" />
         <action
-            android:id="@+id/action_startingFragment_to_basicObserverFragment"
-            app:destination="@id/basicObserverFragment" />
-        <action
             android:id="@+id/action_startingFragment_to_mutableLivedataFragment"
             app:destination="@id/mutableLivedataFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_mvvmObserverFragment"
+            app:destination="@id/mvvmObserverFragment" />
     </fragment>
     <fragment
         android:id="@+id/twoWayDataBngFragment"
@@ -25,13 +25,13 @@
         android:label="fragment_two_way_data_bng"
         tools:layout="@layout/fragment_two_way_binding"/>
     <fragment
-        android:id="@+id/basicObserverFragment"
-        android:name="com.aldreduser.my2_waydatabinding.basicobserver.BasicObserverFragment"
-        android:label="fragment_basic_observer"
-        tools:layout="@layout/fragment_basic_observer" />
-    <fragment
         android:id="@+id/mutableLivedataFragment"
         android:name="com.aldreduser.my2_waydatabinding.mutablelivedata.MutableLivedataFragment"
         android:label="fragment_mutable_livedata"
         tools:layout="@layout/fragment_mutable_livedata" />
+    <fragment
+        android:id="@+id/mvvmObserverFragment"
+        android:name="com.aldreduser.my2_waydatabinding.mvvmobserver.MVVMObserverFragment"
+        android:label="fragment_livedata_observer"
+        tools:layout="@layout/fragment_mvvm_observer" />
 </navigation>

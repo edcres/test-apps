@@ -16,16 +16,7 @@
         android:text="Two Way Binding"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/basic_observer_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:text="Basic Observer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/two_way_binding_frag_btn" />
-
+    
     <Button
         android:id="@+id/mutable_live_data_btn"
         android:layout_width="wrap_content"
@@ -33,6 +24,15 @@
         android:layout_margin="4dp"
         android:text="Mutable Live Data"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/basic_observer_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/two_way_binding_frag_btn" />
+
+    <Button
+        android:id="@+id/livedata_observer_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:text="Livedata Observer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mutable_live_data_btn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

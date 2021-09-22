@@ -11,6 +11,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_two_way_data_bng.xml" value="0.29583333333333334" />
         <entry key="app/src/main/res/layout/fragment_basic_observer.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_livedata_observer.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_mutable_livedata.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_starting.xml" value="0.29583333333333334" />
         <entry key="app/src/main/res/layout/fragment_two_way_binding.xml" value="0.3098958333333333" />
