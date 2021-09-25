@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/startingFragment">
+
+    <fragment
+        android:id="@+id/startingFragment"
+        android:name="com.example.testcoroutines.StartingFragment"
+        android:label="fragment_starting"
+        tools:layout="@layout/fragment_starting" >
+        <action
+            android:id="@+id/action_startingFragment_to_asyncAwaitFragment"
+            app:destination="@id/asyncAwaitFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_parallelAsyncAwait"
+            app:destination="@id/parallelAsyncAwait" />
+        <action
+            android:id="@+id/action_startingFragment_to_basicCoroutines"
+            app:destination="@id/basicCoroutines" />
+    </fragment>
+    <fragment
+        android:id="@+id/asyncAwaitFragment"
+        android:name="com.example.testcoroutines.basicasyncawait.AsyncAwaitFragment"
+        android:label="fragment_async_await"
+        tools:layout="@layout/fragment_async_await" />
+    <fragment
+        android:id="@+id/parallelAsyncAwait"
+        android:name="com.example.testcoroutines.parallelasyncawait.ParallelAsyncAwait"
+        android:label="fragment_parallel_async_await"
+        tools:layout="@layout/fragment_parallel_async_await" />
+    <fragment
+        android:id="@+id/basicCoroutines"
+        android:name="com.example.testcoroutines.basiccoroutines.BasicCoroutinesFragment"
+        android:label="fragment_basic_coroutines"
+        tools:layout="@layout/fragment_basic_coroutines" />
+</navigation>

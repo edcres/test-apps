@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 
+// prevent bug: make sure FragmentContainerView has:
+//      'android:name="androidx.navigation.fragment.NavHostFragment"'
+
 /** This app uses the Jetpack Navigation Component
  * - Navigation Graph
  *      -an xml resource file that defines all possible paths a user can take through an app

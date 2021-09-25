@@ -22,12 +22,12 @@ class StartingFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_starting, container, false)
 
         bindUIWidgets(view)
-        eventListeners(view)
+        eventListeners()
 
         return view
     }
 
-    private fun eventListeners(view: View) {
+    private fun eventListeners() {
         // 'requireParentFragment().requireView()' gets the parent view bc this has the navHost
         //      there's probably a better way if doing it
         val navController = Navigation.findNavController(requireParentFragment().requireView())
