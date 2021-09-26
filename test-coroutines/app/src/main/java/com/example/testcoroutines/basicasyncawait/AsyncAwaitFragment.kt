@@ -27,6 +27,7 @@ class AsyncAwaitFragment : Fragment() {
 
     private val TAG = "Async Fragment"
 
+    @DelicateCoroutinesApi
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

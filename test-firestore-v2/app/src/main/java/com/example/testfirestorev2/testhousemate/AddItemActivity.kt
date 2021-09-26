@@ -1,4 +1,4 @@
-package com.example.testfirestorev2
+package com.example.testfirestorev2.testhousemate
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -9,6 +9,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.*
+import com.example.testfirestorev2.R
+import com.example.testfirestorev2.getDataFromSP
+import com.example.testfirestorev2.sendDataToSP
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -24,8 +27,8 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
     private val activityTAG = "AddItemActyTAG"
     private val testHousemateActivity = TestHousemateActivity
     private val db = Firebase.firestore
-    private val clientIDCollectionDB = db.collection(testHousemateActivity.GENERAL_COLLECTION)
-        .document(testHousemateActivity.GROUP_IDS_DOC).collection(homeActivity.clientGroupIDCollection!!)
+    private val clientIDCollectionDB = db.collection(TestHousemateActivity.GENERAL_COLLECTION)
+        .document(TestHousemateActivity.GROUP_IDS_DOC).collection(TestHousemateActivity.clientGroupIDCollection!!)
 
     // for date picker
     private var day = 0
@@ -66,9 +69,9 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
     // For date picker
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val txtToDisplay = "$dayOfMonth/${month+1}/$year"
-        if (lastDateBtnClicked == testHousemateActivity.SHOPPING_LIST_DOC) {
+        if (lastDateBtnClicked == TestHousemateActivity.SHOPPING_LIST_DOC) {
             i1shoppingWhenNeededDoneBtn.text = txtToDisplay
-        } else if (lastDateBtnClicked == testHousemateActivity.CHORES_LIST_DOC) {
+        } else if (lastDateBtnClicked == TestHousemateActivity.CHORES_LIST_DOC) {
             i1choresWhenNeededDoneBtn.text = txtToDisplay
         }
     }
@@ -84,19 +87,19 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
         addedBy: String
     ) {
         val shoppingItemData = hashMapOf(
-            homeActivity.NAME_FIELD to itemName,
-            homeActivity.QUANTITY_FIELD to itemQuantity,
-            homeActivity.COST_FIELD to itemCost,
-            homeActivity.PURCHASE_LOCATION_FIELD to purchaseLocation,
-            homeActivity.NEEDED_BY_FIELD to neededBy,
-            homeActivity.PRIORITY_FIELD to itemPriority,
-            homeActivity.COMPLETED_FIELD to false,
-            homeActivity.VOLUNTEER_FIELD to "",
-            homeActivity.ADDED_BY_FIELD to addedBy
+            TestHousemateActivity.NAME_FIELD to itemName,
+            TestHousemateActivity.QUANTITY_FIELD to itemQuantity,
+            TestHousemateActivity.COST_FIELD to itemCost,
+            TestHousemateActivity.PURCHASE_LOCATION_FIELD to purchaseLocation,
+            TestHousemateActivity.NEEDED_BY_FIELD to neededBy,
+            TestHousemateActivity.PRIORITY_FIELD to itemPriority,
+            TestHousemateActivity.COMPLETED_FIELD to false,
+            TestHousemateActivity.VOLUNTEER_FIELD to "",
+            TestHousemateActivity.ADDED_BY_FIELD to addedBy
         )
         // access the clientGroup, then the client, then the shopping item
-        clientIDCollectionDB.document(testHousemateActivity.SHOPPING_LIST_DOC)
-            .collection(testHousemateActivity.SHOPPING_ITEMS_COLLECTION).document(itemName)
+        clientIDCollectionDB.document(TestHousemateActivity.SHOPPING_LIST_DOC)
+            .collection(TestHousemateActivity.SHOPPING_ITEMS_COLLECTION).document(itemName)
             .set(shoppingItemData)
             .addOnSuccessListener { Log.d(activityTAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(activityTAG, "Error writing document", e) }
@@ -110,18 +113,18 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
         addedBy: String
     ) {
         val choresItemData = hashMapOf(
-            homeActivity.NAME_FIELD to itemName,
-            homeActivity.DIFFICULTY_FIELD to difficulty,
-            homeActivity.NEEDED_BY_FIELD to neededBy,
-            homeActivity.PRIORITY_FIELD to itemPriority,
-            homeActivity.COMPLETED_FIELD to false,
-            homeActivity.VOLUNTEER_FIELD to "",
-            homeActivity.ADDED_BY_FIELD to addedBy
+            TestHousemateActivity.NAME_FIELD to itemName,
+            TestHousemateActivity.DIFFICULTY_FIELD to difficulty,
+            TestHousemateActivity.NEEDED_BY_FIELD to neededBy,
+            TestHousemateActivity.PRIORITY_FIELD to itemPriority,
+            TestHousemateActivity.COMPLETED_FIELD to false,
+            TestHousemateActivity.VOLUNTEER_FIELD to "",
+            TestHousemateActivity.ADDED_BY_FIELD to addedBy
         )
 
         // access the clientGroup, then the client, then the shopping item
-        clientIDCollectionDB.document(testHousemateActivity.CHORES_LIST_DOC)
-            .collection(testHousemateActivity.CHORE_ITEMS_COLLECTION).document(itemName)
+        clientIDCollectionDB.document(TestHousemateActivity.CHORES_LIST_DOC)
+            .collection(TestHousemateActivity.CHORE_ITEMS_COLLECTION).document(itemName)
             .set(choresItemData)
             .addOnSuccessListener { Log.d(activityTAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(activityTAG, "Error writing document", e) }
@@ -194,12 +197,12 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
     private fun buttonsOnClick() {
         i1shoppingWhenNeededDoneBtn.setOnClickListener {
             getDateTimeCalendar()
-            lastDateBtnClicked = testHousemateActivity.SHOPPING_LIST_DOC
+            lastDateBtnClicked = TestHousemateActivity.SHOPPING_LIST_DOC
             DatePickerDialog(this, this, year, month, day).show()
         }
         i1choresWhenNeededDoneBtn.setOnClickListener {
             getDateTimeCalendar()
-            lastDateBtnClicked = testHousemateActivity.CHORES_LIST_DOC
+            lastDateBtnClicked = TestHousemateActivity.CHORES_LIST_DOC
             DatePickerDialog(this, this, year, month, day).show()
         }
 

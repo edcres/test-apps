@@ -1,4 +1,4 @@
-package com.example.testfirestorev2
+package com.example.testfirestorev2.testhousemate
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.widget.*
+import com.example.testfirestorev2.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.CollectionReference
@@ -646,7 +647,8 @@ class TestHousemateActivity : AppCompatActivity() {
                         // Get 3 item maps from db and set them to threeShoppingItems
                         threeShoppingItems[i] = snapshot.data as HashMap<String, Any>
                         populateTheListItemsUI()
-                        Log.d(TAG, "setUpRealtimeFetching: " +
+                        Log.d(
+                            TAG, "setUpRealtimeFetching: " +
                                 "${threeShoppingItemsNames[i]} fetch successful.")
                     } else {
                         Log.d(TAG, "setUpRealtimeFetching: Data is null.")
@@ -667,7 +669,8 @@ class TestHousemateActivity : AppCompatActivity() {
                         // get 3 item maps from db and set them to threeChoreItems
                         threeChoreItems[i] = snapshot.data as HashMap<String, Any>
                         populateTheListItemsUI()
-                        Log.d(TAG, "setUpRealtimeFetching: " +
+                        Log.d(
+                            TAG, "setUpRealtimeFetching: " +
                                 "${threeChoreItemsNames[i]} fetch successful.")
                     } else {
                         Log.d(TAG, "setUpRealtimeFetching: Data is null.")

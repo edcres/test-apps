@@ -10,13 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestFirestoreV2">
         <activity
+            android:name=".withrecyclerview.WithRecyclerviewActivity"
+            android:exported="true" />
+        <activity
             android:name=".docsandnotes.MyOwnTestActivity"
             android:exported="true" />
         <activity
-            android:name=".TestHousemateActivity"
+            android:name=".testhousemate.TestHousemateActivity"
             android:exported="true" />
         <activity
-            android:name=".AddItemActivity"
+            android:name=".testhousemate.AddItemActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
