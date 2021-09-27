@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import com.example.testfirestorev2.docsandnotes.MyOwnTestActivity
 import com.example.testfirestorev2.testhousemate.TestHousemateActivity
+import com.example.testfirestorev2.testhousematept2.TestHousematePt2Activity
 import com.example.testfirestorev2.withrecyclerview.WithRecyclerviewActivity
 
 class MainActivity : AppCompatActivity() {
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var testHousemateDb: Button
     private lateinit var testAllDb: Button
     private lateinit var withRecyclerview: Button
+    private lateinit var testHousematePt2Db: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,10 @@ class MainActivity : AppCompatActivity() {
             val goToRecyclerview = Intent(this, WithRecyclerviewActivity::class.java)
             startActivity(goToRecyclerview)
         }
+        withRecyclerview.setOnClickListener {
+            val goToTestHousematePt2 = Intent(this, TestHousematePt2Activity::class.java)
+            startActivity(goToTestHousematePt2)
+        }
     }
 
     // SETUP FUNCTIONS //
@@ -43,5 +49,6 @@ class MainActivity : AppCompatActivity() {
         testHousemateDb = findViewById(R.id.test_housemate_db)
         testAllDb = findViewById(R.id.test_all_db)
         withRecyclerview = findViewById(R.id.with_recyclerview)
+        testHousematePt2Db = findViewById(R.id.test_housemate_pt2_db)
     }
 }

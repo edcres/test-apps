@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestFirestoreV2">
         <activity
+            android:name=".testhousematept2.TestHousematePt2Activity"
+            android:exported="true" />
+        <activity
             android:name=".withrecyclerview.WithRecyclerviewActivity"
             android:exported="true" />
         <activity
