@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             val goToRecyclerview = Intent(this, WithRecyclerviewActivity::class.java)
             startActivity(goToRecyclerview)
         }
-        withRecyclerview.setOnClickListener {
+        testHousematePt2Db.setOnClickListener {
             val goToTestHousematePt2 = Intent(this, TestHousematePt2Activity::class.java)
             startActivity(goToTestHousematePt2)
         }

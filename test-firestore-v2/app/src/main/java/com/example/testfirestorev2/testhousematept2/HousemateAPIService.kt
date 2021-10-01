@@ -3,13 +3,23 @@ package com.example.testfirestorev2.testhousematept2
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.testfirestorev2.testhousematept2.ShoppingItem.Companion.toShoppingItem
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 // https://medium.com/firebase-developers/android-mvvm-firestore-37c3a8d65404
+
+// for addSnapshotListener, use flow instead of coroutines or livedata. Use coroutines when calling the 'getPosts()' function
+// https://stackoverflow.com/questions/63889054/use-kotlin-coroutines-for-real-time-firestore-updates
+
+// for .get and .set fireStore queries, use suspend functions and coroutines
 
 class HousemateAPIService {
 
@@ -32,8 +42,11 @@ class HousemateAPIService {
         const val CHORE_ITEMS_COLLECTION = "Chore Items"
 
         // these might be needed in the viewModel and passed to here
-        var clientGroupIDCollection: String? = null
-        var clientIDCollection: String? = null
+        // todo: update these to real ones
+        var clientGroupIDCollection: String? = "00000asdf"
+//        var clientGroupIDCollection: String? = null
+        var clientIDCollection: String? = "00000asdf"
+//        var clientIDCollection: String? = null
 
         const val NAME_FIELD = "name"
         const val QUANTITY_FIELD = "quantity"
@@ -55,13 +68,13 @@ class HousemateAPIService {
 
 
 
-    //from medium.com
+    //from medium.com       .get()
     object FirebaseProfileService {
         suspend fun getShoppingData(userId: String): ShoppingItem? {
             val db = Firebase.firestore
             return try {
                 db.collection("users")
-                    .document(userId).get().await().toShoppingItem()
+                    .document(userId).get().await().toObject(ShoppingItem::class.java)
 //                    .document(userId).get().await().toShoppingItem()
             } catch (e: Exception) {
                 Log.e(TAG, "Error getting user details", e)
@@ -74,22 +87,39 @@ class HousemateAPIService {
     }
 
 
-    // my implementation copying medium.com
-    suspend fun setUpShoppingRealtimeFetching(): MutableList<ShoppingItem> {
-        return try {
-            val shoppingItemCollectionDB = groupIDCollectionDB.document(SHOPPING_LIST_DOC)
-                .collection(SHOPPING_ITEMS_COLLECTION)
-            shoppingItemCollectionDB.addSnapshotListener { snapshot, e ->
+    // for addSnapshotListener, use flow instead of coroutines or livedata. Use coroutines when calling the 'getPosts()' function
+    /* Steps Here:
+        - Creating a listener registration inside a callback flow
+        - Cancelling the registration in case of any error
+        - Emitting the results via the this.trySend() method
+        - Calling awaitClose
+     */
+    fun getShoppingItemsRealtime(): Flow<MutableList<ShoppingItem>> {
+        return callbackFlow {
+            val listenerRegistration = groupIDCollectionDB.document(SHOPPING_LIST_DOC)
+                .collection(SHOPPING_ITEMS_COLLECTION).addSnapshotListener {
+                        querySnapshot: QuerySnapshot?,
+                        firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(message = "Error fetching posts",
+                            cause = firebaseFirestoreException)
+                        return@addSnapshotListener
+                    }
 
+                    if(querySnapshot != null) {
+                        val itemsList = querySnapshot.toObjects(ShoppingItem::class.java)
+                        this.trySend(itemsList)
+                    } else {
+                        Log.d(TAG, "getPosts: querySnapshot is null")
+                    }
+                }
+            awaitClose {
+                Log.d(TAG, "Cancelling posts listener")
+                listenerRegistration.remove()
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting user details", e)
-//                FirebaseCrashlytics.getInstance().log("Error getting user details")
-//                FirebaseCrashlytics.getInstance().setCustomKey("user id", xpertSlug)
-//                FirebaseCrashlytics.getInstance().recordException(e)
-            null
         }
     }
+
 
 
 
