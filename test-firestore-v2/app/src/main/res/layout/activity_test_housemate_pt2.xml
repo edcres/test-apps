@@ -35,10 +35,10 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-<!--            app:layout_constraintTop_toBottomOf="@+id/shopping_btn">-->
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/shopping_btn">
+            <!--            app:layout_constraintTop_toBottomOf="@+id/shopping_btn">-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -48,25 +48,27 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/shopping_recycler_widget"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    tools:listitem="@layout/profile_recycler_item" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/chores_recycler_widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    tools:listitem="@layout/profile_recycler_item"
                     android:visibility="gone" />
 
             </LinearLayout>
 
         </ScrollView>
 
-        <TextView
-            android:id="@+id/test_item_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/shopping_btn" />
+<!--        <TextView-->
+<!--            android:id="@+id/test_item_list"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/shopping_btn" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

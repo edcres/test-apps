@@ -11,11 +11,6 @@ class HousemateRepository {
         return housemateAPIService.getShoppingItemsRealtime()
     }
 
-    // old method
-    fun setUpFirestoreRealtimeFetching() {
-        housemateAPIService.setUpRealtimeFetching()
-    }
-
     // add item
 
     // remove item

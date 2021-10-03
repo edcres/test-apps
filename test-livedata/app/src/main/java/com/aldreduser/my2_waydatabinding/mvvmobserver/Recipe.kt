@@ -1,4 +1,3 @@
 package com.aldreduser.my2_waydatabinding.mvvmobserver
 
-class Recipe {
-}
+data class Recipe (val name: String, val age: Int)

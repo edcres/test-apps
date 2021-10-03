@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_startingFragment_to_mvvmObserverFragment"
             app:destination="@id/mvvmObserverFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_recyclerviewListAdapter"
+            app:destination="@id/recyclerviewListAdapter" />
     </fragment>
     <fragment
         android:id="@+id/twoWayDataBngFragment"
@@ -34,4 +37,9 @@
         android:name="com.aldreduser.my2_waydatabinding.mvvmobserver.MVVMObserverFragment"
         android:label="fragment_livedata_observer"
         tools:layout="@layout/fragment_mvvm_observer" />
+    <fragment
+        android:id="@+id/recyclerviewListAdapter"
+        android:name="com.aldreduser.my2_waydatabinding.recyclerlistadapter.RecyclerviewListAdapterFragment"
+        android:label="fragment_recycleview_list_adapter"
+        tools:layout="@layout/fragment_recyclerview_list_adapter" />
 </navigation>

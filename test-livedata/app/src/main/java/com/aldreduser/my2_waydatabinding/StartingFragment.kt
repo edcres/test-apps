@@ -13,6 +13,7 @@ class StartingFragment : Fragment() {
     private lateinit var twoWayBindingFragBtn: Button
     private lateinit var mutableLiveDataBtn: Button
     private lateinit var livedataObserverBtn: Button
+    private lateinit var listAdapterBtn: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,11 +42,15 @@ class StartingFragment : Fragment() {
         livedataObserverBtn.setOnClickListener {
             navController.navigate(R.id.action_startingFragment_to_mvvmObserverFragment)
         }
+        listAdapterBtn.setOnClickListener {
+            navController.navigate(R.id.action_startingFragment_to_recyclerviewListAdapter)
+        }
     }
 
     private fun bindUIWidgets(view: View) {
         twoWayBindingFragBtn = view.findViewById(R.id.two_way_binding_frag_btn)
         mutableLiveDataBtn = view.findViewById(R.id.mutable_live_data_btn)
         livedataObserverBtn = view.findViewById(R.id.livedata_observer_btn)
+        listAdapterBtn = view.findViewById(R.id.list_adapter_btn)
     }
 }
