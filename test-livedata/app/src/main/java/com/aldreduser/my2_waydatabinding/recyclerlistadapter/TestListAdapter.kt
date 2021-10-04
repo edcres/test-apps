@@ -28,7 +28,7 @@ class TestListAdapter :
     }
 
     // class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    class RecipeViewHolder(val binding: RecipeRecyclerItemBinding) :
+    class RecipeViewHolder(private val binding: RecipeRecyclerItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bindTo(recipeItem: Recipe) {

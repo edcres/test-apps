@@ -29,11 +29,10 @@
                 android:textSize="26sp"
                 android:textStyle="bold"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/item_name_et"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
@@ -51,11 +50,10 @@
                 android:textSize="26sp"
                 android:textStyle="bold"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/item_needed_by_et"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="date" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
@@ -73,11 +71,10 @@
                 android:textSize="26sp"
                 android:textStyle="bold"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/item_priority_et"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

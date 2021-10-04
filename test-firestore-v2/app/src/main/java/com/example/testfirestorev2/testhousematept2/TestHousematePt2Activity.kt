@@ -75,9 +75,12 @@ class TestHousematePt2Activity : AppCompatActivity() {
     private fun setUpObservers() {
         // owner 'this' might be a bug.
         housemate2ViewModel.shoppingItems.observe(this, Observer { result ->
-            // send the updates list to the recycler adapter
-            recyclerAdapter.submitShoppingList(result)
-//            displayTextText(result)
+            // send the updates list to the ListAdapter
+            // submitList() is how the adapter know how many items to display
+            recyclerAdapter.submitList(result)
+
+            Log.d("HsMtTest2TAG", result[0].name.toString())
+            Log.d("HsMtTest2TAG", result[0].neededBy.toString())
         })
     }
 
