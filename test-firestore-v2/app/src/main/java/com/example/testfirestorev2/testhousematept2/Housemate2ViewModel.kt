@@ -50,6 +50,9 @@ class Housemate2ViewModel: ViewModel() {
             purchaseLocation, itemNeededBy, itemPriority, addedBy
         )
     }
+    fun sendVolunteerToDb(itemName: String, volunteerName: String) {
+        housemateRepository.sendVolunteerToDb(itemName, volunteerName)
+    }
     // DATABASE FUNCTIONS //
 
     // HELPER FUNCTIONS //

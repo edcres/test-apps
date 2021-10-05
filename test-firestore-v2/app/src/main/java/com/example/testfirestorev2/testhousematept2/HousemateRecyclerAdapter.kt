@@ -25,7 +25,7 @@ class HousemateRecyclerAdapter :
     class HousemateRecyclerViewHolder (private val binding: Housemate2RecyclerItemBinding):
         RecyclerView.ViewHolder(binding.root) {
 
-        // maybe set up the observer in the view, and the view contacts the adapter
+        private val housemate2ViewModel = Housemate2ViewModel()
 
         fun bind(item: ShoppingItem) {
             binding.apply {
@@ -35,6 +35,13 @@ class HousemateRecyclerAdapter :
                 itemWhereToGetTxt.text = item.purchaseLocation
                 itemCostTxt.text = item.cost.toString()
                 itemPriorityTxt.text = item.priority.toString()
+                itemAddedByTxt.text = item.addedBy
+                itemVolunteerEt.setText(item.volunteer)
+
+                // send volunteer name to db
+                sendVolunteerBtn.setOnClickListener{
+                    housemate2ViewModel.sendVolunteerToDb(item.name!!, itemVolunteerEt.text.toString())
+                }
             }
         }
 

@@ -69,7 +69,7 @@ class HousemateAPIService {
         - Emitting the results via the this.trySend() method
         - Calling awaitClose
      */
-    // dont need suspend functions with flow
+    // don't need suspend functions with Flow
     fun getShoppingItemsRealtime(): Flow<MutableList<ShoppingItem>> {
         return callbackFlow {
             val listenerRegistration = groupIDCollectionDB.document(SHOPPING_LIST_DOC)
@@ -124,6 +124,12 @@ class HousemateAPIService {
                 Log.d(TAG, "$itemName DocumentSnapshot successfully written!")
             }
             .addOnFailureListener { e -> Log.d(TAG, "Error writing document", e) }
+    }
+    fun sendVolunteerToDb(itemName: String ,volunteerName: String) {
+        groupIDCollectionDB.document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
+            .document(itemName).update(VOLUNTEER_FIELD, volunteerName)
+            .addOnSuccessListener { Log.d(TAG, "$itemName successfully updated to $volunteerName") }
+            .addOnFailureListener { Log.d(TAG, "Error updating doc") }
     }
     // DATABASE WRITES //
 

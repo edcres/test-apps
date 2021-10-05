@@ -84,5 +84,4 @@ class TestHousematePt2Activity : AppCompatActivity() {
         housemate2ViewModel = ViewModelProvider(this)[Housemate2ViewModel::class.java]
     }
     // SETUP FUNCTIONS //
-
 }
