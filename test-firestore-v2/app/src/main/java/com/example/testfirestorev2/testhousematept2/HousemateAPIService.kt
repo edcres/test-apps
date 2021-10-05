@@ -51,10 +51,10 @@ class HousemateAPIService {
         //  this way the fields are correctly fetched from db
         const val NAME_FIELD = "name"
         const val QUANTITY_FIELD = "quantity"
-        const val ADDED_BY_FIELD = "added by"
+        const val ADDED_BY_FIELD = "addedBy"
         const val COMPLETED_FIELD = "completed"
         const val COST_FIELD = "cost"
-        const val PURCHASE_LOCATION_FIELD = "purchase location"
+        const val PURCHASE_LOCATION_FIELD = "purchaseLocation"
         const val NEEDED_BY_FIELD = "neededBy"
         const val VOLUNTEER_FIELD = "volunteer"
         const val PRIORITY_FIELD = "priority"
@@ -69,6 +69,7 @@ class HousemateAPIService {
         - Emitting the results via the this.trySend() method
         - Calling awaitClose
      */
+    // dont need suspend functions with flow
     fun getShoppingItemsRealtime(): Flow<MutableList<ShoppingItem>> {
         return callbackFlow {
             val listenerRegistration = groupIDCollectionDB.document(SHOPPING_LIST_DOC)
@@ -99,13 +100,23 @@ class HousemateAPIService {
     // DATABASE WRITES //
     fun addItemToDatabase(
         itemName: String,
-        itemNeededBy: String,
-        itemPriority: Int
+        itemQuantity: Double,
+        itemCost: Double,
+        purchaseLocation: String,
+        itemNeededBy: String,   // try and make this a date
+        itemPriority: Int,
+        addedBy: String
     ) {
         val shoppingItemData = hashMapOf(
             NAME_FIELD to itemName,
+            QUANTITY_FIELD to itemQuantity,
+            COST_FIELD to itemCost,
+            PURCHASE_LOCATION_FIELD to purchaseLocation,
             NEEDED_BY_FIELD to itemNeededBy,
-            PRIORITY_FIELD to itemPriority
+            PRIORITY_FIELD to itemPriority,
+            COMPLETED_FIELD to false,
+            VOLUNTEER_FIELD to "",
+            ADDED_BY_FIELD to addedBy
         )
         groupIDCollectionDB.document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
             .document(itemName).set(shoppingItemData)

@@ -1,6 +1,5 @@
 package com.example.testfirestorev2.testhousematept2
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -27,18 +26,16 @@ class HousemateRecyclerAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         // maybe set up the observer in the view, and the view contacts the adapter
-        // figure out how to get db changes from db to here
-        // figure out how to get here changes from here to db
 
         fun bind(item: ShoppingItem) {
             binding.apply {
-                itemNameEt.text = item.name
-                itemNeededByEt.text = item.neededBy.toString()
-                itemPriorityEt.text = item.priority.toString()
+                itemNameTxt.text = item.name
+                itemQtyTxt.text = item.quantity.toString()
+                itemNeededByTxt.text = item.neededBy
+                itemWhereToGetTxt.text = item.purchaseLocation
+                itemCostTxt.text = item.cost.toString()
+                itemPriorityTxt.text = item.priority.toString()
             }
-
-            Log.d("HsMtTest2TAG", item.neededBy.toString())
-            Log.d("HsMtTest2TAG", item.neededBy!!)
         }
 
         companion object {
@@ -48,7 +45,6 @@ class HousemateRecyclerAdapter :
                 return HousemateRecyclerViewHolder(binding)
             }
         }
-
     }
 }
 

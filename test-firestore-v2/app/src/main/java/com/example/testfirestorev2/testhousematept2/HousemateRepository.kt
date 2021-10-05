@@ -12,11 +12,18 @@ class HousemateRepository {
 
     // add item
     fun addItemToDb(
-        name: String,
-        neededBy: String,
-        priority: Int
+        itemName: String,
+        itemQuantity: Double,
+        itemCost: Double,
+        purchaseLocation: String,
+        itemNeededBy: String,   // try and make this a date
+        itemPriority: Int,
+        addedBy: String
     ) {
-        housemateAPIService.addItemToDatabase(name, neededBy, priority)
+        housemateAPIService.addItemToDatabase(
+            itemName, itemQuantity, itemCost,
+            purchaseLocation, itemNeededBy, itemPriority, addedBy
+        )
     }
 
     // remove item

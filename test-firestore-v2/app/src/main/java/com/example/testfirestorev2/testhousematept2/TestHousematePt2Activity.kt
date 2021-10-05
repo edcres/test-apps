@@ -24,9 +24,7 @@ class TestHousematePt2Activity : AppCompatActivity() {
         binding = ActivityTestHousematePt2Binding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        Log.d(TAG, "onCreate: before 'setUpViewModel()'")
         setUpViewModel()    // viewModel init{} is called here
-        Log.d(TAG, "onCreate: after 'setUpViewModel()'")
         binding?.apply {
             lifecycleOwner = this@TestHousematePt2Activity
             viewModel = housemate2ViewModel
@@ -57,8 +55,12 @@ class TestHousematePt2Activity : AppCompatActivity() {
                 shoppingRecyclerWidget.visibility = View.VISIBLE
                 housemate2ViewModel.sendItemToDatabase(
                     shoppingEtName.text.toString(),
+                    shoppingEtQty.text.toString().toDouble(),
+                    shoppingEtCost.text.toString().toDouble(),
+                    shoppingEtWhereToGetIt.text.toString(),
                     shoppingEtNeededBy.text.toString(),
-                    shoppingEtPriority.text.toString().toInt()
+                    shoppingEtPriority.text.toString().toInt(),
+                    "Edd"
                 )
             }
         }

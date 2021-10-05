@@ -91,30 +91,60 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
                 android:hint="Name"
+                android:inputType="textPersonName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/shopping_et_qty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Quantity"
+                android:inputType="number"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/shopping_et_name" />
 
             <EditText
                 android:id="@+id/shopping_et_needed_by"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="date"
                 android:hint="Needed by"
+                android:inputType="date"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/shopping_et_name" />
+                app:layout_constraintTop_toBottomOf="@+id/shopping_et_qty" />
+
+            <EditText
+                android:id="@+id/shopping_et_where_to_get_it"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="Where to get it"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/shopping_et_needed_by" />
+
+            <EditText
+                android:id="@+id/shopping_et_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number|numberDecimal"
+                android:hint="Cost"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/shopping_et_where_to_get_it" />
 
             <EditText
                 android:id="@+id/shopping_et_priority"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:hint="Priority (1,2,3)"
                 android:inputType="number"
-                android:hint="Priority"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/shopping_et_needed_by" />
+                app:layout_constraintTop_toBottomOf="@+id/shopping_et_cost" />
 
             <Button
                 android:id="@+id/shopping_send_btn"

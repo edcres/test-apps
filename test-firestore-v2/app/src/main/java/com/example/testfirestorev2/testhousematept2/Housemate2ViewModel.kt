@@ -21,7 +21,6 @@ class Housemate2ViewModel: ViewModel() {
 
     init {
         Log.d(TAG, "ViewModel initialized")
-
         setShoppingItems()
     }
 
@@ -38,11 +37,18 @@ class Housemate2ViewModel: ViewModel() {
         }
     }
     fun sendItemToDatabase(
-        name: String,
-        neededBy: String,
-        priority: Int
+        itemName: String,
+        itemQuantity: Double,
+        itemCost: Double,
+        purchaseLocation: String,
+        itemNeededBy: String,   // try and make this a date
+        itemPriority: Int,
+        addedBy: String
     ) {
-        housemateRepository.addItemToDb(name, neededBy, priority)
+        housemateRepository.addItemToDb(
+            itemName, itemQuantity, itemCost,
+            purchaseLocation, itemNeededBy, itemPriority, addedBy
+        )
     }
     // DATABASE FUNCTIONS //
 
