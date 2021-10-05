@@ -47,13 +47,15 @@ class HousemateAPIService {
         var clientIDCollection: String? = "00000asdf"
 //        var clientIDCollection: String? = null
 
+        // Have the field names in camelcase so it matches the 'ShoppingItem.neededBy' format
+        //  this way the fields are correctly fetched from db
         const val NAME_FIELD = "name"
         const val QUANTITY_FIELD = "quantity"
         const val ADDED_BY_FIELD = "added by"
         const val COMPLETED_FIELD = "completed"
         const val COST_FIELD = "cost"
         const val PURCHASE_LOCATION_FIELD = "purchase location"
-        const val NEEDED_BY_FIELD = "needed by"
+        const val NEEDED_BY_FIELD = "neededBy"
         const val VOLUNTEER_FIELD = "volunteer"
         const val PRIORITY_FIELD = "priority"
         const val DIFFICULTY_FIELD = "difficulty"

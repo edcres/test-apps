@@ -4,15 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.testfirestorev2.R
-import com.example.testfirestorev2.databinding.ActivityMainBinding
 import com.example.testfirestorev2.databinding.ActivityTestHousematePt2Binding
 
 // use recyclerview, firebase, livedata, and coroutines
@@ -78,8 +73,8 @@ class TestHousematePt2Activity : AppCompatActivity() {
             // submitList() is how the adapter know how many items to display
             recyclerAdapter.submitList(result)
 
-            Log.d("HsMtTest2TAG", result[0].name.toString())
-            Log.d("HsMtTest2TAG", result[0].neededBy.toString())
+//            Log.d("HsMtTest2TAG", result[0].name.toString())      bug if list is empty
+//            Log.d("HsMtTest2TAG", result[0].neededBy.toString())
         })
     }
 
