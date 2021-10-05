@@ -34,11 +34,12 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/shopping_btn">
-            <!--            app:layout_constraintTop_toBottomOf="@+id/shopping_btn">-->
+            app:layout_constraintBottom_toBottomOf="parent">
+<!--            app:layout_constraintTop_toBottomOf="@+id/add_shopping_btn"-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,20 +56,76 @@
                     android:id="@+id/chores_recycler_widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:listitem="@layout/profile_recycler_item"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:listitem="@layout/profile_recycler_item" />
 
             </LinearLayout>
 
         </ScrollView>
 
-<!--        <TextView-->
-<!--            android:id="@+id/test_item_list"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/shopping_btn" />-->
+        <Button
+            android:id="@+id/add_shopping_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/shopping_btn" />
+
+        <Button
+            android:id="@+id/add_chores_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chores_btn" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/shopping_add_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_shopping_btn">
+<!--            android:visibility="gone"-->
+
+            <EditText
+                android:id="@+id/shopping_et_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/shopping_et_needed_by"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="date"
+                android:text="Needed by"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/shopping_et_name" />
+
+            <EditText
+                android:id="@+id/shopping_et_priority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:text="Priority"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/shopping_et_needed_by" />
+
+            <Button
+                android:id="@+id/shopping_send_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Send"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/shopping_et_priority" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

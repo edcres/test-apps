@@ -3,7 +3,9 @@ package com.example.testfirestorev2.testhousematept2
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -20,16 +22,10 @@ class TestHousematePt2Activity : AppCompatActivity() {
     private val TAG = "HousematePt2 mTAG"
     private var binding: ActivityTestHousematePt2Binding? = null
     private lateinit var housemate2ViewModel: Housemate2ViewModel
-
-    private lateinit var shoppingBtn: Button
-    private lateinit var choresBtn: Button
-    private lateinit var shoppingRecyclerWidget: RecyclerView
-    private lateinit var choresRecyclerWidget: RecyclerView
     private val recyclerAdapter = HousemateRecyclerAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_test_housemate_pt2)
         binding = ActivityTestHousematePt2Binding.inflate(layoutInflater)
         setContentView(binding?.root)
 
@@ -40,36 +36,38 @@ class TestHousematePt2Activity : AppCompatActivity() {
             lifecycleOwner = this@TestHousematePt2Activity
             viewModel = housemate2ViewModel
             shoppingRecyclerWidget.adapter = recyclerAdapter
-            shoppingRecyclerWidget.layoutManager = LinearLayoutManager(this@TestHousematePt2Activity)
+            shoppingRecyclerWidget.layoutManager =
+                LinearLayoutManager(this@TestHousematePt2Activity)
         }
         Log.d(TAG, "onCreate: after binding")
         setUpObservers()
     }
 
+    // CLICK LISTENERS //
+    private fun clickListeners() {
+        binding!!.apply {
 
-//    // just a test function
-//    // todo: delete this later
-//    var textAlreadyUpdated = false
-//    private fun displayTextText(itemsList: MutableList<ShoppingItem>) {
-//
-//        if (!textAlreadyUpdated) {
-//            var iterator = 0
-//            for (item in itemsList) {
-//                iterator++
-//                val lineToDisplay = "${binding!!.testItemList.text}$iterator -> ${item.name}\n"
-//                binding!!.testItemList.text = lineToDisplay
-//                textAlreadyUpdated = true
-//            }
-//        } else {
-//            var iterator = 0
-//            binding!!.testItemList.text = ""
-//            for (item in itemsList) {
-//                iterator++
-//                val lineToDisplay = "${binding!!.testItemList.text}$iterator -> ${item.name}\n"
-//                binding!!.testItemList.text = lineToDisplay
-//            }
-//        }
-//    }
+            addShoppingBtn.setOnClickListener {
+                if (shoppingRecyclerWidget.visibility == View.VISIBLE) {
+                    shoppingAddContainer.visibility = View.VISIBLE
+                    shoppingRecyclerWidget.visibility = View.INVISIBLE
+                } else {
+                    Toast.makeText(parent, "Select 'SHOPPING' to edit", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+            shoppingSendBtn.setOnClickListener {
+                shoppingAddContainer.visibility = View.GONE
+                shoppingRecyclerWidget.visibility = View.VISIBLE
+                housemate2ViewModel.sendItemToDatabase(
+                    shoppingEtName.text.toString(),
+                    shoppingEtNeededBy.text.toString(),
+                    shoppingEtPriority.text.toString()
+                )
+            }
+        }
+    }
+    // CLICK LISTENERS //
 
     // SETUP FUNCTIONS //
     private fun setUpObservers() {

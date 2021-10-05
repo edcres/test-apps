@@ -27,7 +27,7 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
     private val activityTAG = "AddItemActyTAG"
     private val testHousemateActivity = TestHousemateActivity
     private val db = Firebase.firestore
-    private val clientIDCollectionDB = db.collection(TestHousemateActivity.GENERAL_COLLECTION)
+    private val clientGroupIDCollectionDB = db.collection(TestHousemateActivity.GENERAL_COLLECTION)
         .document(TestHousemateActivity.GROUP_IDS_DOC).collection(TestHousemateActivity.clientGroupIDCollection!!)
 
     // for date picker
@@ -98,7 +98,7 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
             TestHousemateActivity.ADDED_BY_FIELD to addedBy
         )
         // access the clientGroup, then the client, then the shopping item
-        clientIDCollectionDB.document(TestHousemateActivity.SHOPPING_LIST_DOC)
+        clientGroupIDCollectionDB.document(TestHousemateActivity.SHOPPING_LIST_DOC)
             .collection(TestHousemateActivity.SHOPPING_ITEMS_COLLECTION).document(itemName)
             .set(shoppingItemData)
             .addOnSuccessListener { Log.d(activityTAG, "DocumentSnapshot successfully written!") }
@@ -123,7 +123,7 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
         )
 
         // access the clientGroup, then the client, then the shopping item
-        clientIDCollectionDB.document(TestHousemateActivity.CHORES_LIST_DOC)
+        clientGroupIDCollectionDB.document(TestHousemateActivity.CHORES_LIST_DOC)
             .collection(TestHousemateActivity.CHORE_ITEMS_COLLECTION).document(itemName)
             .set(choresItemData)
             .addOnSuccessListener { Log.d(activityTAG, "DocumentSnapshot successfully written!") }

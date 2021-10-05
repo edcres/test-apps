@@ -1,7 +1,6 @@
 package com.example.testfirestorev2.testhousematept2
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -60,33 +59,7 @@ class HousemateAPIService {
         const val DIFFICULTY_FIELD = "difficulty"
     }
 
-
-
-
-
-
-
-
-
-    //from medium.com       .get()
-    object FirebaseProfileService {
-        suspend fun getShoppingData(userId: String): ShoppingItem? {
-            val db = Firebase.firestore
-            return try {
-                db.collection("users")
-                    .document(userId).get().await().toObject(ShoppingItem::class.java)
-//                    .document(userId).get().await().toShoppingItem()
-            } catch (e: Exception) {
-                Log.e(TAG, "Error getting user details", e)
-//                FirebaseCrashlytics.getInstance().log("Error getting user details")
-//                FirebaseCrashlytics.getInstance().setCustomKey("user id", xpertSlug)
-//                FirebaseCrashlytics.getInstance().recordException(e)
-                null
-            }
-        }
-    }
-
-
+    // SET UP FUNCTIONS //
     // for addSnapshotListener, use flow instead of coroutines or livedata. Use coroutines when calling the 'getPosts()' function
     /* Steps Here:
         - Creating a listener registration inside a callback flow
@@ -119,57 +92,45 @@ class HousemateAPIService {
             }
         }
     }
-
-
-
-
-
-
-
     // SET UP FUNCTIONS //
-    fun setUpRealtimeFetching() {
-        Log.d(TAG, "setUpRealtimeFetching: called")
-        val shoppingItemCollectionDB = groupIDCollectionDB.document(SHOPPING_LIST_DOC)
-            .collection(SHOPPING_ITEMS_COLLECTION)
-        val choresItemCollectionDB = groupIDCollectionDB.document(CHORES_LIST_DOC)
-            .collection(CHORE_ITEMS_COLLECTION)
 
-
-        // fill the '_shoppingItems' list
-        shoppingItemCollectionDB.addSnapshotListener { snapshot, e ->
-
-            if (e != null) {
-                // if there is an exception, skip the listener
-                Log.d(TAG, "setUpRealtimeFetching: DB Query Fail in Shopping.", e)
-                return@addSnapshotListener
+    // DATABASE WRITES //
+    fun addItemToDatabase(
+        itemName: String,
+        itemNeededBy: String,
+        itemPriority: String
+    ) {
+        val shoppingItemData = hashMapOf(
+            NAME_FIELD to itemName,
+            NEEDED_BY_FIELD to itemNeededBy,
+            PRIORITY_FIELD to itemPriority
+        )
+        groupIDCollectionDB.document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
+            .document(itemName).set(shoppingItemData)
+            .addOnSuccessListener {
+                Log.d(TAG, "$itemName DocumentSnapshot successfully written!")
             }
-            if (snapshot != null) {
-                // turn each shopping item into an object
-                val allShoppingItems =
-                    snapshot.toObjects(ShoppingItem::class.java) as MutableList<ShoppingItem>
-                shoppingItems.value = allShoppingItems
-            }
-        }
-        // fill the '_choreItems' list
-        choresItemCollectionDB.addSnapshotListener { snapshot, e ->
+            .addOnFailureListener { e -> Log.d(TAG, "Error writing document", e) }
+    }
+    // DATABASE WRITES //
 
-            if (e != null) {
-                // if there is an exception, skip the listener
-                Log.d(TAG, "setUpRealtimeFetching: DB Query Fail in Shopping.", e)
-                return@addSnapshotListener
-            }
-            if (snapshot != null) {
-                // turn each shopping item into an object
-                val allChoreItems =
-                    snapshot.toObjects(ChoresItem::class.java) as MutableList<ChoresItem>
-                choreItems.value = allChoreItems
+    // DATABASE READS //
+    //from medium.com       .get()
+    object FirebaseProfileService {
+        suspend fun getShoppingData(userId: String): ShoppingItem? {
+            val db = Firebase.firestore
+            return try {
+                db.collection("users")
+                    .document(userId).get().await().toObject(ShoppingItem::class.java)
+//                    .document(userId).get().await().toShoppingItem()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error getting user details", e)
+//                FirebaseCrashlytics.getInstance().log("Error getting user details")
+//                FirebaseCrashlytics.getInstance().setCustomKey("user id", xpertSlug)
+//                FirebaseCrashlytics.getInstance().recordException(e)
+                null
             }
         }
     }
-    // SET UP FUNCTIONS //
-
     // DATABASE READS //
-
-    // DATABASE WRITES //
-
 }

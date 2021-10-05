@@ -6,12 +6,18 @@ class HousemateRepository {
 
     private val housemateAPIService = HousemateAPIService()
 
-    // using flow
     fun setUpShoppingRealtimeFetching(): Flow<MutableList<ShoppingItem>> {
         return housemateAPIService.getShoppingItemsRealtime()
     }
 
     // add item
+    fun addItemToDb(
+        name: String,
+        neededBy: String,
+        priority: String
+    ) {
+        housemateAPIService.addItemToDatabase(name, neededBy, priority)
+    }
 
     // remove item
 }

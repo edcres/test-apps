@@ -25,7 +25,7 @@ class Housemate2ViewModel: ViewModel() {
         setShoppingItems()
     }
 
-    // HELPER FUNCTIONS //
+    // DATABASE FUNCTIONS //
     private fun setShoppingItems() {
         // get shopping items realtime using Flow, liveData and coroutines
         CoroutineScope(IO).launch {
@@ -37,5 +37,15 @@ class Housemate2ViewModel: ViewModel() {
             }
         }
     }
+    fun sendItemToDatabase(
+        name: String,
+        neededBy: String,
+        priority: String
+    ) {
+        housemateRepository.addItemToDb(name, neededBy, priority)
+    }
+    // DATABASE FUNCTIONS //
+
+    // HELPER FUNCTIONS //
     // HELPER FUNCTIONS //
 }
