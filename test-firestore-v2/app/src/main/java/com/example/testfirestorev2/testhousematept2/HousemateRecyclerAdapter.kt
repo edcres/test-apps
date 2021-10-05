@@ -42,6 +42,11 @@ class HousemateRecyclerAdapter :
                 sendVolunteerBtn.setOnClickListener{
                     housemate2ViewModel.sendVolunteerToDb(item.name!!, itemVolunteerEt.text.toString())
                 }
+
+                // delete list item
+                deleteItemBtn.setOnClickListener {
+                    housemate2ViewModel.deleteListItem(item.name!!)
+                }
             }
         }
 

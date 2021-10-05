@@ -152,4 +152,13 @@ class HousemateAPIService {
         }
     }
     // DATABASE READS //
+
+    // DELETE DOCUMENT //
+    fun deleteListItem(itemName: String) {
+        groupIDCollectionDB.document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
+            .document(itemName).delete()
+            .addOnSuccessListener { Log.d(TAG, "$itemName document deleted") }
+            .addOnFailureListener { Log.d(TAG, "Failure to delete $itemName document") }
+    }
+    // DELETE DOCUMENT //
 }

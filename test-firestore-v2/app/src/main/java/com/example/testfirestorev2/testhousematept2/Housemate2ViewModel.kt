@@ -53,6 +53,9 @@ class Housemate2ViewModel: ViewModel() {
     fun sendVolunteerToDb(itemName: String, volunteerName: String) {
         housemateRepository.sendVolunteerToDb(itemName, volunteerName)
     }
+    fun deleteListItem(itemName: String) {
+        housemateRepository.deleteListItem(itemName)
+    }
     // DATABASE FUNCTIONS //
 
     // HELPER FUNCTIONS //

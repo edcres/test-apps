@@ -31,5 +31,8 @@ class HousemateRepository {
         housemateAPIService.sendVolunteerToDb(itemName, volunteerName)
     }
 
-        // remove item
+    // delete item
+    fun deleteListItem(itemName: String) {
+        housemateAPIService.deleteListItem(itemName)
+    }
 }
