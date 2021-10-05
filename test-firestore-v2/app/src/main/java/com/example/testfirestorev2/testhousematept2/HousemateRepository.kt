@@ -14,7 +14,7 @@ class HousemateRepository {
     fun addItemToDb(
         name: String,
         neededBy: String,
-        priority: String
+        priority: Int
     ) {
         housemateAPIService.addItemToDatabase(name, neededBy, priority)
     }

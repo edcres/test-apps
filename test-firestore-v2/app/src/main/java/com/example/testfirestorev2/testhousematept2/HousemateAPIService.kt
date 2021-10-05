@@ -98,7 +98,7 @@ class HousemateAPIService {
     fun addItemToDatabase(
         itemName: String,
         itemNeededBy: String,
-        itemPriority: String
+        itemPriority: Int
     ) {
         val shoppingItemData = hashMapOf(
             NAME_FIELD to itemName,

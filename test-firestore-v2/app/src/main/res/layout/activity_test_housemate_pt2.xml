@@ -34,12 +34,11 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-<!--            app:layout_constraintTop_toBottomOf="@+id/add_shopping_btn"-->
+            app:layout_constraintTop_toBottomOf="@+id/add_shopping_btn">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,9 +82,9 @@
             android:id="@+id/shopping_add_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_shopping_btn">
-<!--            android:visibility="gone"-->
 
             <EditText
                 android:id="@+id/shopping_et_name"
@@ -93,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Name"
+                android:hint="Name"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -103,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="date"
-                android:text="Needed by"
+                android:hint="Needed by"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/shopping_et_name" />
 
@@ -113,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="number"
-                android:text="Priority"
+                android:hint="Priority"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/shopping_et_needed_by" />
 

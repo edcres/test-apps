@@ -40,7 +40,7 @@ class Housemate2ViewModel: ViewModel() {
     fun sendItemToDatabase(
         name: String,
         neededBy: String,
-        priority: String
+        priority: Int
     ) {
         housemateRepository.addItemToDb(name, neededBy, priority)
     }

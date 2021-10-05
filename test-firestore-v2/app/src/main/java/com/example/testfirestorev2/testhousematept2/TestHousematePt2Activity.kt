@@ -41,6 +41,7 @@ class TestHousematePt2Activity : AppCompatActivity() {
         }
         Log.d(TAG, "onCreate: after binding")
         setUpObservers()
+        clickListeners()
     }
 
     // CLICK LISTENERS //
@@ -62,7 +63,7 @@ class TestHousematePt2Activity : AppCompatActivity() {
                 housemate2ViewModel.sendItemToDatabase(
                     shoppingEtName.text.toString(),
                     shoppingEtNeededBy.text.toString(),
-                    shoppingEtPriority.text.toString()
+                    shoppingEtPriority.text.toString().toInt()
                 )
             }
         }
