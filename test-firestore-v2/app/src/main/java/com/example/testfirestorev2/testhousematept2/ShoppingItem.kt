@@ -1,11 +1,7 @@
 package com.example.testfirestorev2.testhousematept2
 
-import android.util.Log
-import com.google.firebase.firestore.DocumentSnapshot
-
 data class ShoppingItem(
     // Necessary
-    val id: Long? = 0,
     val name: String? = "",
     val quantity: Double? = 0.0,
     val addedBy: String? = "",

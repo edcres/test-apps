@@ -95,10 +95,36 @@ class HousemateAPIService {
             }
         }
     }
+
+    fun getChoreItemsRealtime(): Flow<MutableList<ChoresItem>> {
+        return callbackFlow {
+            val listenerRegistration = groupIDCollectionDB.document(CHORES_LIST_DOC)
+                .collection(CHORE_ITEMS_COLLECTION).addSnapshotListener {
+                        querySnapshot: QuerySnapshot?,
+                        firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(message = "Error fetching posts",
+                            cause = firebaseFirestoreException)
+                        return@addSnapshotListener
+                    }
+
+                    if(querySnapshot != null) {
+                        val itemsList = querySnapshot.toObjects(ChoresItem::class.java)
+                        this.trySend(itemsList)
+                    } else {
+                        Log.d(TAG, "getPosts: querySnapshot is null")
+                    }
+                }
+            awaitClose {
+                Log.d(TAG, "Cancelling posts listener")
+                listenerRegistration.remove()
+            }
+        }
+    }
     // SET UP FUNCTIONS //
 
     // DATABASE WRITES //
-    fun addItemToDatabase(
+    fun addShoppingItemToDatabase(
         itemName: String,
         itemQuantity: Double,
         itemCost: Double,
@@ -124,12 +150,50 @@ class HousemateAPIService {
                 Log.d(TAG, "$itemName DocumentSnapshot successfully written!")
             }
             .addOnFailureListener { e -> Log.d(TAG, "Error writing document", e) }
+
     }
-    fun sendVolunteerToDb(itemName: String ,volunteerName: String) {
-        groupIDCollectionDB.document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
-            .document(itemName).update(VOLUNTEER_FIELD, volunteerName)
-            .addOnSuccessListener { Log.d(TAG, "$itemName successfully updated to $volunteerName") }
-            .addOnFailureListener { Log.d(TAG, "Error updating doc") }
+    fun addChoresItemToDatabase(
+        itemName: String,
+        itemDifficulty: Int,
+        itemNeededBy: String,   // try and make this a date
+        itemPriority: Int,
+        addedBy: String
+    ) {
+        val choresItemData = hashMapOf(
+            NAME_FIELD to itemName,
+            DIFFICULTY_FIELD to itemDifficulty,
+            NEEDED_BY_FIELD to itemNeededBy,
+            PRIORITY_FIELD to itemPriority,
+            ADDED_BY_FIELD to addedBy
+        )
+        groupIDCollectionDB.document(CHORES_LIST_DOC).collection(CHORE_ITEMS_COLLECTION)
+            .document(itemName).set(choresItemData)
+            .addOnSuccessListener {
+                Log.d(TAG, "$itemName DocumentSnapshot successfully written!")
+            }
+            .addOnFailureListener { e -> Log.d(TAG, "Error writing document", e) }
+    }
+
+    fun sendVolunteerToDb(listType: Any, itemName: String, volunteerName: String) {
+
+        when (listType) {
+            ShoppingItem::class -> {
+                groupIDCollectionDB.document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
+                    .document(itemName).update(VOLUNTEER_FIELD, volunteerName)
+                    .addOnSuccessListener { Log.d(TAG, "$itemName successfully updated to $volunteerName") }
+                    .addOnFailureListener { Log.d(TAG, "Error updating doc") }
+            }
+            ChoresItem::class -> {
+                groupIDCollectionDB.document(CHORES_LIST_DOC).collection(CHORE_ITEMS_COLLECTION)
+                    .document(itemName).update(VOLUNTEER_FIELD, volunteerName)
+                    .addOnSuccessListener { Log.d(TAG, "$itemName successfully updated to $volunteerName") }
+                    .addOnFailureListener { Log.d(TAG, "Error updating doc") }
+            }
+            else -> {
+                Log.d(TAG, "sendVolunteerToDb: Error recognizing list Type")
+            }
+        }
+
     }
     // DATABASE WRITES //
 
@@ -154,9 +218,23 @@ class HousemateAPIService {
     // DATABASE READS //
 
     // DELETE DOCUMENT //
-    fun deleteListItem(itemName: String) {
-        groupIDCollectionDB.document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
-            .document(itemName).delete()
+    fun deleteListItem(listType: Any, itemName: String) {
+        var itemsCollectionDB: CollectionReference = groupIDCollectionDB
+        when (listType) {
+            ShoppingItem::class -> {
+                itemsCollectionDB = groupIDCollectionDB.document(SHOPPING_LIST_DOC)
+                    .collection(SHOPPING_ITEMS_COLLECTION)
+            }
+            ChoresItem::class -> {
+                itemsCollectionDB = groupIDCollectionDB.document(CHORES_LIST_DOC)
+                    .collection(CHORE_ITEMS_COLLECTION)
+            }
+            else -> {
+                Log.d(TAG, "deleteListItem: Error verifying the List Type")
+            }
+        }
+
+        itemsCollectionDB.document(itemName).delete()
             .addOnSuccessListener { Log.d(TAG, "$itemName document deleted") }
             .addOnFailureListener { Log.d(TAG, "Failure to delete $itemName document") }
     }

@@ -2,7 +2,6 @@ package com.example.testfirestorev2.testhousematept2
 
 data class ChoresItem (
     // Necessary
-    val id: Long? = 0,
     val name: String? = "",
     val addedBy: String? = "",
     val completed: Boolean? = false,

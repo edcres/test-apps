@@ -33,6 +33,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -49,6 +50,7 @@
                     android:id="@+id/shopping_recycler_widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:visibility="visible"
                     tools:listitem="@layout/profile_recycler_item" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -102,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Quantity"
-                android:inputType="number"
+                android:inputType="number|numberDecimal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/shopping_et_name" />
 
@@ -153,6 +155,64 @@
                 android:text="Send"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/shopping_et_priority" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/chores_add_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_chores_btn">
+
+            <EditText
+                android:id="@+id/chores_et_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Name"
+                android:inputType="textPersonName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/chores_et_difficulty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Difficulty"
+                android:inputType="number"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chores_et_name" />
+
+            <EditText
+                android:id="@+id/chores_et_needed_by"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Needed by"
+                android:inputType="date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chores_et_difficulty" />
+
+            <EditText
+                android:id="@+id/chores_et_priority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Priority (1,2,3)"
+                android:inputType="number"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chores_et_needed_by" />
+
+            <Button
+                android:id="@+id/chores_send_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Send"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chores_et_priority" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

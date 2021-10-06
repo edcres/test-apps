@@ -50,6 +50,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/item_qty_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Quantity : "
@@ -92,6 +93,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/item_where_to_get_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Where to get : "
@@ -113,6 +115,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/item_cost_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cost : "

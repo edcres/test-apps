@@ -3,7 +3,6 @@ package com.example.testfirestorev2.testhousematept2
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -13,30 +12,40 @@ import kotlinx.coroutines.launch
 class Housemate2ViewModel: ViewModel() {
 
     private val TAG = "RecyclerView mTAG"
-
     private val housemateRepository = HousemateRepository()
 
     private var _shoppingItems = MutableLiveData<MutableList<ShoppingItem>>()
     val shoppingItems: LiveData<MutableList<ShoppingItem>> get() = _shoppingItems
+    private var _choreItems = MutableLiveData<MutableList<ChoresItem>>()
+    val choreItems: LiveData<MutableList<ChoresItem>> get() = _choreItems
 
     init {
         Log.d(TAG, "ViewModel initialized")
         setShoppingItems()
+        setChoreItems()
     }
 
     // DATABASE FUNCTIONS //
+    // set up shopping realtime fetching
     private fun setShoppingItems() {
         // get shopping items realtime using Flow, liveData and coroutines
         CoroutineScope(IO).launch {
-
             housemateRepository.setUpShoppingRealtimeFetching().collect {
-//                _shoppingItems.value = it
                 _shoppingItems.postValue(it)
-
             }
         }
     }
-    fun sendItemToDatabase(
+
+    // set up chore realtime fetching
+    private fun setChoreItems() {
+        CoroutineScope(IO).launch {
+            housemateRepository.setUpChoresRealtimeFetching().collect {
+                _choreItems.postValue(it)
+            }
+        }
+    }
+
+    fun sendShoppingItemToDatabase(
         itemName: String,
         itemQuantity: Double,
         itemCost: Double,
@@ -45,16 +54,34 @@ class Housemate2ViewModel: ViewModel() {
         itemPriority: Int,
         addedBy: String
     ) {
-        housemateRepository.addItemToDb(
+        housemateRepository.addShoppingItemToDb(
             itemName, itemQuantity, itemCost,
             purchaseLocation, itemNeededBy, itemPriority, addedBy
         )
     }
-    fun sendVolunteerToDb(itemName: String, volunteerName: String) {
-        housemateRepository.sendVolunteerToDb(itemName, volunteerName)
+    fun sendChoresItemToDatabase(
+        itemName: String,
+        itemDifficulty: Int,
+        itemNeededBy: String,   // try and make this a date
+        itemPriority: Int,
+        addedBy: String
+    ) {
+        housemateRepository.addChoresItemToDb(
+            itemName, itemDifficulty, itemNeededBy, itemPriority, addedBy
+        )
     }
-    fun deleteListItem(itemName: String) {
-        housemateRepository.deleteListItem(itemName)
+
+    fun sendShoppingVolunteerToDb(itemName: String, volunteerName: String) {
+        housemateRepository.sendShoppingVolunteerToDb(itemName, volunteerName)
+    }
+    fun sendChoresVolunteerToDb(itemName: String, volunteerName: String) {
+        housemateRepository.sendChoresVolunteerToDb(itemName, volunteerName)
+    }
+    fun deleteShoppingListItem(itemName: String) {
+        housemateRepository.deleteShoppingListItem(itemName)
+    }
+    fun deleteChoresListItem(itemName: String) {
+        housemateRepository.deleteChoresListItem(itemName)
     }
     // DATABASE FUNCTIONS //
 
