@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_startingFragment_to_basicCoroutines"
             app:destination="@id/basicCoroutines" />
+        <action
+            android:id="@+id/action_startingFragment_to_dialogAwaitFragment"
+            app:destination="@id/dialogAwaitFragment" />
     </fragment>
     <fragment
         android:id="@+id/asyncAwaitFragment"
@@ -35,4 +38,9 @@
         android:name="com.example.testcoroutines.basiccoroutines.BasicCoroutinesFragment"
         android:label="fragment_basic_coroutines"
         tools:layout="@layout/fragment_basic_coroutines" />
+    <fragment
+        android:id="@+id/dialogAwaitFragment"
+        android:name="com.example.testcoroutines.DialogAwaitFragment"
+        android:label="fragment_dialog_await"
+        tools:layout="@layout/fragment_dialog_await" />
 </navigation>

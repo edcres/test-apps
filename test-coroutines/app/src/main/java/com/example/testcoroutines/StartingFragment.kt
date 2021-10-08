@@ -13,6 +13,7 @@ class StartingFragment : Fragment() {
     private lateinit var asyncAwaitBtn: Button
     private lateinit var parallelAsyncAwaitBtn: Button
     private lateinit var basicCoroutinesBtn: Button
+    private lateinit var dialogAwaitBtn: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,11 +38,15 @@ class StartingFragment : Fragment() {
         basicCoroutinesBtn.setOnClickListener {
             navController.navigate(R.id.action_startingFragment_to_basicCoroutines)
         }
+        dialogAwaitBtn.setOnClickListener {
+            navController.navigate(R.id.action_startingFragment_to_dialogAwaitFragment)
+        }
     }
 
     private fun setUIWidgets(view: View) {
         asyncAwaitBtn = view.findViewById(R.id.async_await_btn)
         parallelAsyncAwaitBtn = view.findViewById(R.id.parallel_async_await_btn)
         basicCoroutinesBtn = view.findViewById(R.id.basic_coroutines_btn)
+        dialogAwaitBtn = view.findViewById(R.id.dialog_await_btn)
     }
 }

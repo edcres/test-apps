@@ -26,7 +26,7 @@ import kotlin.collections.HashMap
 // -display the groupID somewhere in the UI
 // -make/get client group id
 // -make/get client id
-// - for authentication
+// -for authentication
 // start this database with a '00000000asdfg' groupID before users start using the app
 
 class TestHousemateActivity : AppCompatActivity() {

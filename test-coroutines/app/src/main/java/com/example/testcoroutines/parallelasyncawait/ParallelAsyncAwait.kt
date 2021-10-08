@@ -63,6 +63,7 @@ class ParallelAsyncAwait : Fragment() {
     }
 
     private suspend fun setTextOnMainThread(input: String) {
+        // 'withContext(Main) {}' switches the thread to main
         // the thread only switches to main while within the curly brackets {}
         withContext(Main) {
             Log.d(TAG, "switch to main: ${Thread.currentThread()}")
