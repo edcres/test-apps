@@ -17,6 +17,12 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -534,6 +540,15 @@ class TestHousemateActivity : AppCompatActivity() {
         var oldID: String
         // ie. 00000001asdfg, 00000002fagsd, 00000003sgdfa ...
         // Get the latest groupID from the remote db (ie. 00000001asdfg)
+
+//        CoroutineScope(IO).launch {
+//            val testGroupID = db.collection(GENERAL_COLLECTION).document(GROUP_IDS_DOC)
+//                .get().await().get(lastGroupAddedField)
+//            withContext(Main) {
+//                Toast.makeText(this@TestHousemateActivity, "$testGroupID", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+
         db.collection(GENERAL_COLLECTION).document(GROUP_IDS_DOC)
             .get()
             .addOnSuccessListener { document ->
@@ -586,7 +601,7 @@ class TestHousemateActivity : AppCompatActivity() {
                     val clientIdDoc = document.data as Map<String, Any>
                     oldID = clientIdDoc[lastClientAddedField] as String
                     newID = add1AndScrambleLetters(oldID)
-                    // Add the new id to the database as the last id added
+                    // Update new id to the database as the last id added
                     clientsDocDb.update(lastClientAddedField, newID)
                         .addOnSuccessListener {
                             clientIDCollection = newID
@@ -617,6 +632,7 @@ class TestHousemateActivity : AppCompatActivity() {
         }
     }
     // HELPER FUNCTIONS //
+
     // SETUP FUNCTIONS //
     private fun setUpDatabaseIDsAndFetchData() {
         // try to get the groupId from shared preferences

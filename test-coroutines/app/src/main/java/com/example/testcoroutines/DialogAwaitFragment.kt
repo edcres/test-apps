@@ -15,6 +15,8 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 
+// WARNING: I gave up on this and concluded it's better to just call functions from inside the dialog.
+
 // User presses a button that pops up a dialog that asks to input a name
 //  the name is then displayed in a TextView
 // A function to update the TextView with the name awaits until the user inputs the name and accepts
@@ -23,7 +25,6 @@ class DialogAwaitFragment : Fragment() {
 
     private lateinit var displayNameTxt: TextView
     private lateinit var inputNameBtn: Button
-
     private lateinit var nameToDisplay: Deferred<String>
 
     override fun onCreateView(

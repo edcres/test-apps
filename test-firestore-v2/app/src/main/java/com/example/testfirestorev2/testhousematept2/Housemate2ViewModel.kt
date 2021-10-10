@@ -1,8 +1,12 @@
 package com.example.testfirestorev2.testhousematept2
 
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.*
+
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -14,6 +18,14 @@ class Housemate2ViewModel: ViewModel() {
     private val TAG = "RecyclerView mTAG"
     private val housemateRepository = HousemateRepository()
 
+    val groupIdSPTag = "Group ID"
+    val clientIdSPTag = "Client ID"
+
+    lateinit var sharedPref: SharedPreferences
+    var clientGroupIDCollection: String? = null
+    var clientIDCollection: String? = null
+    // todo: send client ID to a list of users to the database
+
     private var _shoppingItems = MutableLiveData<MutableList<ShoppingItem>>()
     val shoppingItems: LiveData<MutableList<ShoppingItem>> get() = _shoppingItems
     private var _choreItems = MutableLiveData<MutableList<ChoresItem>>()
@@ -21,13 +33,11 @@ class Housemate2ViewModel: ViewModel() {
 
     init {
         Log.d(TAG, "ViewModel initialized")
-        setShoppingItems()
-        setChoreItems()
     }
 
     // DATABASE FUNCTIONS //
     // set up shopping realtime fetching
-    private fun setShoppingItems() {
+    fun setShoppingItemsRealtime() {
         // get shopping items realtime using Flow, liveData and coroutines
         CoroutineScope(IO).launch {
             housemateRepository.setUpShoppingRealtimeFetching().collect {
@@ -37,7 +47,7 @@ class Housemate2ViewModel: ViewModel() {
     }
 
     // set up chore realtime fetching
-    private fun setChoreItems() {
+    fun setChoreItemsRealtime() {
         CoroutineScope(IO).launch {
             housemateRepository.setUpChoresRealtimeFetching().collect {
                 _choreItems.postValue(it)
@@ -85,6 +95,42 @@ class Housemate2ViewModel: ViewModel() {
     }
     // DATABASE FUNCTIONS //
 
+    // SHARED PREFERENCE //
+    fun getDataFromSP(theTag: String): String? {
+        return sharedPref.getString(theTag, null)
+    }
+    @SuppressLint("ApplySharedPref")
+    fun sendDataToSP(theTag: String, dataToSend: String) {
+        val spEditor: SharedPreferences.Editor = sharedPref.edit()
+        spEditor.putString(theTag, dataToSend).commit()
+    }
+    @SuppressLint("ApplySharedPref")
+    fun clearSP() {
+        sharedPref.edit().clear().commit()
+    }
+    // SHARED PREFERENCE //
+
     // HELPER FUNCTIONS //
+    fun generateClientGroupID() {
+        // Get the latest groupID from the remote db (ie. 00000001asdfg)
+        housemateRepository.getLastGroupAdded()
+    }
+
+    fun generateClientID() {
+        housemateRepository.getLastClientAdded()
+    }
+
+    fun setClientID() {
+        clientIDCollection = getDataFromSP(clientIdSPTag)
+        if(clientIDCollection == null) {
+            if(clientGroupIDCollection != null) {
+                generateClientID()
+            }
+        }
+    }
+    fun getCurrentGroupID(): String? {
+        clientGroupIDCollection = getDataFromSP(groupIdSPTag)
+        return clientGroupIDCollection
+    }
     // HELPER FUNCTIONS //
 }

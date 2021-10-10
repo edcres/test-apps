@@ -2,6 +2,7 @@ package com.example.testfirestorev2.testhousematept2
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.example.testfirestorev2.add1AndScrambleLetters
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
@@ -22,9 +23,10 @@ import kotlinx.coroutines.tasks.await
 
 class HousemateAPIService {
 
+    private val housemate2ViewModel = Housemate2ViewModel()
     private val db = Firebase.firestore
     private var groupIDCollectionDB: CollectionReference = db.collection(HOUSEMATE_COLLECTION)
-        .document(GROUP_IDS_DOC).collection(clientGroupIDCollection!!)
+        .document(GROUP_IDS_DOC).collection(housemate2ViewModel.clientGroupIDCollection!!)
 
     private val shoppingItems = MutableLiveData<MutableList<ShoppingItem>>()
     private val choreItems = MutableLiveData<MutableList<ChoresItem>>()
@@ -39,13 +41,6 @@ class HousemateAPIService {
         const val SHOPPING_ITEMS_COLLECTION = "Shopping Items"
         const val CHORES_LIST_DOC = "Chores List"
         const val CHORE_ITEMS_COLLECTION = "Chore Items"
-
-        // these might be needed in the viewModel and passed to here
-        // todo: update these to real ones
-        var clientGroupIDCollection: String? = "00000asdf"
-//        var clientGroupIDCollection: String? = null
-        var clientIDCollection: String? = "00000asdf"
-//        var clientIDCollection: String? = null
 
         // Have the field names in camelcase so it matches the 'ShoppingItem.neededBy' format
         //  this way the fields are correctly fetched from db
@@ -214,6 +209,82 @@ class HousemateAPIService {
                 null
             }
         }
+    }
+
+    // get the last group added String (and update it to the new ID)
+    fun getLastGroupAdded() {
+        // remember to start off the database with last group added '00000000asdfg'
+        // ie. 00000001asdfg, 00000002fagsd, 00000003sgdfa ...
+        val lastGroupAddedField = "last group added"
+        var oldID: String
+        var newID: String
+
+        // get old ID
+         db.collection(HOUSEMATE_COLLECTION).document(GROUP_IDS_DOC)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    val groupIdDoc = document.data as Map<String, Any>
+                    oldID = groupIdDoc[lastGroupAddedField] as String
+                    newID = add1AndScrambleLetters(oldID)
+                    housemate2ViewModel.clientGroupIDCollection = newID
+                    Log.d(TAG, "getLastGroupAdded: new group $newID")
+                    // update last ID added
+                    db.collection(HOUSEMATE_COLLECTION).document(GROUP_IDS_DOC)
+                        .update(lastGroupAddedField, newID)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "generateClientGroupID: lastGroupAddedField updated")
+                            housemate2ViewModel.sendDataToSP(
+                                housemate2ViewModel.groupIdSPTag,
+                                newID
+                            )
+                            housemate2ViewModel.setClientID()
+                        }
+                } else {
+                    Log.d(TAG, "generateClientGroupID: groupIDs document is null")
+                }
+            }
+             .addOnFailureListener { e ->
+                Log.d(TAG, "generateClientGroupID: database fetch failed", e)
+            }
+    }
+
+    fun getLastClientAdded() {
+        val lastClientAddedField = "last client added"
+        var oldID: String
+        var newID: String?
+        val clientsDocDb = groupIDCollectionDB.document(CLIENT_IDS_DOC)
+        clientsDocDb.get()
+            .addOnSuccessListener { document ->
+                if (document.data != null) {
+                    val clientIdDoc = document.data as Map<String, Any>
+                    oldID = clientIdDoc[lastClientAddedField] as String
+                    newID = add1AndScrambleLetters(oldID)
+                    // Update new id to the database as the last id added
+                    clientsDocDb.update(lastClientAddedField, newID)
+                        .addOnSuccessListener {
+                            housemate2ViewModel.clientIDCollection = newID
+                            housemate2ViewModel
+                                .sendDataToSP(housemate2ViewModel.clientIdSPTag, newID!!)
+                        }
+                        .addOnFailureListener { e ->
+                            Log.d("DB Query", "Error updating client doc", e)
+                        }
+                } else {
+                    // the document will be null for the first member in the group
+                    //  -there is no client id to get, make a new clientID and add it to the db
+                    newID = add1AndScrambleLetters("00000000asdfg")
+                    val firstDocData = hashMapOf<String, Any>(lastClientAddedField to newID!!)
+                    clientsDocDb.set(firstDocData)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "DocumentSnapshot successfully written!")
+                            housemate2ViewModel.clientIDCollection = newID
+                            housemate2ViewModel
+                                .sendDataToSP(housemate2ViewModel.clientIdSPTag, newID!!)
+                        }
+                        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                }
+            }
     }
     // DATABASE READS //
 

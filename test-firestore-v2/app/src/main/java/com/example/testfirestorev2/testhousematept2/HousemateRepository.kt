@@ -41,6 +41,16 @@ class HousemateRepository {
         )
     }
 
+    // get the last group added String
+    fun getLastGroupAdded() {
+        housemateAPIService.getLastGroupAdded()
+    }
+
+    // get the latest clientID from the db
+    fun getLastClientAdded() {
+        housemateAPIService.getLastClientAdded()
+    }
+
     // send volunteer name to db
     fun sendShoppingVolunteerToDb(itemName: String, volunteerName: String) {
         housemateAPIService.sendVolunteerToDb(ShoppingItem::class, itemName, volunteerName)
