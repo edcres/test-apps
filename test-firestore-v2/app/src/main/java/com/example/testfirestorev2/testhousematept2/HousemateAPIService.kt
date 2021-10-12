@@ -23,13 +23,13 @@ import kotlinx.coroutines.tasks.await
 
 class HousemateAPIService {
 
+    // todo: BUG stack overflow instantiating the viewmodel bc it also instantiates  this class
+    //  creating an infinite loop
     private val housemate2ViewModel = Housemate2ViewModel()
+
     private val db = Firebase.firestore
     private var groupIDCollectionDB: CollectionReference = db.collection(HOUSEMATE_COLLECTION)
         .document(GROUP_IDS_DOC).collection(housemate2ViewModel.clientGroupIDCollection!!)
-
-    private val shoppingItems = MutableLiveData<MutableList<ShoppingItem>>()
-    private val choreItems = MutableLiveData<MutableList<ChoresItem>>()
 
     companion object {
         const val TAG = "ApiServiceTAG"
@@ -212,7 +212,7 @@ class HousemateAPIService {
     }
 
     // get the last group added String (and update it to the new ID)
-    fun getLastGroupAdded() {
+    fun getLastGroupAdded(vmClientGroupIDCollection: String) {
         // remember to start off the database with last group added '00000000asdfg'
         // ie. 00000001asdfg, 00000002fagsd, 00000003sgdfa ...
         val lastGroupAddedField = "last group added"
@@ -227,7 +227,11 @@ class HousemateAPIService {
                     val groupIdDoc = document.data as Map<String, Any>
                     oldID = groupIdDoc[lastGroupAddedField] as String
                     newID = add1AndScrambleLetters(oldID)
-                    housemate2ViewModel.clientGroupIDCollection = newID
+
+
+                    Housemate2ViewModel.clientGroupIDCollection = newID
+
+
                     Log.d(TAG, "getLastGroupAdded: new group $newID")
                     // update last ID added
                     db.collection(HOUSEMATE_COLLECTION).document(GROUP_IDS_DOC)
