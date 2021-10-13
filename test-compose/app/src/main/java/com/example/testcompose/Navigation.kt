@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import com.example.testcompose.screens.PrettyUIScreen
+import com.example.testcompose.screens.TestScreen
 
 @Composable
 fun Navigation() {
@@ -25,6 +27,12 @@ fun Navigation() {
             )
         ) {
             DetailScreen(name = it.arguments?.getString("name"))
+        }
+        composable(route = Screen.TestScreen.route) {
+            TestScreen()
+        }
+        composable(route = Screen.PrettyUIScreen.route) {
+            PrettyUIScreen()
         }
     }
 }

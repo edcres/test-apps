@@ -22,8 +22,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
             Navigation()
+
+//            Greeting(name = "Philipp")
 
             // the default code by Android Studio
 //            TestComposeTheme {
@@ -38,15 +39,16 @@ class MainActivity : ComponentActivity() {
 }
 
 // the default code by Android Studio
-//@Composable
-//fun Greeting(name: String) {
-//    Text(text = "Hello $name!")
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun DefaultPreview() {
-//    TestComposeTheme {
-//        Greeting("Android")
-//    }
-//}
+@Composable
+fun Greeting(name: String) {
+    Text(text = "Hello $name!")
+}
+
+// this displays the preview
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    TestComposeTheme {
+        Greeting("Android")
+    }
+}
