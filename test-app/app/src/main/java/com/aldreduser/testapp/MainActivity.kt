@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import com.aldreduser.testapp.addwidgettolayout.AddWidgetToLayoutActivity
 import com.aldreduser.testapp.basicrecyclerview.RecyclerviewActivity
+import com.aldreduser.testapp.kotlinremember.KotlinRmbrActivity
 import com.aldreduser.testapp.recyclerviewclicklistener.RecyclerClickListener
 import com.aldreduser.testapp.recyclerwidgetclick.RecyclerWidgetClickActivity
 
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerClickActivityBtn: Button
     private lateinit var recyclerviewActivityBtn: Button
     private lateinit var addLayoutWidgetsActivityBtn: Button
+    private lateinit var kotlinRmbrBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +45,10 @@ class MainActivity : AppCompatActivity() {
             val goToActivity = Intent(this, AddWidgetToLayoutActivity::class.java)
             startActivity(goToActivity)
         }
+        kotlinRmbrBtn.setOnClickListener {
+            val goToActivity = Intent(this, KotlinRmbrActivity::class.java)
+            startActivity(goToActivity)
+        }
     }
 
     private fun bindUIWidgets() {
@@ -50,5 +56,6 @@ class MainActivity : AppCompatActivity() {
         recyclerClickActivityBtn = findViewById(R.id.recycler_click_activity_btn)
         recyclerviewActivityBtn = findViewById(R.id.recyclerview_activity_btn)
         addLayoutWidgetsActivityBtn = findViewById(R.id.add_layout_widgets_activity_btn)
+        kotlinRmbrBtn = findViewById(R.id.kotlin_rmbr_btn)
     }
 }
