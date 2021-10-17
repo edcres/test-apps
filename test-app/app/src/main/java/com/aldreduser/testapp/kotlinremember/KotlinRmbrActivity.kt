@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import com.aldreduser.testapp.R
 
+// kotlin features to remember
+
 class KotlinRmbrActivity : AppCompatActivity() {
 
     private val TAG = "KotlinRmbrTAG"
@@ -17,6 +19,37 @@ class KotlinRmbrActivity : AppCompatActivity() {
 //        continueTest()
 //        iterateAString()
 //        isValueInArray()
+        higherOrderFun()
+    }
+
+
+    // Higher order function (takes another function as its argument)
+    // useful when we want to change the behavior of a function
+    private fun higherOrderFun() {
+
+        // 'apply' is a higher order function. Has an integer and function 'action' as parameters
+        fun apply(x: Int, action: (Int) -> Int): Int {
+            return action(x)
+        }
+
+        Log.d(TAG, "higherOrderFun: ${apply(4, {x -> x*2}) }")
+        Log.d(TAG, "higherOrderFun: ${apply(4, {x -> x/2}) }")
+
+        // IMPORTANT:   filter an list
+        val listToFilter = listOf(42, 3, 10, 4, 6, 1)
+        // make a list with numbers > 5
+        val res = listToFilter.filter({ it > 5 })
+        Log.d(TAG, "higherOrderFun: $res")
+    }
+
+    // anonymous function
+    private fun anonymousFunction() {
+        // takes 2 Int inputs and returns their sum
+        // 'a' and 'b' are the names of the inputs
+//        val sumNumbs: (Int, Int) -> Int = {a, b -> a+b}
+        val sumNumbs = {a:Int, b:Int -> a+b}
+        val sumOfNumbs = sumNumbs(8, 42)
+        Log.d(TAG, "anonymousFunction: sum of numbs = $sumOfNumbs")
     }
 
     // check if a value is in a list (also works with custom objects)
@@ -30,6 +63,17 @@ class KotlinRmbrActivity : AppCompatActivity() {
     // use a for loop to iterate over characters ofa string
     private fun iterateAString() {
         val name = "James"
+
+        name.toCharArray().size
+        name.toCharArray().joinToString("-")
+        name.length
+        name.replaceFirstChar { it.uppercase() }
+        name.replaceFirst()
+        name.capitalize()
+        name.split("_")
+        name.replace("_", "")
+        name.lowercase()
+        name.uppercase()
         for (char in name) {
             Log.d(TAG, "iterateAString: $char")
         }

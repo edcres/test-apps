@@ -39,16 +39,16 @@ class MainActivity : ComponentActivity() {
 }
 
 // the default code by Android Studio
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-// this displays the preview
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    TestComposeTheme {
-        Greeting("Android")
-    }
-}
+//@Composable
+//fun Greeting(name: String) {
+//    Text(text = "Hello $name!")
+//}
+//
+//// this displays the preview
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    TestComposeTheme {
+//        Greeting("Android")
+//    }
+//}
