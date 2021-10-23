@@ -3,7 +3,10 @@ package com.aldreduser.testapp.kotlinremember
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.graphics.convertTo
 import com.aldreduser.testapp.R
+import java.math.BigDecimal
+import kotlin.math.pow
 
 // kotlin features to remember
 
@@ -64,13 +67,32 @@ class KotlinRmbrActivity : AppCompatActivity() {
     private fun iterateAString() {
         val name = "James"
 
+        val arrayOfInt = listOf(1, 3, 6, 8, 9)
+        val (even, odd) = arrayOfInt.partition { it % 2 == 0 }
+        arrayOfInt.singleOrNull()
+
+        //name.replaceFirst(
+        val updatedSignature = mutableListOf<String>()
+        val kfk = doubleArrayOf()
+        kfk.sum()
+        val sentece = "fndkfnkdf"
+        sentece.length
+        sentece.toDouble()
+        sentece.format()
+        kfk[0].toBigDecimal().toDouble().toBigDecimal()
+        var numb = 1234
+        numb.toDouble().pow(3)
+        name.groupBy { }
+        name.groupingBy { }
+        name.toCharArray().forEach { }
         name.toCharArray().size
         name.toCharArray().joinToString("-")
         name.length
         name.replaceFirstChar { it.uppercase() }
-        name.replaceFirst()
+        //name.replaceFirst()
         name.capitalize()
-        name.split("_")
+        name.slice(0..2)
+        name.split("_").joinToString(" ")
         name.replace("_", "")
         name.lowercase()
         name.uppercase()
@@ -79,8 +101,11 @@ class KotlinRmbrActivity : AppCompatActivity() {
         }
     }
 
+}
+
     // skip an iteration of a loop
     private fun continueTest() {
+        val TAG = "KotlinRmbrTAG"
         for (i in 1..100) {
             // if i is divisible by 5. skip this iteration
             if (i%5 == 0) {
@@ -98,6 +123,7 @@ class KotlinRmbrActivity : AppCompatActivity() {
 
     // break a loop or something
     private fun breakTest() {
+        val TAG = "KotlinRmbrTAG"
         for (i in 1..100) {
             Log.d(TAG, "breakTest: $i")
             if (i == 23) {
@@ -116,4 +142,3 @@ class KotlinRmbrActivity : AppCompatActivity() {
             println(inputText)
         }
     }
-}
