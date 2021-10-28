@@ -18,6 +18,8 @@ class StartingFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_starting, container, false)
 
+        bindUIWidgets(view)
+
         cameraBtn.setOnClickListener {
             Navigation.findNavController(view)
                 .navigate(R.id.action_startingFragment_to_cameraFragment)
