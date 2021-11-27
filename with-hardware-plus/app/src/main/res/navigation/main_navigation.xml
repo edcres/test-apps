@@ -19,4 +19,5 @@
             android:id="@+id/action_startingFragment_to_cameraFragment"
             app:destination="@id/cameraFragment" />
     </fragment>
+
 </navigation>

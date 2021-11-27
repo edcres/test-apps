@@ -3,6 +3,8 @@
     package="com.example.testhardwareplus">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.any" />
+<!-- Adding android.hardware.camera.any makes sure that the device has a camera. Specifying .any means that it can be a front camera or a back camera.-->
 
     <application
         android:allowBackup="true"
