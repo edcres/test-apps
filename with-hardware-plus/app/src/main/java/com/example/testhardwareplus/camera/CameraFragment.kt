@@ -31,9 +31,12 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.testhardwareplus.MainActivity
+import kotlinx.android.synthetic.main.fragment_camera.*
 import java.util.concurrent.TimeUnit
 
 typealias LumaListener = (luma: Double) -> Unit
@@ -46,10 +49,12 @@ typealias LumaListener = (luma: Double) -> Unit
 
 // todo: should use 'MediaStore' instead of 'mediaDir'
 // I'm using 'mediadir' to save the picture and 'MediaStore' to show all the pictures
+// only shows the pictures taking with this app.
+//  Idk why but it's probably bc I'm missing shared storage permissions
 
 // uses Glide to load the images
 
-class CameraFragment : Fragment() {
+class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
 
     private lateinit var cameraCaptureBtn: Button
     private lateinit var getImgBtn: Button
@@ -65,7 +70,7 @@ class CameraFragment : Fragment() {
     
     private val imageURIs = mutableListOf<Uri>() // I made this to have a list of image locations
 
-    private lateinit var image: MediaStoreImage
+//    private lateinit var image: MediaStoreImage
 
     companion object {
         private const val TAG = "CameraXBasic"
@@ -88,6 +93,13 @@ class CameraFragment : Fragment() {
         goToCamBtn = view.findViewById(R.id.go_to_cam_btn)
         galleyRecycler = view.findViewById(R.id.galley_recycler)
 
+        val imagesList = getImages()
+        Log.d(TAG, "onCreateView: listSize = ${imagesList.size}")
+        val galleryAdapter = GalleryAdapter(imagesList, this)
+
+        galleyRecycler.adapter = galleryAdapter
+        galleyRecycler.layoutManager = GridLayoutManager(context, 3)
+
         // Request camera permissions
         if (allPermissionsGranted()) {
             startCamera()
@@ -97,10 +109,21 @@ class CameraFragment : Fragment() {
             )
         }
 
-        cameraCaptureBtn.setOnClickListener { takePhoto() }
+        cameraCaptureBtn.setOnClickListener {
+            takePhoto()
+            showChosenImageWidgets()
+        }
 
-        //todo
-        getImgBtn.setOnClickListener {  }
+        getImgBtn.setOnClickListener {
+            // the gallery images are fetched when the activity starts
+            //  possible problem: when the user takes a picture, it might not show up in the
+            //  gallery until the activity is recreated
+            showGalleryWidgets()
+        }
+
+        goToCamBtn.setOnClickListener {
+            showCamPreviewWidgets()
+        }
 
         outputDirectory = getOutputDirectory()
 
@@ -131,6 +154,11 @@ class CameraFragment : Fragment() {
                 // 'requireActivity().finish()'
             }
         }
+    }
+
+    // for the recyclerView
+    override fun onItemClick(position: Int) {
+        //todo: handle user click in image from gallery
     }
 
     override fun onDestroy() {
@@ -241,7 +269,7 @@ class CameraFragment : Fragment() {
     // helper function
     // todo i think i need to get permission for shared storage
 
-    // todo: display the pictures from the gallery
+    // display the pictures from the gallery
     private fun getImages(): List<MediaStoreImage> {
         val images = mutableListOf<MediaStoreImage>()
 
@@ -257,8 +285,13 @@ class CameraFragment : Fragment() {
         )
         val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
 
-        val application = Application()
-        application.contentResolver.query(
+
+
+
+
+
+
+        requireContext().contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             projection,
             selection,
@@ -292,6 +325,10 @@ class CameraFragment : Fragment() {
             }
         }
 
+
+
+
+
         Log.v(TAG, "Found ${images.size} images")
         return images
 
@@ -310,18 +347,29 @@ class CameraFragment : Fragment() {
 
 
     // HELPER FUNCTIONS //
+    private fun showCamPreviewWidgets() {
+        viewFinder.visibility = View.VISIBLE
+        cameraCaptureBtn.visibility = View.VISIBLE
+        getImgBtn.visibility = View.VISIBLE
+        galleyRecycler.visibility = View.GONE
+        pictureView.visibility = View.GONE
+        goToCamBtn.visibility = View.GONE
+    }
     private fun showGalleryWidgets() {
         viewFinder.visibility = View.GONE
         cameraCaptureBtn.visibility = View.GONE
         getImgBtn.visibility = View.GONE
-
-
-
+        galleyRecycler.visibility = View.VISIBLE
         pictureView.visibility = View.GONE
         goToCamBtn.visibility = View.GONE
     }
-    private fun showCamPreviewWidgets() {
-
+    private fun showChosenImageWidgets() {
+        viewFinder.visibility = View.GONE
+        cameraCaptureBtn.visibility = View.GONE
+        getImgBtn.visibility = View.GONE
+        galleyRecycler.visibility = View.GONE
+        pictureView.visibility = View.VISIBLE
+        goToCamBtn.visibility = View.VISIBLE
     }
     private fun dateToTimestamp(day: Int, month: Int, year: Int): Long =
         SimpleDateFormat("dd.MM.yyyy").let { formatter ->
