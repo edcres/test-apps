@@ -1,7 +1,6 @@
 package com.example.testhardwareplus.camera
 
 import android.Manifest
-import android.app.Application
 import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -30,13 +29,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.testhardwareplus.MainActivity
-import kotlinx.android.synthetic.main.fragment_camera.*
 import java.util.concurrent.TimeUnit
 
 typealias LumaListener = (luma: Double) -> Unit
@@ -54,6 +49,8 @@ typealias LumaListener = (luma: Double) -> Unit
 
 // uses Glide to load the images
 
+//opssible problem, from the time the picture is taken and the time it shows up, it takes a long time
+
 class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
 
     private lateinit var cameraCaptureBtn: Button
@@ -69,8 +66,6 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
     private lateinit var cameraExecutor: ExecutorService
     
     private val imageURIs = mutableListOf<Uri>() // I made this to have a list of image locations
-
-//    private lateinit var image: MediaStoreImage
 
     companion object {
         private const val TAG = "CameraXBasic"
@@ -110,8 +105,18 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
         }
 
         cameraCaptureBtn.setOnClickListener {
-            takePhoto()
+            val newImageURI = takePhoto()
             showChosenImageWidgets()
+
+            // it's inefficient to query all the images just to display one.
+            // but it's fine, this isn't a real app
+//            val newImageURI = imageURIs.last()
+//            val newImage = getImages()[0]
+            Glide.with(pictureView)
+                .load(newImageURI)
+                .thumbnail(0.33f)
+                .centerCrop()
+                .into(pictureView)
         }
 
         getImgBtn.setOnClickListener {
@@ -158,7 +163,8 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
 
     // for the recyclerView
     override fun onItemClick(position: Int) {
-        //todo: handle user click in image from gallery
+        // todo: handle user click in image from gallery
+        // i don't care about this part anymore
     }
 
     override fun onDestroy() {
@@ -214,15 +220,18 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
 
     // Implement ImageCapture
     // define a configuration object that is used to instantiate the actual use case object
-    private fun takePhoto() {
+    private fun takePhoto(): Uri? {
         // Get a stable reference of the modifiable image capture use case
-        val imageCapture = imageCapture ?: return
+//        val imageCapture = imageCapture ?: return
+        val imageCapture = imageCapture ?: return null
 
         // Create time-stamped output file to hold the image
         val photoFile = File(
             outputDirectory,
-            SimpleDateFormat(FILENAME_FORMAT, Locale.US
-            ).format(System.currentTimeMillis()) + ".jpg")
+            SimpleDateFormat(
+                FILENAME_FORMAT, Locale.US
+            ).format(System.currentTimeMillis()) + ".jpg"
+        )
 
         // Create output options object which contains file + metadata
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
@@ -230,7 +239,9 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
         // Set up image capture listener, which is triggered after photo has
         // been taken
         imageCapture.takePicture(
-            outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
+            outputOptions,
+            ContextCompat.getMainExecutor(requireContext()),
+            object : ImageCapture.OnImageSavedCallback {
 
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
@@ -244,6 +255,8 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
                     Log.d(TAG, msg)
                 }
             })
+
+        return Uri.fromFile(photoFile)
     }
     // FEATURES //
 
