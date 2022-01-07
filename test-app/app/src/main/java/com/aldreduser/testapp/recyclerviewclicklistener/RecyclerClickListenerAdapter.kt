@@ -61,7 +61,7 @@ class RecyclerClickListenerAdapter(
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 // do this bc its possible to delete an item but click it before it's completely
-                    // animated off the recyclerview
+                // animated off the recyclerview
                 onItemClickListener.onItemClick(position)
             }
         }

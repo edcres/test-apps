@@ -1,6 +1,8 @@
 package com.example.testhardwareplus.camera
 
 import android.Manifest
+import android.app.Application
+import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -12,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -27,27 +30,42 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import java.util.concurrent.TimeUnit
 
 typealias LumaListener = (luma: Double) -> Unit
 
 // This code uses the CameraX library
 
 // https://www.youtube.com/watch?v=xZZQ5q5pOp0      I didn't use this
-// https://developer.android.com/codelabs/camerax-getting-started#0
+// https://developer.android.com/codelabs/camerax-getting-started#0     Taking photo codelab
+// https://github.com/android/storage-samples/tree/main/MediaStore  MediaStore sample project
 
 // todo: should use 'MediaStore' instead of 'mediaDir'
+// I'm using 'mediadir' to save the picture and 'MediaStore' to show all the pictures
+
+// uses Glide to load the images
 
 class CameraFragment : Fragment() {
 
     private lateinit var cameraCaptureBtn: Button
+    private lateinit var getImgBtn: Button
     private lateinit var viewFinder: PreviewView
-    private val cameraRequest = 1888
+    private lateinit var pictureView: ImageView
+    private lateinit var goToCamBtn: Button
+    private lateinit var galleyRecycler: RecyclerView
 
+    private val cameraRequest = 1888
     private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
     
     private val imageURIs = mutableListOf<Uri>() // I made this to have a list of image locations
+
+    private lateinit var image: MediaStoreImage
 
     companion object {
         private const val TAG = "CameraXBasic"
@@ -64,7 +82,11 @@ class CameraFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_camera, container, false)
 
         cameraCaptureBtn = view.findViewById(R.id.camera_capture_btn)
+        getImgBtn = view.findViewById(R.id.get_img_btn)
         viewFinder = view.findViewById(R.id.view_finder)
+        pictureView = view.findViewById(R.id.picture_view)
+        goToCamBtn = view.findViewById(R.id.go_to_cam_btn)
+        galleyRecycler = view.findViewById(R.id.galley_recycler)
 
         // Request camera permissions
         if (allPermissionsGranted()) {
@@ -76,6 +98,9 @@ class CameraFragment : Fragment() {
         }
 
         cameraCaptureBtn.setOnClickListener { takePhoto() }
+
+        //todo
+        getImgBtn.setOnClickListener {  }
 
         outputDirectory = getOutputDirectory()
 
@@ -178,6 +203,7 @@ class CameraFragment : Fragment() {
         // been taken
         imageCapture.takePicture(
             outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
+
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
@@ -190,13 +216,12 @@ class CameraFragment : Fragment() {
                     Log.d(TAG, msg)
                 }
             })
-
     }
     // FEATURES //
 
-    // SAVED IMAGE //
-    
-    // SAVED IMAGE //
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 
     private fun getOutputDirectory(): File {
         val mediaDir = requireActivity().externalMediaDirs.firstOrNull()?.let {
@@ -204,6 +229,160 @@ class CameraFragment : Fragment() {
         }
         return if (mediaDir != null && mediaDir.exists())
             mediaDir else requireActivity().filesDir
+    }
+
+
+
+
+
+
+
+    // code for open gallery picture //
+    // helper function
+    // todo i think i need to get permission for shared storage
+
+    // todo: display the pictures from the gallery
+    private fun getImages(): List<MediaStoreImage> {
+        val images = mutableListOf<MediaStoreImage>()
+
+        val projection = arrayOf(
+            MediaStore.Images.Media._ID,
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media.DATE_ADDED
+        )
+        val selection = "${MediaStore.Images.Media.DATE_ADDED} >= ?"
+        val selectionArgs = arrayOf(
+            // Release day of the G1. :)
+            dateToTimestamp(day = 22, month = 10, year = 2008).toString()
+        )
+        val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+
+        val application = Application()
+        application.contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            sortOrder
+        )?.use { cursor ->
+            val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+            val dateModifiedColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED)
+            val displayNameColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+
+            Log.i(TAG, "Found ${cursor.count} images")
+            while (cursor.moveToNext()) {
+                // Here we'll use the column indexes that we found above.
+                val id = cursor.getLong(idColumn)
+                val dateModified =
+                    Date(TimeUnit.SECONDS.toMillis(cursor.getLong(dateModifiedColumn)))
+                val displayName = cursor.getString(displayNameColumn)
+
+                val contentUri = ContentUris.withAppendedId(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    id
+                )
+
+                val image = MediaStoreImage(id, displayName, dateModified, contentUri)
+                images += image
+
+                // For debugging, we'll output the image objects we create to logcat.
+                Log.v(TAG, "Added image: $image")
+            }
+        }
+
+        Log.v(TAG, "Found ${images.size} images")
+        return images
+
+
+    }
+
+    // todo: user selects the a picture from the gallery
+    // handle click on the adapter
+
+    // todo: display the picture in the imageview
+    // change the PreviewView widget visibility to gone
+    // change imageview visibility to visible
+
+
+
+
+
+    // HELPER FUNCTIONS //
+    private fun showGalleryWidgets() {
+        viewFinder.visibility = View.GONE
+        cameraCaptureBtn.visibility = View.GONE
+        getImgBtn.visibility = View.GONE
+
+
+
+        pictureView.visibility = View.GONE
+        goToCamBtn.visibility = View.GONE
+    }
+    private fun showCamPreviewWidgets() {
+
+    }
+    private fun dateToTimestamp(day: Int, month: Int, year: Int): Long =
+        SimpleDateFormat("dd.MM.yyyy").let { formatter ->
+            TimeUnit.MICROSECONDS.toSeconds(formatter.parse("$day.$month.$year")?.time ?: 0)
+        }
+    // HELPER FUNCTIONS //
+}
+
+
+// recyclerView to display the gallery
+class GalleryAdapter(
+    private val imageList: List<MediaStoreImage>,
+    private val onItemClickListener: OnItemClickListener
+) : RecyclerView.Adapter<GalleryAdapter.ClickListenerViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClickListenerViewHolder {
+        val itemView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.gallery_item_layout, parent, false)
+
+        return ClickListenerViewHolder(itemView)
+    }
+
+    override fun onBindViewHolder(holder: ClickListenerViewHolder, position: Int) {
+        val currentImage = imageList[position]
+        holder.rootView.tag = currentImage
+
+        // set the image to the imageView
+        Glide.with(holder.imageView)
+            .load(currentImage.contentUri)
+            .thumbnail(0.33f)
+            .centerCrop()
+            .into(holder.imageView)
+    }
+
+    override fun getItemCount(): Int {
+        return imageList.size
+    }
+
+    inner class ClickListenerViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
+        val rootView = itemView
+        val imageView: ImageView = itemView.findViewById(R.id.gallery_image)
+
+        init {
+            itemView.setOnClickListener(this)
+
+//            val image = rootView.tag as? MediaStoreImage ?: return@setOnClickListener
+//            onClick(image)
+        }
+
+        override fun onClick(v: View?) {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                onItemClickListener.onItemClick(position)
+            }
+        }
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
     }
 
 }
