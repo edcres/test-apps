@@ -49,7 +49,10 @@ typealias LumaListener = (luma: Double) -> Unit
 
 // uses Glide to load the images
 
-//opssible problem, from the time the picture is taken and the time it shows up, it takes a long time
+// popssible problem, from the time the picture is taken and the time it shows up, it takes a long time
+
+// bug: displaying a photo when it is taken only works the first time. I have to restart
+//  the app so it works again (maybe I have to clear Glide from that ImageView widget)
 
 class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
 
@@ -66,6 +69,7 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
     private lateinit var cameraExecutor: ExecutorService
     
     private val imageURIs = mutableListOf<Uri>() // I made this to have a list of image locations
+    private lateinit var imagesList: List<MediaStoreImage>
 
     companion object {
         private const val TAG = "CameraXBasic"
@@ -88,7 +92,7 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
         goToCamBtn = view.findViewById(R.id.go_to_cam_btn)
         galleyRecycler = view.findViewById(R.id.galley_recycler)
 
-        val imagesList = getImages()
+        imagesList = getImages()
         Log.d(TAG, "onCreateView: listSize = ${imagesList.size}")
         val galleryAdapter = GalleryAdapter(imagesList, this)
 
@@ -163,8 +167,15 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
 
     // for the recyclerView
     override fun onItemClick(position: Int) {
-        // todo: handle user click in image from gallery
-        // i don't care about this part anymore
+        Log.d(TAG, "onItemClick: position: $position")
+
+        val chosenImageURI = imagesList[position].contentUri
+        showChosenImageWidgets()
+        Glide.with(pictureView)
+            .load(chosenImageURI)
+            .thumbnail(0.33f)
+            .centerCrop()
+            .into(pictureView)
     }
 
     override fun onDestroy() {
@@ -279,9 +290,6 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
 
 
     // code for open gallery picture //
-    // helper function
-    // todo i think i need to get permission for shared storage
-
     // display the pictures from the gallery
     private fun getImages(): List<MediaStoreImage> {
         val images = mutableListOf<MediaStoreImage>()
@@ -297,12 +305,6 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
             dateToTimestamp(day = 22, month = 10, year = 2008).toString()
         )
         val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
-
-
-
-
-
-
 
         requireContext().contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -338,26 +340,9 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
             }
         }
 
-
-
-
-
         Log.v(TAG, "Found ${images.size} images")
         return images
-
-
     }
-
-    // todo: user selects the a picture from the gallery
-    // handle click on the adapter
-
-    // todo: display the picture in the imageview
-    // change the PreviewView widget visibility to gone
-    // change imageview visibility to visible
-
-
-
-
 
     // HELPER FUNCTIONS //
     private fun showCamPreviewWidgets() {
