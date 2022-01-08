@@ -15,6 +15,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/notification_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:text="Notification"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/camera_btn" />
+
 <!--    <Button-->
 <!--        android:id="@+id/map_btn"-->
 <!--        android:layout_width="wrap_content"-->

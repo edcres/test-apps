@@ -11,6 +11,7 @@ import androidx.navigation.Navigation
 class StartingFragment : Fragment() {
 
     private lateinit var cameraBtn: Button
+    private lateinit var notificationBtn: Button
 //    private lateinit var mapBtn: Button
 
     override fun onCreateView(
@@ -25,6 +26,10 @@ class StartingFragment : Fragment() {
             Navigation.findNavController(view)
                 .navigate(R.id.action_startingFragment_to_cameraFragment)
         }
+        notificationBtn.setOnClickListener {
+            Navigation.findNavController(view)
+                .navigate(R.id.action_startingFragment_to_notificationFragment)
+        }
 //        mapBtn.setOnClickListener {
 //            Navigation.findNavController(view)
 //                .navigate(R.id.action_startingFragment_to_mapFragment)
@@ -35,6 +40,7 @@ class StartingFragment : Fragment() {
 
     private fun bindUIWidgets(view: View) {
         cameraBtn = view.findViewById(R.id.camera_btn)
+        notificationBtn = view.findViewById(R.id.notification_btn)
 //        mapBtn = view.findViewById(R.id.map_btn)
     }
 }

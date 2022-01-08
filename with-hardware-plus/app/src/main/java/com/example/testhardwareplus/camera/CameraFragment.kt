@@ -283,12 +283,6 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
             mediaDir else requireActivity().filesDir
     }
 
-
-
-
-
-
-
     // code for open gallery picture //
     // display the pictures from the gallery
     private fun getImages(): List<MediaStoreImage> {

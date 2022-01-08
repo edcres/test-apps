@@ -18,6 +18,14 @@
         <action
             android:id="@+id/action_startingFragment_to_cameraFragment"
             app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.example.testhardwareplus.notification.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
 
 </navigation>
