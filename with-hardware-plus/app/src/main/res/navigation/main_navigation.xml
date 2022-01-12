@@ -21,11 +21,28 @@
         <action
             android:id="@+id/action_startingFragment_to_notificationFragment"
             app:destination="@id/notificationFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_bluetoothFragment"
+            app:destination="@id/bluetoothFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
         android:name="com.example.testhardwareplus.notification.NotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/bluetoothFragment"
+        android:name="com.example.testhardwareplus.BluetoothFragment"
+        android:label="fragment_bluetooth"
+        tools:layout="@layout/fragment_bluetooth" >
+        <action
+            android:id="@+id/action_bluetoothFragment_to_BLEFragment"
+            app:destination="@id/BLEFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/BLEFragment"
+        android:name="com.example.testhardwareplus.BLEFragment"
+        android:label="fragment_b_l_e"
+        tools:layout="@layout/fragment_b_l_e" />
 
 </navigation>
