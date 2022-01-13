@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_startingFragment_to_bluetoothFragment"
             app:destination="@id/bluetoothFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_locationFragment"
+            app:destination="@id/locationFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
@@ -44,5 +47,10 @@
         android:name="com.example.testhardwareplus.BLEFragment"
         android:label="fragment_b_l_e"
         tools:layout="@layout/fragment_b_l_e" />
+    <fragment
+        android:id="@+id/locationFragment"
+        android:name="com.example.testhardwareplus.location.LocationFragment"
+        android:label="fragment_location"
+        tools:layout="@layout/fragment_location" />
 
 </navigation>

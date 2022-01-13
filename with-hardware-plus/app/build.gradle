@@ -60,6 +60,9 @@ dependencies {
 
     // glide
     implementation "com.github.bumptech.glide:glide:4.12.0"
-
     implementation "androidx.vectordrawable:vectordrawable:1.1.0"
+
+    // location
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+
 }

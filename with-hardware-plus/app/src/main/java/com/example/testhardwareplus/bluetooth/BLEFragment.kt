@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.testhardwareplus.R
+import java.time.Duration
 
 // https://developer.android.com/guide/topics/connectivity/bluetooth/find-ble-devices
 // https://medium.com/@nithinjith.p/ble-in-android-kotlin-c485f0e83c16
@@ -60,6 +61,8 @@ class BLEFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_b_l_e, container, false)
 
 //        checkLocationPermission()
+        Toast.makeText(requireContext(), "This feature doesn't work yet", Toast.LENGTH_SHORT)
+            .show()
 
         return view
     }

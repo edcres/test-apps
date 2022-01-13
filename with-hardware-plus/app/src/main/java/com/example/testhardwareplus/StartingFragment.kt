@@ -35,7 +35,7 @@ class StartingFragment : Fragment() {
     private lateinit var cameraBtn: Button
     private lateinit var notificationBtn: Button
     private lateinit var bluetoothBtn: Button
-//    private lateinit var mapBtn: Button
+    private lateinit var locationBtn: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,10 +57,10 @@ class StartingFragment : Fragment() {
             Navigation.findNavController(view)
                 .navigate(R.id.action_startingFragment_to_bluetoothFragment)
         }
-//        mapBtn.setOnClickListener {
-//            Navigation.findNavController(view)
-//                .navigate(R.id.action_startingFragment_to_mapFragment)
-//        }
+        locationBtn.setOnClickListener {
+            Navigation.findNavController(view)
+                .navigate(R.id.action_startingFragment_to_locationFragment)
+        }
 
         return view
     }
@@ -69,6 +69,6 @@ class StartingFragment : Fragment() {
         cameraBtn = view.findViewById(R.id.camera_btn)
         notificationBtn = view.findViewById(R.id.notification_btn)
         bluetoothBtn = view.findViewById(R.id.bluetooth_btn)
-//        mapBtn = view.findViewById(R.id.map_btn)
+        locationBtn = view.findViewById(R.id.location_btn)
     }
 }
