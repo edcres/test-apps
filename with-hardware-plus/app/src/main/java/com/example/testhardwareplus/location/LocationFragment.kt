@@ -30,9 +30,11 @@ import android.util.Log
 
 class LocationFragment : Fragment() {
 
-    private var fusedLocationClient: FusedLocationProviderClient? = null
-    private val LOCATION_PERMISSION_REQUEST_CODE = 2
     private var addressResultReceiver: LocationAddressResultReceiver? = null
+    private var fusedLocationClient: FusedLocationProviderClient? = null
+
+    private val TAG = "LocationFragTAG"
+    private val LOCATION_PERMISSION_REQUEST_CODE = 2
     private var currentLocation: Location? = null
     private var locationCallback: LocationCallback? = null
 
@@ -42,7 +44,6 @@ class LocationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_location, container, false)
 
         currentAddTv = view.findViewById(R.id.location_txt)
@@ -68,29 +69,41 @@ class LocationFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startLocationUpdates();
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startLocationUpdates()
             } else {
                 Toast.makeText(
                     requireContext(), "Location permission not granted, " +
                             "restart the app if you want the feature", Toast.LENGTH_SHORT
-                ).show();
+                ).show()
             }
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.i(TAG, "Fragment resumed")
+        startLocationUpdates()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.i(TAG, "Fragment paused")
+        fusedLocationClient!!.removeLocationUpdates(locationCallback)
+    }
+
     private fun startLocationUpdates() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) !=
-            PackageManager.PERMISSION_GRANTED
-        ) {
+        val checkSelfPermission = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        if (checkSelfPermission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 LOCATION_PERMISSION_REQUEST_CODE
             )
         } else {
+            // get the location (turn on location updates)
             val locationRequest = LocationRequest()
             locationRequest.interval = 2000
             locationRequest.fastestInterval = 1000
@@ -114,8 +127,8 @@ class LocationFragment : Fragment() {
         requireActivity().startService(intent)
     }
 
-
-    private inner class LocationAddressResultReceiver(context: Context, handler: Handler?) : ResultReceiver(handler) {
+    private inner class LocationAddressResultReceiver(context: Context, handler: Handler?) :
+        ResultReceiver(handler) {
 
         val fragmentContext = context
 
@@ -123,11 +136,11 @@ class LocationFragment : Fragment() {
             super.onReceiveResult(resultCode, resultData)
 
             if (resultCode == 0) {
-                Log.d("Address", "Location null retrying");
-                getAddress();
+                Log.d("Address", "Location null retrying")
+                getAddress()
             }
             if (resultCode == 1) {
-                Toast.makeText(fragmentContext, "Address not found, ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(fragmentContext, "Address not found, ", Toast.LENGTH_SHORT).show()
             }
             val currentAdd = resultData!!.getString("address_result")
             showResults(currentAdd!!)
@@ -137,16 +150,6 @@ class LocationFragment : Fragment() {
 
     private fun showResults(currentAdd: String) {
         currentAddTv.text = currentAdd
-    }
-
-    override fun onResume() {
-        super.onResume()
-        startLocationUpdates()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        fusedLocationClient!!.removeLocationUpdates(locationCallback)
     }
 
 }

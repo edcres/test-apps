@@ -14,9 +14,10 @@ import java.util.*
 class GetAddressIntentService : IntentService(IDENTIFIER) {
 
     private var addressResultReceiver: ResultReceiver? = null
+
     override fun onHandleIntent(intent: Intent?) {
         val msg: String
-        addressResultReceiver = Objects.requireNonNull(intent)?.getParcelableExtra("add_receiver")
+        addressResultReceiver = Objects.requireNonNull(intent)!!.getParcelableExtra("add_receiver")
         if (addressResultReceiver == null) {
             Log.e("GetAddressIntentService", "No receiver, not processing the request further")
             return
@@ -30,20 +31,20 @@ class GetAddressIntentService : IntentService(IDENTIFIER) {
         val geocoder = Geocoder(this, Locale.getDefault())
         var addresses: List<Address>? = null
         try {
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1)
+            addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
         } catch (ioException: Exception) {
             Log.e("", "Error in getting address for the location")
         }
-        if (addresses == null || addresses.size == 0) {
+        if (addresses == null || addresses.isEmpty()) {
             msg = "No address found for the location"
             sendResultsToReceiver(1, msg)
         } else {
             val address: Address = addresses[0]
             val addressDetails: String =
-                address.getFeatureName().toString() + "\n" + address.getThoroughfare() + "\n" +
-                        "Locality: " + address.getLocality() + "\n" + "County: " + address.getSubAdminArea() + "\n" +
-                        "State: " + address.getAdminArea() + "\n" + "Country: " + address.getCountryName() + "\n" +
-                        "Postal Code: " + address.getPostalCode() + "\n"
+                address.featureName.toString() + "\n" + address.thoroughfare + "\n" +
+                        "Locality: " + address.locality + "\n" + "County: " + address.subAdminArea + "\n" +
+                        "State: " + address.adminArea + "\n" + "Country: " + address.countryName + "\n" +
+                        "Postal Code: " + address.postalCode + "\n"
             sendResultsToReceiver(2, addressDetails)
         }
     }
