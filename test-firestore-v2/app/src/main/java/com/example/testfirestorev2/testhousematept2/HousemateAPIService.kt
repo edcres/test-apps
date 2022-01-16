@@ -16,16 +16,13 @@ import kotlinx.coroutines.tasks.await
 
 // https://medium.com/firebase-developers/android-mvvm-firestore-37c3a8d65404
 
-// for addSnapshotListener, use flow instead of coroutines or livedata. Use coroutines when calling the 'getPosts()' function
+// for addSnapshotListener (real-time changes), use flow instead of coroutines or livedata.
+//      Use coroutines when calling the 'getPosts()' (one time call) function
 // https://stackoverflow.com/questions/63889054/use-kotlin-coroutines-for-real-time-firestore-updates
 
 // for .get and .set fireStore queries, use suspend functions and coroutines
 
 class HousemateAPIService {
-
-    // todo: BUG stack overflow instantiating the viewmodel bc it also instantiates  this class
-    //  creating an infinite loop
-    private val housemate2ViewModel = Housemate2ViewModel()
 
     private val db = Firebase.firestore
     private var groupIDCollectionDB: CollectionReference = db.collection(HOUSEMATE_COLLECTION)
@@ -212,7 +209,7 @@ class HousemateAPIService {
     }
 
     // get the last group added String (and update it to the new ID)
-    fun getLastGroupAdded(vmClientGroupIDCollection: String) {
+    fun getLastGroupAdded() {
         // remember to start off the database with last group added '00000000asdfg'
         // ie. 00000001asdfg, 00000002fagsd, 00000003sgdfa ...
         val lastGroupAddedField = "last group added"
@@ -229,7 +226,7 @@ class HousemateAPIService {
                     newID = add1AndScrambleLetters(oldID)
 
 
-                    Housemate2ViewModel.clientGroupIDCollection = newID
+                    housemate2ViewModel.clientGroupIDCollection = newID
 
 
                     Log.d(TAG, "getLastGroupAdded: new group $newID")

@@ -31,24 +31,12 @@ class Housemate2ViewModel: ViewModel() {
     val choreItems: LiveData<MutableList<ChoresItem>> get() = _choreItems
 
     init {
+        housemateRepository
         Log.d(TAG, "ViewModel initialized")
         // if i have different views, everytime i call the viewModel, the variables might be reset
         //  unless maybe it's only initialized the firs time it's called
         Log.d(TAG, "_shoppingItems: ${_shoppingItems.value?.size}")
         Log.d(TAG, "_shoppingItems: ${_choreItems.value?.size}")
-    }
-
-    companion object {
-        // Todo: set the variables/functions used in the APIService here
-        //  in the activity, cal 'Housemate2ViewModel.clientGroupIDCollection' and things like that
-//        var clientGroupIDCollection: String? = null
-//        var clientIDCollection: String? = null
-
-        val instance = Housemate2ViewModel()
-
-        fun setClientGroupIDCollection() {
-            housemateRepository
-        }
     }
 
     // DATABASE FUNCTIONS //
