@@ -1,9 +1,9 @@
 package com.example.testfirestorev2.testhousematept2
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.example.testfirestorev2.add1AndScrambleLetters
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
@@ -25,8 +25,8 @@ import kotlinx.coroutines.tasks.await
 class HousemateAPIService {
 
     private val db = Firebase.firestore
-    private var groupIDCollectionDB: CollectionReference = db.collection(HOUSEMATE_COLLECTION)
-        .document(GROUP_IDS_DOC).collection(housemate2ViewModel.clientGroupIDCollection!!)
+    private var groupIDsDocumentDB: DocumentReference = db.collection(HOUSEMATE_COLLECTION)
+        .document(GROUP_IDS_DOC)//.collection(clientGroupIDCollection)
 
     companion object {
         const val TAG = "ApiServiceTAG"
@@ -62,9 +62,9 @@ class HousemateAPIService {
         - Calling awaitClose
      */
     // don't need suspend functions with Flow
-    fun getShoppingItemsRealtime(): Flow<MutableList<ShoppingItem>> {
+    fun getShoppingItemsRealtime(clientGroupIDCollection: String): Flow<MutableList<ShoppingItem>> {
         return callbackFlow {
-            val listenerRegistration = groupIDCollectionDB.document(SHOPPING_LIST_DOC)
+            val listenerRegistration = groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC)
                 .collection(SHOPPING_ITEMS_COLLECTION).addSnapshotListener {
                         querySnapshot: QuerySnapshot?,
                         firebaseFirestoreException: FirebaseFirestoreException? ->
@@ -76,6 +76,7 @@ class HousemateAPIService {
 
                     if(querySnapshot != null) {
                         val itemsList = querySnapshot.toObjects(ShoppingItem::class.java)
+
                         this.trySend(itemsList)
                     } else {
                         Log.d(TAG, "getPosts: querySnapshot is null")
@@ -88,9 +89,9 @@ class HousemateAPIService {
         }
     }
 
-    fun getChoreItemsRealtime(): Flow<MutableList<ChoresItem>> {
+    fun getChoreItemsRealtime(clientGroupIDCollection: String): Flow<MutableList<ChoresItem>> {
         return callbackFlow {
-            val listenerRegistration = groupIDCollectionDB.document(CHORES_LIST_DOC)
+            val listenerRegistration = groupIDsDocumentDB.collection(clientGroupIDCollection).document(CHORES_LIST_DOC)
                 .collection(CHORE_ITEMS_COLLECTION).addSnapshotListener {
                         querySnapshot: QuerySnapshot?,
                         firebaseFirestoreException: FirebaseFirestoreException? ->
@@ -117,6 +118,7 @@ class HousemateAPIService {
 
     // DATABASE WRITES //
     fun addShoppingItemToDatabase(
+        clientGroupIDCollection: String,
         itemName: String,
         itemQuantity: Double,
         itemCost: Double,
@@ -136,7 +138,7 @@ class HousemateAPIService {
             VOLUNTEER_FIELD to "",
             ADDED_BY_FIELD to addedBy
         )
-        groupIDCollectionDB.document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
+        groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
             .document(itemName).set(shoppingItemData)
             .addOnSuccessListener {
                 Log.d(TAG, "$itemName DocumentSnapshot successfully written!")
@@ -145,6 +147,7 @@ class HousemateAPIService {
 
     }
     fun addChoresItemToDatabase(
+        clientGroupIDCollection: String,
         itemName: String,
         itemDifficulty: Int,
         itemNeededBy: String,   // try and make this a date
@@ -158,7 +161,7 @@ class HousemateAPIService {
             PRIORITY_FIELD to itemPriority,
             ADDED_BY_FIELD to addedBy
         )
-        groupIDCollectionDB.document(CHORES_LIST_DOC).collection(CHORE_ITEMS_COLLECTION)
+        groupIDsDocumentDB.collection(clientGroupIDCollection).document(CHORES_LIST_DOC).collection(CHORE_ITEMS_COLLECTION)
             .document(itemName).set(choresItemData)
             .addOnSuccessListener {
                 Log.d(TAG, "$itemName DocumentSnapshot successfully written!")
@@ -166,17 +169,17 @@ class HousemateAPIService {
             .addOnFailureListener { e -> Log.d(TAG, "Error writing document", e) }
     }
 
-    fun sendVolunteerToDb(listType: Any, itemName: String, volunteerName: String) {
+    fun sendVolunteerToDb(clientGroupIDCollection: String, listType: Any, itemName: String, volunteerName: String) {
 
         when (listType) {
             ShoppingItem::class -> {
-                groupIDCollectionDB.document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
+                groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
                     .document(itemName).update(VOLUNTEER_FIELD, volunteerName)
                     .addOnSuccessListener { Log.d(TAG, "$itemName successfully updated to $volunteerName") }
                     .addOnFailureListener { Log.d(TAG, "Error updating doc") }
             }
             ChoresItem::class -> {
-                groupIDCollectionDB.document(CHORES_LIST_DOC).collection(CHORE_ITEMS_COLLECTION)
+                groupIDsDocumentDB.collection(clientGroupIDCollection).document(CHORES_LIST_DOC).collection(CHORE_ITEMS_COLLECTION)
                     .document(itemName).update(VOLUNTEER_FIELD, volunteerName)
                     .addOnSuccessListener { Log.d(TAG, "$itemName successfully updated to $volunteerName") }
                     .addOnFailureListener { Log.d(TAG, "Error updating doc") }
@@ -226,7 +229,7 @@ class HousemateAPIService {
                     newID = add1AndScrambleLetters(oldID)
 
 
-                    housemate2ViewModel.clientGroupIDCollection = newID
+                    viewModel.clientGroupIDCollection = newID
 
 
                     Log.d(TAG, "getLastGroupAdded: new group $newID")
@@ -235,6 +238,11 @@ class HousemateAPIService {
                         .update(lastGroupAddedField, newID)
                         .addOnSuccessListener {
                             Log.d(TAG, "generateClientGroupID: lastGroupAddedField updated")
+
+                            // todo: call setClientID() from the viewModel
+                            //  when the data that's being passed here (newID) changes
+                            //  Also, don't send the viewModel to set the SP from here.
+                            //  Don't pass the SP TAG
                             housemate2ViewModel.sendDataToSP(
                                 housemate2ViewModel.groupIdSPTag,
                                 newID
@@ -250,11 +258,11 @@ class HousemateAPIService {
             }
     }
 
-    fun getLastClientAdded() {
+    fun getLastClientAdded(clientGroupIDCollection: String) {
         val lastClientAddedField = "last client added"
         var oldID: String
         var newID: String?
-        val clientsDocDb = groupIDCollectionDB.document(CLIENT_IDS_DOC)
+        val clientsDocDb = groupIDsDocumentDB.collection(clientGroupIDCollection).document(CLIENT_IDS_DOC)
         clientsDocDb.get()
             .addOnSuccessListener { document ->
                 if (document.data != null) {
@@ -264,6 +272,9 @@ class HousemateAPIService {
                     // Update new id to the database as the last id added
                     clientsDocDb.update(lastClientAddedField, newID)
                         .addOnSuccessListener {
+
+                            // todo: set the value of newID from the viewModel
+                            //  set the SP from the viewModel
                             housemate2ViewModel.clientIDCollection = newID
                             housemate2ViewModel
                                 .sendDataToSP(housemate2ViewModel.clientIdSPTag, newID!!)
@@ -290,15 +301,15 @@ class HousemateAPIService {
     // DATABASE READS //
 
     // DELETE DOCUMENT //
-    fun deleteListItem(listType: Any, itemName: String) {
-        var itemsCollectionDB: CollectionReference = groupIDCollectionDB
+    fun deleteListItem(clientGroupIDCollection: String, listType: Any, itemName: String) {
+        var itemsCollectionDB: CollectionReference = groupIDsDocumentDB.collection(clientGroupIDCollection)
         when (listType) {
             ShoppingItem::class -> {
-                itemsCollectionDB = groupIDCollectionDB.document(SHOPPING_LIST_DOC)
+                itemsCollectionDB = groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC)
                     .collection(SHOPPING_ITEMS_COLLECTION)
             }
             ChoresItem::class -> {
-                itemsCollectionDB = groupIDCollectionDB.document(CHORES_LIST_DOC)
+                itemsCollectionDB = groupIDsDocumentDB.collection(clientGroupIDCollection).document(CHORES_LIST_DOC)
                     .collection(CHORE_ITEMS_COLLECTION)
             }
             else -> {

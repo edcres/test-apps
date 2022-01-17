@@ -2,20 +2,31 @@ package com.example.testfirestorev2.testhousematept2
 
 import kotlinx.coroutines.flow.Flow
 
+// todo: there's 2 main problems:
+//      -one time db fetching
+//          - Fetch the data (APIService)
+//          - Return the value to the Repo (APIService)
+//          - Listen for Repo data changes (ViewModel)
+//      -realtime DB fetching
+//          - Set up listening for data changes (APIService)
+//          - Somehow update the data changes in the repo
+//          - Somehow update the data changes in the viewModel
+
 class HousemateRepository {
 
     private val housemateAPIService = HousemateAPIService()
 
-    fun setUpShoppingRealtimeFetching(): Flow<MutableList<ShoppingItem>> {
-        return housemateAPIService.getShoppingItemsRealtime()
+    fun setUpShoppingRealtimeFetching(groupID: String): Flow<MutableList<ShoppingItem>> {
+        return housemateAPIService.getShoppingItemsRealtime(groupID)
     }
 
-    fun setUpChoresRealtimeFetching(): Flow<MutableList<ChoresItem>> {
-        return housemateAPIService.getChoreItemsRealtime()
+    fun setUpChoresRealtimeFetching(groupID: String): Flow<MutableList<ChoresItem>> {
+        return housemateAPIService.getChoreItemsRealtime(groupID)
     }
 
     // add item
     fun addShoppingItemToDb(
+        groupID: String,
         itemName: String,
         itemQuantity: Double,
         itemCost: Double,
@@ -25,11 +36,12 @@ class HousemateRepository {
         addedBy: String
     ) {
         housemateAPIService.addShoppingItemToDatabase(
-            itemName, itemQuantity, itemCost,
+            groupID, itemName, itemQuantity, itemCost,
             purchaseLocation, itemNeededBy, itemPriority, addedBy
         )
     }
     fun addChoresItemToDb(
+        groupID: String,
         itemName: String,
         itemDifficulty: Int,
         itemNeededBy: String,   // try and make this a date
@@ -37,7 +49,7 @@ class HousemateRepository {
         addedBy: String
     ) {
         housemateAPIService.addChoresItemToDatabase(
-            itemName, itemDifficulty, itemNeededBy, itemPriority, addedBy
+            groupID, itemName, itemDifficulty, itemNeededBy, itemPriority, addedBy
         )
     }
 
@@ -47,25 +59,25 @@ class HousemateRepository {
     }
 
     // get the latest clientID from the db
-    fun getLastClientAdded() {
-        housemateAPIService.getLastClientAdded()
+    fun getLastClientAdded(groupID: String) {
+        housemateAPIService.getLastClientAdded(groupID)
     }
 
     // send volunteer name to db
-    fun sendShoppingVolunteerToDb(itemName: String, volunteerName: String) {
-        housemateAPIService.sendVolunteerToDb(ShoppingItem::class, itemName, volunteerName)
+    fun sendShoppingVolunteerToDb(groupID: String, itemName: String, volunteerName: String) {
+        housemateAPIService.sendVolunteerToDb(groupID, ShoppingItem::class, itemName, volunteerName)
     }
 
-    fun sendChoresVolunteerToDb(itemName: String, volunteerName: String) {
-        housemateAPIService.sendVolunteerToDb(ChoresItem::class, itemName, volunteerName)
+    fun sendChoresVolunteerToDb(groupID: String, itemName: String, volunteerName: String) {
+        housemateAPIService.sendVolunteerToDb(groupID, ChoresItem::class, itemName, volunteerName)
     }
 
     // delete item
-    fun deleteShoppingListItem(itemName: String) {
-        housemateAPIService.deleteListItem(ShoppingItem::class, itemName)
+    fun deleteShoppingListItem(groupID: String, itemName: String) {
+        housemateAPIService.deleteListItem(groupID, ShoppingItem::class, itemName)
     }
 
-    fun deleteChoresListItem(itemName: String) {
-        housemateAPIService.deleteListItem(ChoresItem::class, itemName)
+    fun deleteChoresListItem(groupID: String, itemName: String) {
+        housemateAPIService.deleteListItem(groupID, ChoresItem::class, itemName)
     }
 }

@@ -44,7 +44,7 @@ class Housemate2ViewModel: ViewModel() {
     fun setShoppingItemsRealtime() {
         // get shopping items realtime using Flow, liveData and coroutines
         CoroutineScope(IO).launch {
-            housemateRepository.setUpShoppingRealtimeFetching().collect {
+            housemateRepository.setUpShoppingRealtimeFetching(clientGroupIDCollection!!).collect {
                 _shoppingItems.postValue(it)
             }
         }
@@ -53,7 +53,7 @@ class Housemate2ViewModel: ViewModel() {
     // set up chore realtime fetching
     fun setChoreItemsRealtime() {
         CoroutineScope(IO).launch {
-            housemateRepository.setUpChoresRealtimeFetching().collect {
+            housemateRepository.setUpChoresRealtimeFetching(clientGroupIDCollection!!).collect {
                 _choreItems.postValue(it)
             }
         }
@@ -69,7 +69,7 @@ class Housemate2ViewModel: ViewModel() {
         addedBy: String
     ) {
         housemateRepository.addShoppingItemToDb(
-            itemName, itemQuantity, itemCost,
+            clientGroupIDCollection!!, itemName, itemQuantity, itemCost,
             purchaseLocation, itemNeededBy, itemPriority, addedBy
         )
     }
@@ -81,21 +81,21 @@ class Housemate2ViewModel: ViewModel() {
         addedBy: String
     ) {
         housemateRepository.addChoresItemToDb(
-            itemName, itemDifficulty, itemNeededBy, itemPriority, addedBy
+            clientGroupIDCollection!!, itemName, itemDifficulty, itemNeededBy, itemPriority, addedBy
         )
     }
 
     fun sendShoppingVolunteerToDb(itemName: String, volunteerName: String) {
-        housemateRepository.sendShoppingVolunteerToDb(itemName, volunteerName)
+        housemateRepository.sendShoppingVolunteerToDb(clientGroupIDCollection!!, itemName, volunteerName)
     }
     fun sendChoresVolunteerToDb(itemName: String, volunteerName: String) {
-        housemateRepository.sendChoresVolunteerToDb(itemName, volunteerName)
+        housemateRepository.sendChoresVolunteerToDb(clientGroupIDCollection!!, itemName, volunteerName)
     }
     fun deleteShoppingListItem(itemName: String) {
-        housemateRepository.deleteShoppingListItem(itemName)
+        housemateRepository.deleteShoppingListItem(clientGroupIDCollection!!, itemName)
     }
     fun deleteChoresListItem(itemName: String) {
-        housemateRepository.deleteChoresListItem(itemName)
+        housemateRepository.deleteChoresListItem(clientGroupIDCollection!!, itemName)
     }
     // DATABASE FUNCTIONS //
 
@@ -121,10 +121,12 @@ class Housemate2ViewModel: ViewModel() {
     }
 
     fun generateClientID() {
-        housemateRepository.getLastClientAdded()
+        housemateRepository.getLastClientAdded(clientGroupIDCollection!!)
     }
 
     fun setClientID() {
+        // todo: this is horrible, I set the SP data from the APIService and gave this
+        //  local variable the value from the sp storage
         clientIDCollection = getDataFromSP(clientIdSPTag)
         if(clientIDCollection == null) {
             if(clientGroupIDCollection != null) {
