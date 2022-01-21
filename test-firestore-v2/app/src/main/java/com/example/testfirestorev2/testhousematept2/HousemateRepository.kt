@@ -1,5 +1,6 @@
 package com.example.testfirestorev2.testhousematept2
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 
 // todo: there's 2 main problems:
@@ -16,13 +17,15 @@ class HousemateRepository {
 
     private val housemateAPIService = HousemateAPIService()
 
-    fun setUpShoppingRealtimeFetching(groupID: String): Flow<MutableList<ShoppingItem>> {
-        return housemateAPIService.getShoppingItemsRealtime(groupID)
-    }
+    // todo: uncomment this
+//    fun setUpShoppingRealtimeFetching(groupID: String): Flow<MutableList<ShoppingItem>> {
+//        return housemateAPIService.getShoppingItemsRealtime(groupID)
+//    }
 
-    fun setUpChoresRealtimeFetching(groupID: String): Flow<MutableList<ChoresItem>> {
-        return housemateAPIService.getChoreItemsRealtime(groupID)
-    }
+    // todo: uncomment this
+//    fun setUpChoresRealtimeFetching(groupID: String): Flow<MutableList<ChoresItem>> {
+//        return housemateAPIService.getChoreItemsRealtime(groupID)
+//    }
 
     // add item
     fun addShoppingItemToDb(

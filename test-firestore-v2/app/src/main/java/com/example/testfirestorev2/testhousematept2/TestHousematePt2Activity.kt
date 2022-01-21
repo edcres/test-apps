@@ -18,7 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class TestHousematePt2Activity : AppCompatActivity() {
 
-    private val TAG = "HousematePt2 mTAG"
+    private val TAG = "HousematePt2mTAG"
 
     private val mainSharedPrefTag = "TestHousemateActySP"
     private var binding: ActivityTestHousematePt2Binding? = null

@@ -26,7 +26,7 @@ class HousemateAPIService {
         .document(GROUP_IDS_DOC)//.collection(clientGroupIDCollection)
 
     companion object {
-        const val TAG = "ApiServiceTAG"
+        const val TAG = "HousematePt2mTAG"
 
         const val HOUSEMATE_COLLECTION = "Test Housemate Pt2"
         const val GROUP_IDS_DOC = "Group IDs"
@@ -35,7 +35,7 @@ class HousemateAPIService {
         const val SHOPPING_ITEMS_COLLECTION = "Shopping Items"
         const val CHORES_LIST_DOC = "Chores List"
         const val CHORE_ITEMS_COLLECTION = "Chore Items"
-        const val LAST_GROUP_ADDED_FIELD = "last group added"
+        const val LAST_GROUP_ADDED_FIELD = "lastGroupAdded"
 
         // Have the field names in camelcase so it matches the 'ShoppingItem.neededBy' format
         //  this way the fields are correctly fetched from db
@@ -61,61 +61,61 @@ class HousemateAPIService {
         - Calling awaitClose
      */
     // don't need suspend functions with Flow
-    fun getShoppingItemsRealtime(clientGroupIDCollection: String): Flow<MutableList<ShoppingItem>> {
-        return callbackFlow {
-            val listenerRegistration =
-                groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC)
-                    .collection(SHOPPING_ITEMS_COLLECTION)
-                    .addSnapshotListener { querySnapshot: QuerySnapshot?,
-                                           firebaseFirestoreException: FirebaseFirestoreException? ->
-                        if (firebaseFirestoreException != null) {
-                            cancel(
-                                message = "Error fetching posts",
-                                cause = firebaseFirestoreException
-                            )
-                            return@addSnapshotListener
-                        }
+//    fun getShoppingItemsRealtime(clientGroupIDCollection: String): Flow<MutableList<ShoppingItem>> {
+//        return callbackFlow {
+//            val listenerRegistration =
+//                groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC)
+//                    .collection(SHOPPING_ITEMS_COLLECTION)
+//                    .addSnapshotListener { querySnapshot: QuerySnapshot?,
+//                                           firebaseFirestoreException: FirebaseFirestoreException? ->
+//                        if (firebaseFirestoreException != null) {
+//                            cancel(
+//                                message = "Error fetching posts",
+//                                cause = firebaseFirestoreException
+//                            )
+//                            return@addSnapshotListener
+//                        }
+//
+//                        if (querySnapshot != null) {
+//                            val itemsList = querySnapshot.toObjects(ShoppingItem::class.java)
+//
+//                            this.trySend(itemsList)
+//                        } else {
+//                            Log.d(TAG, "getPosts: querySnapshot is null")
+//                        }
+//                    }
+//            awaitClose {
+//                Log.d(TAG, "Cancelling posts listener")
+//                listenerRegistration.remove()
+//            }
+//        }
+//    }
 
-                        if (querySnapshot != null) {
-                            val itemsList = querySnapshot.toObjects(ShoppingItem::class.java)
-
-                            this.trySend(itemsList)
-                        } else {
-                            Log.d(TAG, "getPosts: querySnapshot is null")
-                        }
-                    }
-            awaitClose {
-                Log.d(TAG, "Cancelling posts listener")
-                listenerRegistration.remove()
-            }
-        }
-    }
-
-    fun getChoreItemsRealtime(clientGroupIDCollection: String): Flow<MutableList<ChoresItem>> {
-        return callbackFlow {
-            val listenerRegistration = groupIDsDocumentDB.collection(clientGroupIDCollection).document(CHORES_LIST_DOC)
-                .collection(CHORE_ITEMS_COLLECTION).addSnapshotListener {
-                        querySnapshot: QuerySnapshot?,
-                        firebaseFirestoreException: FirebaseFirestoreException? ->
-                    if (firebaseFirestoreException != null) {
-                        cancel(message = "Error fetching posts",
-                            cause = firebaseFirestoreException)
-                        return@addSnapshotListener
-                    }
-
-                    if(querySnapshot != null) {
-                        val itemsList = querySnapshot.toObjects(ChoresItem::class.java)
-                        this.trySend(itemsList)
-                    } else {
-                        Log.d(TAG, "getPosts: querySnapshot is null")
-                    }
-                }
-            awaitClose {
-                Log.d(TAG, "Cancelling posts listener")
-                listenerRegistration.remove()
-            }
-        }
-    }
+//    fun getChoreItemsRealtime(clientGroupIDCollection: String): Flow<MutableList<ChoresItem>> {
+//        return callbackFlow {
+//            val listenerRegistration = groupIDsDocumentDB.collection(clientGroupIDCollection).document(CHORES_LIST_DOC)
+//                .collection(CHORE_ITEMS_COLLECTION).addSnapshotListener {
+//                        querySnapshot: QuerySnapshot?,
+//                        firebaseFirestoreException: FirebaseFirestoreException? ->
+//                    if (firebaseFirestoreException != null) {
+//                        cancel(message = "Error fetching posts",
+//                            cause = firebaseFirestoreException)
+//                        return@addSnapshotListener
+//                    }
+//
+//                    if(querySnapshot != null) {
+//                        val itemsList = querySnapshot.toObjects(ChoresItem::class.java)
+//                        this.trySend(itemsList)
+//                    } else {
+//                        Log.d(TAG, "getPosts: querySnapshot is null")
+//                    }
+//                }
+//            awaitClose {
+//                Log.d(TAG, "Cancelling posts listener")
+//                listenerRegistration.remove()
+//            }
+//        }
+//    }
     // SET UP FUNCTIONS //
 
     // DATABASE WRITES //
@@ -215,33 +215,30 @@ class HousemateAPIService {
 
     // get the last group added String (and update it to the new ID)
     suspend fun getLastGroupAdded(): String? {
+        Log.d("RecyclerView mTAG", "getLastGroupAdded()API: called")
         return try {
             // This is an inefficient query
                 // I'm getting 3 documents with all their info, but I only need one
             // todo: My goal was to go directly to the CLIENT_IDS_DOC doc and get the id.
             //  all while writing to the db in the same remote query
+            // Update, it looks like 'it.data' points directly to the GroupIDs document. Idk why
             val newIDList = db.collection(HOUSEMATE_COLLECTION).get().await().documents.mapNotNull {
-                val clientIDsDoc = it.data!![CLIENT_IDS_DOC] as MutableMap<*, *>
-                val oldID = clientIDsDoc[LAST_GROUP_ADDED_FIELD] as String
+                val oldID = it.data!![LAST_GROUP_ADDED_FIELD] as String
                 val newID = add1AndScrambleLetters(oldID)
 
-                Log.i(TAG, "getLastGroupAdded: new group: $newID")
+                Log.i(TAG, "getLastGroupAdded: new group added")
                 db.collection(HOUSEMATE_COLLECTION).document(GROUP_IDS_DOC)
                     .update(LAST_GROUP_ADDED_FIELD, newID)
                     .addOnSuccessListener {
-                        Log.d(TAG, "generateClientGroupID: lastGroupAddedField updated")
+                        Log.i(TAG, "generateClientGroupID: lastGroupAddedField updated")
                     }
                     .addOnFailureListener { e ->
-                        Log.d(TAG, "generateClientGroupID: database fetch failed", e)
+                        Log.e(TAG, "generateClientGroupID: database fetch failed", e)
                     }
                 newID
             }
 
-            // todo: idk if this will work
-            // -it's supposed to return a String (the new ID)
-            Log.d(TAG, "newIDList: $newIDList")
             newIDList[0]
-//            newIDList.last()
         } catch (e: Exception) {
             Log.e(TAG, "Error getting group id", e)
             null

@@ -4,32 +4,25 @@ import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.*
-import com.google.api.LogDescriptor
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // https://medium.com/firebase-tips-tricks/how-to-use-kotlin-flows-with-firestore-6c7ee9ae12f3
 
 class Housemate2ViewModel: ViewModel() {
 
-    private val TAG = "RecyclerView mTAG"
+    private val TAG = "HousematePt2mTAG"
     private val housemateRepository = HousemateRepository()
-
     lateinit var sharedPref: SharedPreferences
     val groupIdSPTag = "Group ID"
     val clientIdSPTag = "Client ID"
-
-
-//    private val _clientGroupIDCollection = MutableLiveData<String>()
     var clientGroupIDCollection: String? = null
-
-
     var clientIDCollection: String? = null
-
     private var _shoppingItems = MutableLiveData<MutableList<ShoppingItem>>()
     val shoppingItems: LiveData<MutableList<ShoppingItem>> get() = _shoppingItems
     private var _choreItems = MutableLiveData<MutableList<ChoresItem>>()
@@ -50,20 +43,20 @@ class Housemate2ViewModel: ViewModel() {
     fun setShoppingItemsRealtime() {
         // get shopping items realtime using Flow, liveData and coroutines
         CoroutineScope(IO).launch {
-            housemateRepository.setUpShoppingRealtimeFetching(clientGroupIDCollection!!)
-                .collect {
-                    _shoppingItems.postValue(it)
-                }
+//            housemateRepository.setUpShoppingRealtimeFetching(clientGroupIDCollection!!)
+//                .collect {
+//                    _shoppingItems.postValue(it)
+//                }
         }
     }
 
     // set up chore realtime fetching
     fun setChoreItemsRealtime() {
         CoroutineScope(IO).launch {
-            housemateRepository.setUpChoresRealtimeFetching(clientGroupIDCollection
-            !!).collect {
-                _choreItems.postValue(it)
-            }
+//            housemateRepository.setUpChoresRealtimeFetching(clientGroupIDCollection
+//            !!).collect {
+//                _choreItems.postValue(it)
+//            }
         }
     }
 
@@ -135,19 +128,18 @@ class Housemate2ViewModel: ViewModel() {
         // Get the latest groupID from the remote db (ie. 00000001asdfg)
         CoroutineScope(IO).launch {
             clientGroupIDCollection = housemateRepository.getLastGroupAdded()
-        }
 
-        // todo: call setClientID()
-        //  when the data that's being passed here (clientGroupIDCollection) changes
-        //  set up an observer to listen to changes in 'clientGroupIDCollection'
-        if (clientGroupIDCollection != null) {
-            sendDataToSP(
-                groupIdSPTag,
-                clientGroupIDCollection!!
-            )
-            setClientID()
-        } else {
-            Log.e(TAG, "setClientID(): clientGroupIDCollection is null")
+            withContext(Main) {
+                if (clientGroupIDCollection != null) {
+                    sendDataToSP(
+                        groupIdSPTag,
+                        clientGroupIDCollection!!
+                    )
+                    setClientID()
+                } else {
+                    Log.e(TAG, "generateClientGroupID(): clientGroupIDCollection is null")
+                }
+            }
         }
     }
 
@@ -163,7 +155,7 @@ class Housemate2ViewModel: ViewModel() {
     }
 
     fun getCurrentGroupID(): String? {
-        clientGroupIDCollection = getDataFromSP(groupIdSPTag)!!
+        clientGroupIDCollection = getDataFromSP(groupIdSPTag)
         return clientGroupIDCollection
     }
     // HELPER FUNCTIONS //
