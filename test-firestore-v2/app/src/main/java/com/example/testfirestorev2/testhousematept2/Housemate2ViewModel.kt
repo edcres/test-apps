@@ -119,8 +119,9 @@ class Housemate2ViewModel: ViewModel() {
     // HELPER FUNCTIONS //
     fun generateClientGroupID() {
         // Get the latest groupID from the remote db (ie. 00000001asdfg)
-        // todo: call this from a coroutine
-        clientGroupIDCollection = housemateRepository.getLastGroupAdded()
+        CoroutineScope(IO).launch {
+            clientGroupIDCollection = housemateRepository.getLastGroupAdded()
+        }
 
         // todo: call setClientID()
         //  when the data that's being passed here (clientGroupIDCollection) changes
