@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.*
+import com.google.api.LogDescriptor
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,10 +19,10 @@ class Housemate2ViewModel: ViewModel() {
     private val TAG = "RecyclerView mTAG"
     private val housemateRepository = HousemateRepository()
 
+    lateinit var sharedPref: SharedPreferences
     val groupIdSPTag = "Group ID"
     val clientIdSPTag = "Client ID"
 
-    lateinit var sharedPref: SharedPreferences
     var clientGroupIDCollection: String? = null
     var clientIDCollection: String? = null
 
@@ -31,6 +32,7 @@ class Housemate2ViewModel: ViewModel() {
     val choreItems: LiveData<MutableList<ChoresItem>> get() = _choreItems
 
     init {
+        //todo: put the initial db fetching functions here. Instead of the activity
         housemateRepository
         Log.d(TAG, "ViewModel initialized")
         // if i have different views, everytime i call the viewModel, the variables might be reset
@@ -117,23 +119,34 @@ class Housemate2ViewModel: ViewModel() {
     // HELPER FUNCTIONS //
     fun generateClientGroupID() {
         // Get the latest groupID from the remote db (ie. 00000001asdfg)
-        housemateRepository.getLastGroupAdded()
+        // todo: call this from a coroutine
+        clientGroupIDCollection = housemateRepository.getLastGroupAdded()
+
+        // todo: call setClientID()
+        //  when the data that's being passed here (clientGroupIDCollection) changes
+        //  set up an observer to listen to changes in 'clientGroupIDCollection'
+        if (clientGroupIDCollection != null) {
+            sendDataToSP(
+                groupIdSPTag,
+                clientGroupIDCollection!!
+            )
+            setClientID()
+        } else {
+            Log.e(TAG, "setClientID(): clientGroupIDCollection is null")
+        }
     }
 
-    fun generateClientID() {
+    private fun generateClientID() {
         housemateRepository.getLastClientAdded(clientGroupIDCollection!!)
     }
 
-    fun setClientID() {
-        // todo: this is horrible, I set the SP data from the APIService and gave this
-        //  local variable the value from the sp storage
+    private fun setClientID() {
         clientIDCollection = getDataFromSP(clientIdSPTag)
-        if(clientIDCollection == null) {
-            if(clientGroupIDCollection != null) {
-                generateClientID()
-            }
+        if (clientIDCollection == null) {
+            generateClientID()
         }
     }
+
     fun getCurrentGroupID(): String? {
         clientGroupIDCollection = getDataFromSP(groupIdSPTag)
         return clientGroupIDCollection

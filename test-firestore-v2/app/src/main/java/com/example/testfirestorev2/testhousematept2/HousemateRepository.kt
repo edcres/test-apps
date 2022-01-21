@@ -54,8 +54,8 @@ class HousemateRepository {
     }
 
     // get the last group added String
-    fun getLastGroupAdded() {
-        housemateAPIService.getLastGroupAdded()
+    suspend fun getLastGroupAdded(): String? {
+        return housemateAPIService.getLastGroupAdded()
     }
 
     // get the latest clientID from the db

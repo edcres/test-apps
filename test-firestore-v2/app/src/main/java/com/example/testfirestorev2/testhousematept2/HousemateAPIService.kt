@@ -2,10 +2,7 @@ package com.example.testfirestorev2.testhousematept2
 
 import android.util.Log
 import com.example.testfirestorev2.add1AndScrambleLetters
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.cancel
@@ -38,6 +35,7 @@ class HousemateAPIService {
         const val SHOPPING_ITEMS_COLLECTION = "Shopping Items"
         const val CHORES_LIST_DOC = "Chores List"
         const val CHORE_ITEMS_COLLECTION = "Chore Items"
+        const val LAST_GROUP_ADDED_FIELD = "last group added"
 
         // Have the field names in camelcase so it matches the 'ShoppingItem.neededBy' format
         //  this way the fields are correctly fetched from db
@@ -54,7 +52,8 @@ class HousemateAPIService {
     }
 
     // SET UP FUNCTIONS //
-    // for addSnapshotListener, use flow instead of coroutines or livedata. Use coroutines when calling the 'getPosts()' function
+    // for addSnapshotListener, use flow instead of coroutines or livedata. Use coroutines
+    // when calling the 'getPosts()' function
     /* Steps Here:
         - Creating a listener registration inside a callback flow
         - Cancelling the registration in case of any error
@@ -64,24 +63,27 @@ class HousemateAPIService {
     // don't need suspend functions with Flow
     fun getShoppingItemsRealtime(clientGroupIDCollection: String): Flow<MutableList<ShoppingItem>> {
         return callbackFlow {
-            val listenerRegistration = groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC)
-                .collection(SHOPPING_ITEMS_COLLECTION).addSnapshotListener {
-                        querySnapshot: QuerySnapshot?,
-                        firebaseFirestoreException: FirebaseFirestoreException? ->
-                    if (firebaseFirestoreException != null) {
-                        cancel(message = "Error fetching posts",
-                            cause = firebaseFirestoreException)
-                        return@addSnapshotListener
-                    }
+            val listenerRegistration =
+                groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC)
+                    .collection(SHOPPING_ITEMS_COLLECTION)
+                    .addSnapshotListener { querySnapshot: QuerySnapshot?,
+                                           firebaseFirestoreException: FirebaseFirestoreException? ->
+                        if (firebaseFirestoreException != null) {
+                            cancel(
+                                message = "Error fetching posts",
+                                cause = firebaseFirestoreException
+                            )
+                            return@addSnapshotListener
+                        }
 
-                    if(querySnapshot != null) {
-                        val itemsList = querySnapshot.toObjects(ShoppingItem::class.java)
+                        if (querySnapshot != null) {
+                            val itemsList = querySnapshot.toObjects(ShoppingItem::class.java)
 
-                        this.trySend(itemsList)
-                    } else {
-                        Log.d(TAG, "getPosts: querySnapshot is null")
+                            this.trySend(itemsList)
+                        } else {
+                            Log.d(TAG, "getPosts: querySnapshot is null")
+                        }
                     }
-                }
             awaitClose {
                 Log.d(TAG, "Cancelling posts listener")
                 listenerRegistration.remove()
@@ -194,68 +196,56 @@ class HousemateAPIService {
 
     // DATABASE READS //
     //from medium.com       .get()
-    object FirebaseProfileService {
-        suspend fun getShoppingData(userId: String): ShoppingItem? {
-            val db = Firebase.firestore
-            return try {
-                db.collection("users")
-                    .document(userId).get().await().toObject(ShoppingItem::class.java)
+    // todo: delete: I'm pretty sure I don't need this function
+    //  bc getting it realtime makes this obsolete
+    suspend fun getShoppingData(userId: String): ShoppingItem? {
+        val db = Firebase.firestore
+        return try {
+            db.collection("users")
+                .document(userId).get().await().toObject(ShoppingItem::class.java)
 //                    .document(userId).get().await().toShoppingItem()
-            } catch (e: Exception) {
-                Log.e(TAG, "Error getting user details", e)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting user details", e)
 //                FirebaseCrashlytics.getInstance().log("Error getting user details")
 //                FirebaseCrashlytics.getInstance().setCustomKey("user id", xpertSlug)
 //                FirebaseCrashlytics.getInstance().recordException(e)
-                null
-            }
+            null
         }
     }
 
     // get the last group added String (and update it to the new ID)
-    fun getLastGroupAdded() {
-        // remember to start off the database with last group added '00000000asdfg'
-        // ie. 00000001asdfg, 00000002fagsd, 00000003sgdfa ...
-        val lastGroupAddedField = "last group added"
-        var oldID: String
-        var newID: String
+    suspend fun getLastGroupAdded(): String? {
+        return try {
+            // This is an inefficient query
+                // I'm getting 3 documents with all their info, but I only need one
+            // todo: My goal was to go directly to the CLIENT_IDS_DOC doc and get the id.
+            //  all while writing to the db in the same remote query
+            val newIDList = db.collection(HOUSEMATE_COLLECTION).get().await().documents.mapNotNull {
+                val clientIDsDoc = it.data!![CLIENT_IDS_DOC] as MutableMap<*, *>
+                val oldID = clientIDsDoc[LAST_GROUP_ADDED_FIELD] as String
+                val newID = add1AndScrambleLetters(oldID)
 
-        // get old ID
-         db.collection(HOUSEMATE_COLLECTION).document(GROUP_IDS_DOC)
-            .get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    val groupIdDoc = document.data as Map<String, Any>
-                    oldID = groupIdDoc[lastGroupAddedField] as String
-                    newID = add1AndScrambleLetters(oldID)
-
-
-                    viewModel.clientGroupIDCollection = newID
-
-
-                    Log.d(TAG, "getLastGroupAdded: new group $newID")
-                    // update last ID added
-                    db.collection(HOUSEMATE_COLLECTION).document(GROUP_IDS_DOC)
-                        .update(lastGroupAddedField, newID)
-                        .addOnSuccessListener {
-                            Log.d(TAG, "generateClientGroupID: lastGroupAddedField updated")
-
-                            // todo: call setClientID() from the viewModel
-                            //  when the data that's being passed here (newID) changes
-                            //  Also, don't send the viewModel to set the SP from here.
-                            //  Don't pass the SP TAG
-                            housemate2ViewModel.sendDataToSP(
-                                housemate2ViewModel.groupIdSPTag,
-                                newID
-                            )
-                            housemate2ViewModel.setClientID()
-                        }
-                } else {
-                    Log.d(TAG, "generateClientGroupID: groupIDs document is null")
-                }
+                Log.i(TAG, "getLastGroupAdded: new group: $newID")
+                db.collection(HOUSEMATE_COLLECTION).document(GROUP_IDS_DOC)
+                    .update(LAST_GROUP_ADDED_FIELD, newID)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "generateClientGroupID: lastGroupAddedField updated")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.d(TAG, "generateClientGroupID: database fetch failed", e)
+                    }
+                newID
             }
-             .addOnFailureListener { e ->
-                Log.d(TAG, "generateClientGroupID: database fetch failed", e)
-            }
+
+            // todo: idk if this will work
+            // -it's supposed to return a String (the new ID)
+            Log.d(TAG, "newIDList: $newIDList")
+            newIDList[0]
+//            newIDList.last()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting group id", e)
+            null
+        }
     }
 
     fun getLastClientAdded(clientGroupIDCollection: String) {
