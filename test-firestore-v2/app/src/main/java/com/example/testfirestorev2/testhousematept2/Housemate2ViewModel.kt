@@ -23,7 +23,14 @@ class Housemate2ViewModel: ViewModel() {
     val groupIdSPTag = "Group ID"
     val clientIdSPTag = "Client ID"
 
-    var clientGroupIDCollection: String? = null
+
+    private val _clientGroupIDCollection = MutableLiveData<String>()
+//    val clientGroupIDCollection: LiveData<String> get() = _clientGroupIDCollection
+
+
+//    var clientGroupIDCollection: String? = null
+
+
     var clientIDCollection: String? = null
 
     private var _shoppingItems = MutableLiveData<MutableList<ShoppingItem>>()
@@ -46,16 +53,17 @@ class Housemate2ViewModel: ViewModel() {
     fun setShoppingItemsRealtime() {
         // get shopping items realtime using Flow, liveData and coroutines
         CoroutineScope(IO).launch {
-            housemateRepository.setUpShoppingRealtimeFetching(clientGroupIDCollection!!).collect {
-                _shoppingItems.postValue(it)
-            }
+            housemateRepository.setUpShoppingRealtimeFetching(_clientGroupIDCollection.value!!)
+                .collect {
+                    _shoppingItems.postValue(it)
+                }
         }
     }
 
     // set up chore realtime fetching
     fun setChoreItemsRealtime() {
         CoroutineScope(IO).launch {
-            housemateRepository.setUpChoresRealtimeFetching(clientGroupIDCollection!!).collect {
+            housemateRepository.setUpChoresRealtimeFetching(_clientGroupIDCollection.value!!).collect {
                 _choreItems.postValue(it)
             }
         }
@@ -71,7 +79,7 @@ class Housemate2ViewModel: ViewModel() {
         addedBy: String
     ) {
         housemateRepository.addShoppingItemToDb(
-            clientGroupIDCollection!!, itemName, itemQuantity, itemCost,
+            _clientGroupIDCollection.value!!, itemName, itemQuantity, itemCost,
             purchaseLocation, itemNeededBy, itemPriority, addedBy
         )
     }
@@ -83,21 +91,29 @@ class Housemate2ViewModel: ViewModel() {
         addedBy: String
     ) {
         housemateRepository.addChoresItemToDb(
-            clientGroupIDCollection!!, itemName, itemDifficulty, itemNeededBy, itemPriority, addedBy
+            _clientGroupIDCollection.value!!, itemName, itemDifficulty, itemNeededBy, itemPriority, addedBy
         )
     }
 
     fun sendShoppingVolunteerToDb(itemName: String, volunteerName: String) {
-        housemateRepository.sendShoppingVolunteerToDb(clientGroupIDCollection!!, itemName, volunteerName)
+        housemateRepository.sendShoppingVolunteerToDb(
+            _clientGroupIDCollection.value!!,
+            itemName,
+            volunteerName
+        )
     }
     fun sendChoresVolunteerToDb(itemName: String, volunteerName: String) {
-        housemateRepository.sendChoresVolunteerToDb(clientGroupIDCollection!!, itemName, volunteerName)
+        housemateRepository.sendChoresVolunteerToDb(
+            _clientGroupIDCollection.value!!,
+            itemName,
+            volunteerName
+        )
     }
     fun deleteShoppingListItem(itemName: String) {
-        housemateRepository.deleteShoppingListItem(clientGroupIDCollection!!, itemName)
+        housemateRepository.deleteShoppingListItem(_clientGroupIDCollection.value!!, itemName)
     }
     fun deleteChoresListItem(itemName: String) {
-        housemateRepository.deleteChoresListItem(clientGroupIDCollection!!, itemName)
+        housemateRepository.deleteChoresListItem(_clientGroupIDCollection.value!!, itemName)
     }
     // DATABASE FUNCTIONS //
 
@@ -120,16 +136,16 @@ class Housemate2ViewModel: ViewModel() {
     fun generateClientGroupID() {
         // Get the latest groupID from the remote db (ie. 00000001asdfg)
         CoroutineScope(IO).launch {
-            clientGroupIDCollection = housemateRepository.getLastGroupAdded()
+            _clientGroupIDCollection.postValue(housemateRepository.getLastGroupAdded())
         }
 
         // todo: call setClientID()
         //  when the data that's being passed here (clientGroupIDCollection) changes
         //  set up an observer to listen to changes in 'clientGroupIDCollection'
-        if (clientGroupIDCollection != null) {
+        if (_clientGroupIDCollection != null) {
             sendDataToSP(
                 groupIdSPTag,
-                clientGroupIDCollection!!
+                _clientGroupIDCollection.value!!
             )
             setClientID()
         } else {
@@ -138,7 +154,7 @@ class Housemate2ViewModel: ViewModel() {
     }
 
     private fun generateClientID() {
-        housemateRepository.getLastClientAdded(clientGroupIDCollection!!)
+        housemateRepository.getLastClientAdded(_clientGroupIDCollection.value!!)
     }
 
     private fun setClientID() {
@@ -149,8 +165,8 @@ class Housemate2ViewModel: ViewModel() {
     }
 
     fun getCurrentGroupID(): String? {
-        clientGroupIDCollection = getDataFromSP(groupIdSPTag)
-        return clientGroupIDCollection
+        _clientGroupIDCollection.value = getDataFromSP(groupIdSPTag)!!
+        return _clientGroupIDCollection.value
     }
     // HELPER FUNCTIONS //
 }
