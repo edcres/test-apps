@@ -62,8 +62,8 @@ class HousemateRepository {
     }
 
     // get the latest clientID from the db
-    fun getLastClientAdded(groupID: String) {
-        housemateAPIService.getLastClientAdded(groupID)
+    suspend fun getLastClientAdded(groupID: String): String? {
+        return housemateAPIService.getLastClientAdded(groupID)
     }
 
     // send volunteer name to db

@@ -36,6 +36,7 @@ class HousemateAPIService {
         const val CHORES_LIST_DOC = "Chores List"
         const val CHORE_ITEMS_COLLECTION = "Chore Items"
         const val LAST_GROUP_ADDED_FIELD = "lastGroupAdded"
+        const val LAST_CLIENT_ADDED_FIELD = "lastClientAdded"
 
         // Have the field names in camelcase so it matches the 'ShoppingItem.neededBy' format
         //  this way the fields are correctly fetched from db
@@ -215,9 +216,8 @@ class HousemateAPIService {
 
     // get the last group added String (and update it to the new ID)
     suspend fun getLastGroupAdded(): String? {
-        Log.d("RecyclerView mTAG", "getLastGroupAdded()API: called")
         return try {
-            // This is an inefficient query
+            // This is an inefficient query (also in 'getLastClientAdded()')
                 // I'm getting 3 documents with all their info, but I only need one
             // todo: My goal was to go directly to the CLIENT_IDS_DOC doc and get the id.
             //  all while writing to the db in the same remote query
@@ -226,18 +226,17 @@ class HousemateAPIService {
                 val oldID = it.data!![LAST_GROUP_ADDED_FIELD] as String
                 val newID = add1AndScrambleLetters(oldID)
 
-                Log.i(TAG, "getLastGroupAdded: new group added")
+                Log.i(TAG, "getLastGroupAdded: new group id created")
                 db.collection(HOUSEMATE_COLLECTION).document(GROUP_IDS_DOC)
                     .update(LAST_GROUP_ADDED_FIELD, newID)
                     .addOnSuccessListener {
-                        Log.i(TAG, "generateClientGroupID: lastGroupAddedField updated")
+                        Log.i(TAG, "getLastGroupAdded: LAST_GROUP_ADDED_FIELD updated")
                     }
                     .addOnFailureListener { e ->
-                        Log.e(TAG, "generateClientGroupID: database fetch failed", e)
+                        Log.e(TAG, "getLastGroupAdded: database fetch failed", e)
                     }
                 newID
             }
-
             newIDList[0]
         } catch (e: Exception) {
             Log.e(TAG, "Error getting group id", e)
@@ -245,59 +244,106 @@ class HousemateAPIService {
         }
     }
 
-    fun getLastClientAdded(clientGroupIDCollection: String) {
-        val lastClientAddedField = "last client added"
-        var oldID: String
-        var newID: String?
-        val clientsDocDb = groupIDsDocumentDB.collection(clientGroupIDCollection).document(CLIENT_IDS_DOC)
-        clientsDocDb.get()
-            .addOnSuccessListener { document ->
-                if (document.data != null) {
-                    val clientIdDoc = document.data as Map<String, Any>
-                    oldID = clientIdDoc[lastClientAddedField] as String
-                    newID = add1AndScrambleLetters(oldID)
-                    // Update new id to the database as the last id added
-                    clientsDocDb.update(lastClientAddedField, newID)
-                        .addOnSuccessListener {
+    suspend fun getLastClientAdded(clientGroupIDCollection: String): String? {
+        val clientIDsDoc =
+            groupIDsDocumentDB.collection(clientGroupIDCollection).document(CLIENT_IDS_DOC)
+        return try {
+            Log.d(TAG, "getLastClientAdded: this happens 1")
+            val newIDList = groupIDsDocumentDB.collection(clientGroupIDCollection)
+                .get().await().documents.mapNotNull {
+                    Log.d(TAG, "getLastClientAdded: this happens 2")
+                    if (it.data != null) {
+                        val oldID = it.data!![LAST_CLIENT_ADDED_FIELD] as String
+                        val newID = add1AndScrambleLetters(oldID)
+                        Log.i(TAG, "getLastClientAdded: new client id created")
 
-                            // todo: set the value of newID from the viewModel
-                            //  set the SP from the viewModel
-                            housemate2ViewModel.clientIDCollection = newID
-                            housemate2ViewModel
-                                .sendDataToSP(housemate2ViewModel.clientIdSPTag, newID!!)
-                        }
-                        .addOnFailureListener { e ->
-                            Log.d("DB Query", "Error updating client doc", e)
-                        }
-                } else {
-                    // the document will be null for the first member in the group
-                    //  -there is no client id to get, make a new clientID and add it to the db
-                    newID = add1AndScrambleLetters("00000000asdfg")
-                    val firstDocData = hashMapOf<String, Any>(lastClientAddedField to newID!!)
-                    clientsDocDb.set(firstDocData)
-                        .addOnSuccessListener {
-                            Log.d(TAG, "DocumentSnapshot successfully written!")
-                            housemate2ViewModel.clientIDCollection = newID
-                            housemate2ViewModel
-                                .sendDataToSP(housemate2ViewModel.clientIdSPTag, newID!!)
-                        }
-                        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                        clientIDsDoc.update(LAST_CLIENT_ADDED_FIELD, newID)
+                            .addOnSuccessListener {
+                                Log.i(TAG, "getLastClientAdded: LAST_CLIENT_ADDED_FIELD updated")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e(TAG, "getLastClientAdded: database fetch failed", e)
+                            }
+                        newID
+                    } else {
+                        Log.d(TAG, "getLastClientAdded: it.data is null")
+                        val newID = add1AndScrambleLetters("00000000asdfg")
+                        val firstDocData = hashMapOf<String, Any>(LAST_CLIENT_ADDED_FIELD to newID)
+
+                        clientIDsDoc.set(firstDocData)
+                            .addOnSuccessListener {
+                                Log.i(TAG, "DocumentSnapshot successfully written!")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w(TAG, "Error writing document", e)
+                            }
+                        newID
+                    }
                 }
-            }
+            Log.d(TAG, "getLastClientAdded: $newIDList")
+            newIDList[0]
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting client id", e)
+            null
+        }
     }
+
+    // todo: delete this
+//    suspend fun oldGetLastClientAdded(clientGroupIDCollection: String): String {
+//        val lastClientAddedField = "last client added"
+//        var oldID: String
+//        var newID: String?
+//        val clientsDocDb =
+//            groupIDsDocumentDB.collection(clientGroupIDCollection).document(CLIENT_IDS_DOC)
+//        clientsDocDb.get()
+//            .addOnSuccessListener { document ->
+//                if (document.data != null) {
+//                    val clientIdDoc = document.data as Map<String, Any>
+//                    oldID = clientIdDoc[lastClientAddedField] as String
+//                    newID = add1AndScrambleLetters(oldID)
+//                    // Update new id to the database as the last id added
+//                    clientsDocDb.update(lastClientAddedField, newID)
+//                        .addOnSuccessListener {
+//
+//                            // todo: set the value of newID from the viewModel
+//                            //  set the SP from the viewModel
+//                            housemate2ViewModel.clientIDCollection = newID
+//                            housemate2ViewModel
+//                                .sendDataToSP(housemate2ViewModel.clientIdSPTag, newID!!)
+//                        }
+//                        .addOnFailureListener { e ->
+//                            Log.d("DB Query", "Error updating client doc", e)
+//                        }
+//                } else {
+//                    // the document will be null for the first member in the group
+//                    //  -there is no client id to get, make a new clientID and add it to the db
+//                    newID = add1AndScrambleLetters("00000000asdfg")
+//                    val firstDocData = hashMapOf<String, Any>(lastClientAddedField to newID!!)
+//                    clientsDocDb.set(firstDocData)
+//                        .addOnSuccessListener {
+//                            Log.d(TAG, "DocumentSnapshot successfully written!")
+//                            housemate2ViewModel.clientIDCollection = newID
+//                            housemate2ViewModel
+//                                .sendDataToSP(housemate2ViewModel.clientIdSPTag, newID!!)
+//                        }
+//                        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+//                }
+//            }
+//    }
     // DATABASE READS //
 
     // DELETE DOCUMENT //
     fun deleteListItem(clientGroupIDCollection: String, listType: Any, itemName: String) {
-        var itemsCollectionDB: CollectionReference = groupIDsDocumentDB.collection(clientGroupIDCollection)
+        var itemsCollectionDB: CollectionReference =
+            groupIDsDocumentDB.collection(clientGroupIDCollection)
         when (listType) {
             ShoppingItem::class -> {
-                itemsCollectionDB = groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC)
-                    .collection(SHOPPING_ITEMS_COLLECTION)
+                itemsCollectionDB = groupIDsDocumentDB.collection(clientGroupIDCollection)
+                        .document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
             }
             ChoresItem::class -> {
-                itemsCollectionDB = groupIDsDocumentDB.collection(clientGroupIDCollection).document(CHORES_LIST_DOC)
-                    .collection(CHORE_ITEMS_COLLECTION)
+                itemsCollectionDB = groupIDsDocumentDB.collection(clientGroupIDCollection)
+                    .document(CHORES_LIST_DOC).collection(CHORE_ITEMS_COLLECTION)
             }
             else -> {
                 Log.d(TAG, "deleteListItem: Error verifying the List Type")

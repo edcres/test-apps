@@ -131,10 +131,7 @@ class Housemate2ViewModel: ViewModel() {
 
             withContext(Main) {
                 if (clientGroupIDCollection != null) {
-                    sendDataToSP(
-                        groupIdSPTag,
-                        clientGroupIDCollection!!
-                    )
+                    sendDataToSP(groupIdSPTag, clientGroupIDCollection!!)
                     setClientID()
                 } else {
                     Log.e(TAG, "generateClientGroupID(): clientGroupIDCollection is null")
@@ -143,14 +140,23 @@ class Housemate2ViewModel: ViewModel() {
         }
     }
 
-    private fun generateClientID() {
-        housemateRepository.getLastClientAdded(clientGroupIDCollection!!)
-    }
-
     private fun setClientID() {
         clientIDCollection = getDataFromSP(clientIdSPTag)
         if (clientIDCollection == null) {
-            generateClientID()
+
+            // todo: get client id from db (copy how it was done with the group id)
+            CoroutineScope(IO).launch {
+                clientIDCollection =
+                    housemateRepository.getLastClientAdded(clientGroupIDCollection!!)
+
+                withContext(Main) {
+                    if (clientIDCollection != null) {
+                        sendDataToSP(groupIdSPTag, clientIDCollection!!)
+                    } else {
+                        Log.e(TAG, "generateClientGroupID(): clientIDCollection is null")
+                    }
+                }
+            }
         }
     }
 
