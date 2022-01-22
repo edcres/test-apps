@@ -249,37 +249,39 @@ class HousemateAPIService {
             groupIDsDocumentDB.collection(clientGroupIDCollection).document(CLIENT_IDS_DOC)
         return try {
             Log.d(TAG, "getLastClientAdded: this happens 1")
-            val newIDList = groupIDsDocumentDB.collection(clientGroupIDCollection)
+            var newIDList = groupIDsDocumentDB.collection(clientGroupIDCollection)
                 .get().await().documents.mapNotNull {
                     Log.d(TAG, "getLastClientAdded: this happens 2")
-                    if (it.data != null) {
-                        val oldID = it.data!![LAST_CLIENT_ADDED_FIELD] as String
-                        val newID = add1AndScrambleLetters(oldID)
-                        Log.i(TAG, "getLastClientAdded: new client id created")
+                    val oldID = it.data!![LAST_CLIENT_ADDED_FIELD] as String
+                    val newID = add1AndScrambleLetters(oldID)
+                    Log.i(TAG, "getLastClientAdded: new client id created")
 
-                        clientIDsDoc.update(LAST_CLIENT_ADDED_FIELD, newID)
-                            .addOnSuccessListener {
-                                Log.i(TAG, "getLastClientAdded: LAST_CLIENT_ADDED_FIELD updated")
-                            }
-                            .addOnFailureListener { e ->
-                                Log.e(TAG, "getLastClientAdded: database fetch failed", e)
-                            }
-                        newID
-                    } else {
-                        Log.d(TAG, "getLastClientAdded: it.data is null")
-                        val newID = add1AndScrambleLetters("00000000asdfg")
-                        val firstDocData = hashMapOf<String, Any>(LAST_CLIENT_ADDED_FIELD to newID)
-
-                        clientIDsDoc.set(firstDocData)
-                            .addOnSuccessListener {
-                                Log.i(TAG, "DocumentSnapshot successfully written!")
-                            }
-                            .addOnFailureListener { e ->
-                                Log.w(TAG, "Error writing document", e)
-                            }
-                        newID
-                    }
+                    clientIDsDoc.update(LAST_CLIENT_ADDED_FIELD, newID)
+                        .addOnSuccessListener {
+                            Log.i(TAG, "getLastClientAdded: LAST_CLIENT_ADDED_FIELD updated")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e(TAG, "getLastClientAdded: database fetch failed", e)
+                        }
+                    newID
                 }
+
+            // if nothing inside the .mapNotNull{} happens, the there is no previous clientID
+            if (newIDList.isEmpty()) {
+                Log.d(TAG, "getLastClientAdded: it.data is null")
+                val newID = add1AndScrambleLetters("00000000asdfg")
+                val firstDocData = hashMapOf<String, Any>(LAST_CLIENT_ADDED_FIELD to newID)
+
+                clientIDsDoc.set(firstDocData)
+                    .addOnSuccessListener {
+                        Log.i(TAG, "DocumentSnapshot successfully written!")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error writing document", e)
+                    }
+                newIDList = listOf(newID)
+            }
+
             Log.d(TAG, "getLastClientAdded: $newIDList")
             newIDList[0]
         } catch (e: Exception) {
