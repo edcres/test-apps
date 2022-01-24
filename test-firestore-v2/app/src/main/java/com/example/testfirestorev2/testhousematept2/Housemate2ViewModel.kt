@@ -54,10 +54,10 @@ class Housemate2ViewModel: ViewModel() {
     // set up chore realtime fetching
     fun setChoreItemsRealtime() {
         CoroutineScope(IO).launch {
-//            housemateRepository.setUpChoresRealtimeFetching(clientGroupIDCollection
-//            !!).collect {
-//                _choreItems.postValue(it)
-//            }
+            housemateRepository.setUpChoresRealtimeFetching(clientGroupIDCollection!!)
+                .collect {
+                _choreItems.postValue(it.toMutableList())
+            }
         }
     }
 

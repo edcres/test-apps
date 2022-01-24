@@ -4,7 +4,6 @@ import android.util.Log
 import com.example.testfirestorev2.add1AndScrambleLetters
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -24,7 +23,7 @@ class HousemateAPIService {
 
     private val db = Firebase.firestore
     private var groupIDsDocumentDB: DocumentReference = db.collection(HOUSEMATE_COLLECTION)
-        .document(GROUP_IDS_DOC)//.collection(clientGroupIDCollection)
+        .document(GROUP_IDS_DOC)
 
     companion object {
         const val TAG = "HousematePt2mTAG"
@@ -36,11 +35,11 @@ class HousemateAPIService {
         const val SHOPPING_ITEMS_COLLECTION = "Shopping Items"
         const val CHORES_LIST_DOC = "Chores List"
         const val CHORE_ITEMS_COLLECTION = "Chore Items"
-        const val LAST_GROUP_ADDED_FIELD = "lastGroupAdded"
-        const val LAST_CLIENT_ADDED_FIELD = "lastClientAdded"
 
         // Have the field names in camelcase so it matches the 'ShoppingItem.neededBy' format
         //  this way the fields are correctly fetched from db
+        const val LAST_GROUP_ADDED_FIELD = "lastGroupAdded"
+        const val LAST_CLIENT_ADDED_FIELD = "lastClientAdded"
         const val NAME_FIELD = "name"
         const val QUANTITY_FIELD = "quantity"
         const val ADDED_BY_FIELD = "addedBy"
@@ -63,49 +62,14 @@ class HousemateAPIService {
         - Calling awaitClose
      */
     // don't need suspend functions with Flow
-//    fun getOldShoppingItemsRealtime(clientGroupIDCollection: String): Flow<MutableList<ShoppingItem>> {
-//        return callbackFlow {
-//            val listenerRegistration =
-//                groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC)
-//                    .collection(SHOPPING_ITEMS_COLLECTION)
-//                    .addSnapshotListener { querySnapshot: QuerySnapshot?,
-//                                           firebaseFirestoreException: FirebaseFirestoreException? ->
-//                        if (firebaseFirestoreException != null) {
-//                            cancel(
-//                                message = "Error fetching posts",
-//                                cause = firebaseFirestoreException
-//                            )
-//                            return@addSnapshotListener
-//                        }
-//
-//                        if (querySnapshot != null) {
-//                            val itemsList = querySnapshot.toObjects(ShoppingItem::class.java)
-//
-//                            this.trySend(itemsList)
-//                        } else {
-//                            Log.d(TAG, "getPosts: querySnapshot is null")
-//                        }
-//                    }
-//            awaitClose {
-//                Log.d(TAG, "Cancelling posts listener")
-//                listenerRegistration.remove()
-//            }
-//        }
-//    }
-
     fun getShoppingItemsRealtime(clientGroupIDCollection: String): Flow<List<ShoppingItem>> {
-        Log.d(TAG, "getShoppingItemsRealtime: this is called")
-        Log.d(TAG, "getShoppingItemsRealtime: groupID: $clientGroupIDCollection")
         return callbackFlow {
-            Log.d(TAG, "getShoppingItemsRealtime: callbackflow started")
             val listenerRegistration =
                 groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC)
                     .collection(SHOPPING_ITEMS_COLLECTION)
                     .addSnapshotListener { querySnapshot: QuerySnapshot?,
                                            firebaseFirestoreException: FirebaseFirestoreException? ->
-                        Log.d(TAG, "getShoppingItemsRealtime: addSnapshotListener started")
                         if (firebaseFirestoreException != null) {
-                            Log.d(TAG, "getShoppingItemsRealtime: firebaseFirestoreException: true")
                             cancel(
                                 message = "Error fetching posts",
                                 cause = firebaseFirestoreException
@@ -115,44 +79,46 @@ class HousemateAPIService {
 
                         if (querySnapshot != null) {
                             val itemsList = querySnapshot.toObjects(ShoppingItem::class.java)
-                            Log.d(TAG, "getShoppingItemsRealtime: itemsList: $itemsList")
                             offer(itemsList)
                         } else {
                             Log.i(TAG, "getShoppingItemsRealtime: querySnapshot is null")
                         }
                     }
             awaitClose {
-                Log.d(TAG, "Cancelling posts listener")
+                Log.i(TAG, "Cancelling posts listener")
                 listenerRegistration.remove()
             }
         }
     }
 
-//    fun getChoreItemsRealtime(clientGroupIDCollection: String): Flow<MutableList<ChoresItem>> {
-//        return callbackFlow {
-//            val listenerRegistration = groupIDsDocumentDB.collection(clientGroupIDCollection).document(CHORES_LIST_DOC)
-//                .collection(CHORE_ITEMS_COLLECTION).addSnapshotListener {
-//                        querySnapshot: QuerySnapshot?,
-//                        firebaseFirestoreException: FirebaseFirestoreException? ->
-//                    if (firebaseFirestoreException != null) {
-//                        cancel(message = "Error fetching posts",
-//                            cause = firebaseFirestoreException)
-//                        return@addSnapshotListener
-//                    }
-//
-//                    if(querySnapshot != null) {
-//                        val itemsList = querySnapshot.toObjects(ChoresItem::class.java)
-//                        this.trySend(itemsList)
-//                    } else {
-//                        Log.d(TAG, "getPosts: querySnapshot is null")
-//                    }
-//                }
-//            awaitClose {
-//                Log.d(TAG, "Cancelling posts listener")
-//                listenerRegistration.remove()
-//            }
-//        }
-//    }
+    fun getChoreItemsRealtime(clientGroupIDCollection: String): Flow<List<ChoresItem>> {
+        return callbackFlow {
+            val listenerRegistration =
+                groupIDsDocumentDB.collection(clientGroupIDCollection).document(CHORES_LIST_DOC)
+                    .collection(CHORE_ITEMS_COLLECTION)
+                    .addSnapshotListener { querySnapshot: QuerySnapshot?,
+                                           firebaseFirestoreException: FirebaseFirestoreException? ->
+                        if (firebaseFirestoreException != null) {
+                            cancel(
+                                message = "Error fetching posts",
+                                cause = firebaseFirestoreException
+                            )
+                            return@addSnapshotListener
+                        }
+
+                        if (querySnapshot != null) {
+                            val itemsList = querySnapshot.toObjects(ChoresItem::class.java)
+                            offer(itemsList)
+                        } else {
+                            Log.i(TAG, "getChoreItemsRealtime: querySnapshot is null")
+                        }
+                    }
+            awaitClose {
+                Log.i(TAG, "Cancelling posts listener")
+                listenerRegistration.remove()
+            }
+        }
+    }
     // SET UP FUNCTIONS //
 
     // DATABASE WRITES //
@@ -180,9 +146,9 @@ class HousemateAPIService {
         groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
             .document(itemName).set(shoppingItemData)
             .addOnSuccessListener {
-                Log.d(TAG, "$itemName DocumentSnapshot successfully written!")
+                Log.i(TAG, "$itemName DocumentSnapshot successfully written!")
             }
-            .addOnFailureListener { e -> Log.d(TAG, "Error writing document", e) }
+            .addOnFailureListener { e -> Log.e(TAG, "Error writing document", e) }
     }
 
     fun addChoresItemToDatabase(
@@ -203,9 +169,9 @@ class HousemateAPIService {
         groupIDsDocumentDB.collection(clientGroupIDCollection).document(CHORES_LIST_DOC).collection(CHORE_ITEMS_COLLECTION)
             .document(itemName).set(choresItemData)
             .addOnSuccessListener {
-                Log.d(TAG, "$itemName DocumentSnapshot successfully written!")
+                Log.i(TAG, "$itemName DocumentSnapshot successfully written!")
             }
-            .addOnFailureListener { e -> Log.d(TAG, "Error writing document", e) }
+            .addOnFailureListener { e -> Log.e(TAG, "Error writing document", e) }
     }
 
     fun sendVolunteerToDb(clientGroupIDCollection: String, listType: Any, itemName: String, volunteerName: String) {
@@ -213,41 +179,23 @@ class HousemateAPIService {
             ShoppingItem::class -> {
                 groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
                     .document(itemName).update(VOLUNTEER_FIELD, volunteerName)
-                    .addOnSuccessListener { Log.d(TAG, "$itemName successfully updated to $volunteerName") }
-                    .addOnFailureListener { Log.d(TAG, "Error updating doc") }
+                    .addOnSuccessListener { Log.i(TAG, "$itemName successfully updated to $volunteerName") }
+                    .addOnFailureListener { Log.e(TAG, "Error updating doc") }
             }
             ChoresItem::class -> {
                 groupIDsDocumentDB.collection(clientGroupIDCollection).document(CHORES_LIST_DOC).collection(CHORE_ITEMS_COLLECTION)
                     .document(itemName).update(VOLUNTEER_FIELD, volunteerName)
-                    .addOnSuccessListener { Log.d(TAG, "$itemName successfully updated to $volunteerName") }
-                    .addOnFailureListener { Log.d(TAG, "Error updating doc") }
+                    .addOnSuccessListener { Log.i(TAG, "$itemName successfully updated to $volunteerName") }
+                    .addOnFailureListener { Log.e(TAG, "Error updating doc") }
             }
             else -> {
-                Log.d(TAG, "sendVolunteerToDb: Error recognizing list Type")
+                Log.e(TAG, "sendVolunteerToDb: Error recognizing list Type")
             }
         }
     }
     // DATABASE WRITES //
 
     // DATABASE READS //
-    //from medium.com       .get()
-    // todo: delete: I'm pretty sure I don't need this function
-    //  bc getting it realtime makes this obsolete
-//    suspend fun getShoppingData(userId: String): ShoppingItem? {
-//        val db = Firebase.firestore
-//        return try {
-//            db.collection("users")
-//                .document(userId).get().await().toObject(ShoppingItem::class.java)
-////                    .document(userId).get().await().toShoppingItem()
-//        } catch (e: Exception) {
-//            Log.e(TAG, "Error getting user details", e)
-////                FirebaseCrashlytics.getInstance().log("Error getting user details")
-////                FirebaseCrashlytics.getInstance().setCustomKey("user id", xpertSlug)
-////                FirebaseCrashlytics.getInstance().recordException(e)
-//            null
-//        }
-//    }
-
     // get the last group added String (and update it to the new ID)
     suspend fun getLastGroupAdded(): String? {
         return try {
@@ -283,10 +231,8 @@ class HousemateAPIService {
         val clientIDsDoc =
             groupIDsDocumentDB.collection(clientGroupIDCollection).document(CLIENT_IDS_DOC)
         return try {
-            Log.d(TAG, "getLastClientAdded: this happens 1")
             var newIDList = groupIDsDocumentDB.collection(clientGroupIDCollection)
                 .get().await().documents.mapNotNull {
-                    Log.d(TAG, "getLastClientAdded: this happens 2")
                     val oldID = it.data!![LAST_CLIENT_ADDED_FIELD] as String
                     val newID = add1AndScrambleLetters(oldID)
                     Log.i(TAG, "getLastClientAdded: new client id created")
@@ -303,7 +249,6 @@ class HousemateAPIService {
 
             // if nothing inside the .mapNotNull{} happens, the there is no previous clientID
             if (newIDList.isEmpty()) {
-                Log.d(TAG, "getLastClientAdded: it.data is null")
                 val newID = add1AndScrambleLetters("00000000asdfg")
                 val firstDocData = hashMapOf<String, Any>(LAST_CLIENT_ADDED_FIELD to newID)
 
@@ -312,12 +257,10 @@ class HousemateAPIService {
                         Log.i(TAG, "DocumentSnapshot successfully written!")
                     }
                     .addOnFailureListener { e ->
-                        Log.w(TAG, "Error writing document", e)
+                        Log.e(TAG, "Error writing document", e)
                     }
                 newIDList = listOf(newID)
             }
-
-            Log.d(TAG, "getLastClientAdded: $newIDList")
             newIDList[0]
         } catch (e: Exception) {
             Log.e(TAG, "Error getting client id", e)
@@ -340,13 +283,13 @@ class HousemateAPIService {
                     .document(CHORES_LIST_DOC).collection(CHORE_ITEMS_COLLECTION)
             }
             else -> {
-                Log.d(TAG, "deleteListItem: Error verifying the List Type")
+                Log.e(TAG, "deleteListItem: Error verifying the List Type")
             }
         }
 
         itemsCollectionDB.document(itemName).delete()
-            .addOnSuccessListener { Log.d(TAG, "$itemName document deleted") }
-            .addOnFailureListener { Log.d(TAG, "Failure to delete $itemName document") }
+            .addOnSuccessListener { Log.i(TAG, "$itemName document deleted") }
+            .addOnFailureListener { Log.e(TAG, "Failure to delete $itemName document") }
     }
     // DELETE DOCUMENT //
 }

@@ -1,17 +1,6 @@
 package com.example.testfirestorev2.testhousematept2
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
-
-// todo: there's 2 main problems:
-//      -one time db fetching
-//          - Fetch the data (APIService)
-//          - Return the value to the Repo (APIService)
-//          - Listen for Repo data changes (ViewModel)
-//      -realtime DB fetching
-//          - Set up listening for data changes (APIService)
-//          - Somehow update the data changes in the repo
-//          - Somehow update the data changes in the viewModel
 
 class HousemateRepository {
 
@@ -21,9 +10,9 @@ class HousemateRepository {
         return housemateAPIService.getShoppingItemsRealtime(groupID)
     }
 
-//    fun setUpChoresRealtimeFetching(groupID: String): Flow<MutableList<ChoresItem>> {
-//        return housemateAPIService.getChoreItemsRealtime(groupID)
-//    }
+    fun setUpChoresRealtimeFetching(groupID: String): Flow<List<ChoresItem>> {
+        return housemateAPIService.getChoreItemsRealtime(groupID)
+    }
 
     // add item
     fun addShoppingItemToDb(
