@@ -43,10 +43,11 @@ class Housemate2ViewModel: ViewModel() {
     fun setShoppingItemsRealtime() {
         // get shopping items realtime using Flow, liveData and coroutines
         CoroutineScope(IO).launch {
-//            housemateRepository.setUpShoppingRealtimeFetching(clientGroupIDCollection!!)
-//                .collect {
-//                    _shoppingItems.postValue(it)
-//                }
+            housemateRepository.setUpShoppingRealtimeFetching(clientGroupIDCollection!!)
+                .collect {
+                    // idk why this has to be a mutableList
+                    _shoppingItems.postValue(it.toMutableList())
+                }
         }
     }
 
@@ -144,7 +145,6 @@ class Housemate2ViewModel: ViewModel() {
         clientIDCollection = getDataFromSP(clientIdSPTag)
         if (clientIDCollection == null) {
 
-            // todo: get client id from db (copy how it was done with the group id)
             CoroutineScope(IO).launch {
                 clientIDCollection =
                     housemateRepository.getLastClientAdded(clientGroupIDCollection!!)

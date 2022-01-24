@@ -17,12 +17,10 @@ class HousemateRepository {
 
     private val housemateAPIService = HousemateAPIService()
 
-    // todo: uncomment this
-//    fun setUpShoppingRealtimeFetching(groupID: String): Flow<MutableList<ShoppingItem>> {
-//        return housemateAPIService.getShoppingItemsRealtime(groupID)
-//    }
+    fun setUpShoppingRealtimeFetching(groupID: String): Flow<List<ShoppingItem>> {
+        return housemateAPIService.getShoppingItemsRealtime(groupID)
+    }
 
-    // todo: uncomment this
 //    fun setUpChoresRealtimeFetching(groupID: String): Flow<MutableList<ChoresItem>> {
 //        return housemateAPIService.getChoreItemsRealtime(groupID)
 //    }

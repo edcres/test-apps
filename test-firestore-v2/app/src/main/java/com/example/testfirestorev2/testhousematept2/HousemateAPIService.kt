@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.testfirestorev2.add1AndScrambleLetters
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -62,7 +63,7 @@ class HousemateAPIService {
         - Calling awaitClose
      */
     // don't need suspend functions with Flow
-//    fun getShoppingItemsRealtime(clientGroupIDCollection: String): Flow<MutableList<ShoppingItem>> {
+//    fun getOldShoppingItemsRealtime(clientGroupIDCollection: String): Flow<MutableList<ShoppingItem>> {
 //        return callbackFlow {
 //            val listenerRegistration =
 //                groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC)
@@ -91,6 +92,41 @@ class HousemateAPIService {
 //            }
 //        }
 //    }
+
+    fun getShoppingItemsRealtime(clientGroupIDCollection: String): Flow<List<ShoppingItem>> {
+        Log.d(TAG, "getShoppingItemsRealtime: this is called")
+        Log.d(TAG, "getShoppingItemsRealtime: groupID: $clientGroupIDCollection")
+        return callbackFlow {
+            Log.d(TAG, "getShoppingItemsRealtime: callbackflow started")
+            val listenerRegistration =
+                groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC)
+                    .collection(SHOPPING_ITEMS_COLLECTION)
+                    .addSnapshotListener { querySnapshot: QuerySnapshot?,
+                                           firebaseFirestoreException: FirebaseFirestoreException? ->
+                        Log.d(TAG, "getShoppingItemsRealtime: addSnapshotListener started")
+                        if (firebaseFirestoreException != null) {
+                            Log.d(TAG, "getShoppingItemsRealtime: firebaseFirestoreException: true")
+                            cancel(
+                                message = "Error fetching posts",
+                                cause = firebaseFirestoreException
+                            )
+                            return@addSnapshotListener
+                        }
+
+                        if (querySnapshot != null) {
+                            val itemsList = querySnapshot.toObjects(ShoppingItem::class.java)
+                            Log.d(TAG, "getShoppingItemsRealtime: itemsList: $itemsList")
+                            offer(itemsList)
+                        } else {
+                            Log.i(TAG, "getShoppingItemsRealtime: querySnapshot is null")
+                        }
+                    }
+            awaitClose {
+                Log.d(TAG, "Cancelling posts listener")
+                listenerRegistration.remove()
+            }
+        }
+    }
 
 //    fun getChoreItemsRealtime(clientGroupIDCollection: String): Flow<MutableList<ChoresItem>> {
 //        return callbackFlow {
@@ -147,8 +183,8 @@ class HousemateAPIService {
                 Log.d(TAG, "$itemName DocumentSnapshot successfully written!")
             }
             .addOnFailureListener { e -> Log.d(TAG, "Error writing document", e) }
-
     }
+
     fun addChoresItemToDatabase(
         clientGroupIDCollection: String,
         itemName: String,
@@ -173,7 +209,6 @@ class HousemateAPIService {
     }
 
     fun sendVolunteerToDb(clientGroupIDCollection: String, listType: Any, itemName: String, volunteerName: String) {
-
         when (listType) {
             ShoppingItem::class -> {
                 groupIDsDocumentDB.collection(clientGroupIDCollection).document(SHOPPING_LIST_DOC).collection(SHOPPING_ITEMS_COLLECTION)
@@ -191,7 +226,6 @@ class HousemateAPIService {
                 Log.d(TAG, "sendVolunteerToDb: Error recognizing list Type")
             }
         }
-
     }
     // DATABASE WRITES //
 
@@ -199,20 +233,20 @@ class HousemateAPIService {
     //from medium.com       .get()
     // todo: delete: I'm pretty sure I don't need this function
     //  bc getting it realtime makes this obsolete
-    suspend fun getShoppingData(userId: String): ShoppingItem? {
-        val db = Firebase.firestore
-        return try {
-            db.collection("users")
-                .document(userId).get().await().toObject(ShoppingItem::class.java)
-//                    .document(userId).get().await().toShoppingItem()
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting user details", e)
-//                FirebaseCrashlytics.getInstance().log("Error getting user details")
-//                FirebaseCrashlytics.getInstance().setCustomKey("user id", xpertSlug)
-//                FirebaseCrashlytics.getInstance().recordException(e)
-            null
-        }
-    }
+//    suspend fun getShoppingData(userId: String): ShoppingItem? {
+//        val db = Firebase.firestore
+//        return try {
+//            db.collection("users")
+//                .document(userId).get().await().toObject(ShoppingItem::class.java)
+////                    .document(userId).get().await().toShoppingItem()
+//        } catch (e: Exception) {
+//            Log.e(TAG, "Error getting user details", e)
+////                FirebaseCrashlytics.getInstance().log("Error getting user details")
+////                FirebaseCrashlytics.getInstance().setCustomKey("user id", xpertSlug)
+////                FirebaseCrashlytics.getInstance().recordException(e)
+//            null
+//        }
+//    }
 
     // get the last group added String (and update it to the new ID)
     suspend fun getLastGroupAdded(): String? {
@@ -244,6 +278,7 @@ class HousemateAPIService {
         }
     }
 
+    // todo: maybe clean this up
     suspend fun getLastClientAdded(clientGroupIDCollection: String): String? {
         val clientIDsDoc =
             groupIDsDocumentDB.collection(clientGroupIDCollection).document(CLIENT_IDS_DOC)
@@ -289,49 +324,6 @@ class HousemateAPIService {
             null
         }
     }
-
-    // todo: delete this
-//    suspend fun oldGetLastClientAdded(clientGroupIDCollection: String): String {
-//        val lastClientAddedField = "last client added"
-//        var oldID: String
-//        var newID: String?
-//        val clientsDocDb =
-//            groupIDsDocumentDB.collection(clientGroupIDCollection).document(CLIENT_IDS_DOC)
-//        clientsDocDb.get()
-//            .addOnSuccessListener { document ->
-//                if (document.data != null) {
-//                    val clientIdDoc = document.data as Map<String, Any>
-//                    oldID = clientIdDoc[lastClientAddedField] as String
-//                    newID = add1AndScrambleLetters(oldID)
-//                    // Update new id to the database as the last id added
-//                    clientsDocDb.update(lastClientAddedField, newID)
-//                        .addOnSuccessListener {
-//
-//                            // todo: set the value of newID from the viewModel
-//                            //  set the SP from the viewModel
-//                            housemate2ViewModel.clientIDCollection = newID
-//                            housemate2ViewModel
-//                                .sendDataToSP(housemate2ViewModel.clientIdSPTag, newID!!)
-//                        }
-//                        .addOnFailureListener { e ->
-//                            Log.d("DB Query", "Error updating client doc", e)
-//                        }
-//                } else {
-//                    // the document will be null for the first member in the group
-//                    //  -there is no client id to get, make a new clientID and add it to the db
-//                    newID = add1AndScrambleLetters("00000000asdfg")
-//                    val firstDocData = hashMapOf<String, Any>(lastClientAddedField to newID!!)
-//                    clientsDocDb.set(firstDocData)
-//                        .addOnSuccessListener {
-//                            Log.d(TAG, "DocumentSnapshot successfully written!")
-//                            housemate2ViewModel.clientIDCollection = newID
-//                            housemate2ViewModel
-//                                .sendDataToSP(housemate2ViewModel.clientIdSPTag, newID!!)
-//                        }
-//                        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-//                }
-//            }
-//    }
     // DATABASE READS //
 
     // DELETE DOCUMENT //
