@@ -27,7 +27,7 @@ class HousemateAPIService {
 
     companion object {
         const val TAG = "HousematePt2mTAG"
-
+        const val DEFAULT_CLIENT_ID = "00000000asdfg"
         const val HOUSEMATE_COLLECTION = "Test Housemate Pt2"
         const val GROUP_IDS_DOC = "Group IDs"
         const val CLIENT_IDS_DOC = "Client IDs"
@@ -226,7 +226,6 @@ class HousemateAPIService {
         }
     }
 
-    // todo: maybe clean this up
     suspend fun getLastClientAdded(clientGroupIDCollection: String): String? {
         val clientIDsDoc =
             groupIDsDocumentDB.collection(clientGroupIDCollection).document(CLIENT_IDS_DOC)
@@ -246,10 +245,10 @@ class HousemateAPIService {
                         }
                     newID
                 }
-
-            // if nothing inside the .mapNotNull{} happens, the there is no previous clientID
+            // if nothing inside the .mapNotNull{} happens, then there is no previous clientID
+            // It only happens once per group creation so it's no big deal to do a second db query
             if (newIDList.isEmpty()) {
-                val newID = add1AndScrambleLetters("00000000asdfg")
+                val newID = add1AndScrambleLetters(DEFAULT_CLIENT_ID)
                 val firstDocData = hashMapOf<String, Any>(LAST_CLIENT_ADDED_FIELD to newID)
 
                 clientIDsDoc.set(firstDocData)

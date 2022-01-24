@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.*
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -18,9 +17,11 @@ class Housemate2ViewModel: ViewModel() {
 
     private val TAG = "HousematePt2mTAG"
     private val housemateRepository = HousemateRepository()
-    lateinit var sharedPref: SharedPreferences
+    var sharedPrefs: SharedPreferences? = null
+    val userNameSPTag = "User Name"
     val groupIdSPTag = "Group ID"
     val clientIdSPTag = "Client ID"
+    var userName: String? = null
     var clientGroupIDCollection: String? = null
     var clientIDCollection: String? = null
     private var _shoppingItems = MutableLiveData<MutableList<ShoppingItem>>()
@@ -29,13 +30,9 @@ class Housemate2ViewModel: ViewModel() {
     val choreItems: LiveData<MutableList<ChoresItem>> get() = _choreItems
 
     init {
-        //todo: put the initial db fetching functions here. Instead of the activity
-        housemateRepository
-        Log.d(TAG, "ViewModel initialized")
-        // if i have different views, everytime i call the viewModel, the variables might be reset
-        //  unless maybe it's only initialized the firs time it's called
-        Log.d(TAG, "_shoppingItems: ${_shoppingItems.value?.size}")
-        Log.d(TAG, "_shoppingItems: ${_choreItems.value?.size}")
+        Log.i(TAG, "ViewModel initialized")
+        Log.i(TAG, "_shoppingItems: ${_shoppingItems.value?.size}")
+        Log.i(TAG, "_choreItems: ${_choreItems.value?.size}")
     }
 
     // DATABASE FUNCTIONS //
@@ -67,23 +64,22 @@ class Housemate2ViewModel: ViewModel() {
         itemCost: Double,
         purchaseLocation: String,
         itemNeededBy: String,   // try and make this a date
-        itemPriority: Int,
-        addedBy: String
+        itemPriority: Int
     ) {
         housemateRepository.addShoppingItemToDb(
             clientGroupIDCollection!!, itemName, itemQuantity, itemCost,
-            purchaseLocation, itemNeededBy, itemPriority, addedBy
+            purchaseLocation, itemNeededBy, itemPriority, userName!!
         )
     }
     fun sendChoresItemToDatabase(
         itemName: String,
         itemDifficulty: Int,
         itemNeededBy: String,   // try and make this a date
-        itemPriority: Int,
-        addedBy: String
+        itemPriority: Int
     ) {
         housemateRepository.addChoresItemToDb(
-            clientGroupIDCollection!!, itemName, itemDifficulty, itemNeededBy, itemPriority, addedBy
+            clientGroupIDCollection!!, itemName, itemDifficulty,
+            itemNeededBy, itemPriority, userName!!
         )
     }
 
@@ -111,16 +107,16 @@ class Housemate2ViewModel: ViewModel() {
 
     // SHARED PREFERENCE //
     fun getDataFromSP(theTag: String): String? {
-        return sharedPref.getString(theTag, null)
+        return sharedPrefs!!.getString(theTag, null)
     }
     @SuppressLint("ApplySharedPref")
     fun sendDataToSP(theTag: String, dataToSend: String) {
-        val spEditor: SharedPreferences.Editor = sharedPref.edit()
+        val spEditor: SharedPreferences.Editor = sharedPrefs!!.edit()
         spEditor.putString(theTag, dataToSend).commit()
     }
     @SuppressLint("ApplySharedPref")
     fun clearSP() {
-        sharedPref.edit().clear().commit()
+        sharedPrefs!!.edit().clear().commit()
     }
     // SHARED PREFERENCE //
 
