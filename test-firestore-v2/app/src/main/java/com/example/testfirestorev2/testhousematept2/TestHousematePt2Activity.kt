@@ -22,6 +22,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
  * - These are shared through a database with users in the same group
  */
 
+// todo: bug
+// When adding an item, if a string that will be turned to an Int/Double is empty, it gives an error
+// shoppingEtCost.text.toString().toDouble(),
+
 class TestHousematePt2Activity : AppCompatActivity() {
 
     private val TAG = "HousematePt2mTAG"
@@ -38,7 +42,8 @@ class TestHousematePt2Activity : AppCompatActivity() {
 
         housemate2ViewModel = ViewModelProvider(this)[Housemate2ViewModel::class.java]
         // shared pref for the viewModel
-        housemate2ViewModel.sharedPrefs = this.getSharedPreferences(mainSharedPrefTag, Context.MODE_PRIVATE)
+        housemate2ViewModel.sharedPrefs =
+            this.getSharedPreferences(mainSharedPrefTag, Context.MODE_PRIVATE)
         binding?.apply {
             lifecycleOwner = this@TestHousematePt2Activity
             viewModel = housemate2ViewModel
@@ -53,7 +58,7 @@ class TestHousematePt2Activity : AppCompatActivity() {
             choresRecyclerWidget.layoutManager =
                 LinearLayoutManager(this@TestHousematePt2Activity)
         }
-        Log.d(TAG, "onCreate: after binding")
+        Log.i(TAG, "onCreate: after binding")
         setUpObservers()
         clickListeners()
         startApplication()

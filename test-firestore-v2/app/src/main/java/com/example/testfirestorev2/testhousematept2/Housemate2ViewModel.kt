@@ -42,7 +42,6 @@ class Housemate2ViewModel: ViewModel() {
         CoroutineScope(IO).launch {
             housemateRepository.setUpShoppingRealtimeFetching(clientGroupIDCollection!!)
                 .collect {
-                    // idk why this has to be a mutableList
                     _shoppingItems.postValue(it.toMutableList())
                 }
         }
@@ -120,7 +119,7 @@ class Housemate2ViewModel: ViewModel() {
     }
     // SHARED PREFERENCE //
 
-    // HELPER FUNCTIONS //
+    // ID QUERIES //
     fun generateClientGroupID() {
         // Get the latest groupID from the remote db (ie. 00000001asdfg)
         CoroutineScope(IO).launch {
@@ -136,11 +135,9 @@ class Housemate2ViewModel: ViewModel() {
             }
         }
     }
-
     private fun setClientID() {
         clientIDCollection = getDataFromSP(clientIdSPTag)
         if (clientIDCollection == null) {
-
             CoroutineScope(IO).launch {
                 clientIDCollection =
                     housemateRepository.getLastClientAdded(clientGroupIDCollection!!)

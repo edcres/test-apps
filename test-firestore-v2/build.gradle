@@ -19,11 +19,3 @@ buildscript {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
-//allprojects {
-//    repositories {
-//        // Check that you have the following line (if not, add it):
-//        google()  // Google's Maven repository
-//        mavenCentral()
-//    }
-//}
