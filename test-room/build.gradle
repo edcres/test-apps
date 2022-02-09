@@ -5,6 +5,16 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.5.30' apply false
 }
 
+//buildscript {
+//    ext.kotlin_version = '1.5.31'
+//}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    lifecycleVersion = '2.4.0'
+    roomVersion = '2.3.0'
+    coroutines = '1.5.2'
 }

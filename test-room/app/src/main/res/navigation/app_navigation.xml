@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/startFragment">
+
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.example.testroom.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_startFragment_to_roomOneToOneFragment"
+            app:destination="@id/roomOneToOneFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_roomBasicsFragment"
+            app:destination="@id/roomBasicsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/roomOneToOneFragment"
+        android:name="com.example.testroom.onetoone.RoomOneToOneFragment"
+        android:label="fragment_room_one_to_one"
+        tools:layout="@layout/fragment_room_one_to_one" />
+    <fragment
+        android:id="@+id/roomBasicsFragment"
+        android:name="com.example.testroom.basics.RoomBasicsFragment"
+        android:label="fragment_room_basics"
+        tools:layout="@layout/fragment_room_basics" />
+</navigation>
