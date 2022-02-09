@@ -62,7 +62,6 @@ class HousemateChoresRecyclerAdapter :
             }
         }
     }
-
 }
 
 class ChoreItemDiffCallback : DiffUtil.ItemCallback<ChoresItem>() {

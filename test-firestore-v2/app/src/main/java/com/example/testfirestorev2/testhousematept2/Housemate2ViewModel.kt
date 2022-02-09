@@ -135,6 +135,7 @@ class Housemate2ViewModel: ViewModel() {
             }
         }
     }
+
     private fun setClientID() {
         clientIDCollection = getDataFromSP(clientIdSPTag)
         if (clientIDCollection == null) {

@@ -22,10 +22,8 @@ class AddItemActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener 
     private val sharedPreferenceTag = "TestHousemateActySP"
     private lateinit var sharedPref: SharedPreferences
     private val clientNameSPTag = "Client Name"
-    private val homeActivity = TestHousemateActivity
     private lateinit var addItemButton: Button
     private val activityTAG = "AddItemActyTAG"
-    private val testHousemateActivity = TestHousemateActivity
     private val db = Firebase.firestore
     private val clientGroupIDCollectionDB = db.collection(TestHousemateActivity.GENERAL_COLLECTION)
         .document(TestHousemateActivity.GROUP_IDS_DOC).collection(TestHousemateActivity.clientGroupIDCollection!!)

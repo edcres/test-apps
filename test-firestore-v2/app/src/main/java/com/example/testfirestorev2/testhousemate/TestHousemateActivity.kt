@@ -11,6 +11,8 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.widget.*
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
 import com.example.testfirestorev2.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -251,20 +253,26 @@ class TestHousemateActivity : AppCompatActivity() {
             }
         }
         // volunteer
-        i1shoppingWhoIsGettingItText.setOnKeyListener { _, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
-                if (threeShoppingItemsNames.size > 0) {
-                    sendVolunteerInputToDb(
-                        SHOPPING_LIST_DOC,
-                        SHOPPING_ITEMS_COLLECTION,
-                        threeShoppingItemsNames[0],
-                        i1shoppingWhoIsGettingItText.text.toString()
-                    )
-                }
-                true
-            } else {
-                false
-            }
+//        i1shoppingWhoIsGettingItText.setOnKeyListener { _, keyCode, event ->
+//            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+//                if (threeShoppingItemsNames.size > 0) {
+//                    sendVolunteerInputToDb(
+//                        SHOPPING_LIST_DOC,
+//                        SHOPPING_ITEMS_COLLECTION,
+//                        threeShoppingItemsNames[0],
+//                        i1shoppingWhoIsGettingItText.text.toString()
+//                    )
+//                }
+//                true
+//            } else {
+//                false
+//            }
+//        }
+//        i1shoppingWhoIsGettingItText.addTextChangedListener {
+//            displayToastMessage(this, it.toString())
+//        }
+        i1shoppingWhoIsGettingItText.doAfterTextChanged {
+            displayToastMessage(this, it.toString())
         }
         i2shoppingWhoIsGettingItText.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
@@ -662,6 +670,20 @@ class TestHousemateActivity : AppCompatActivity() {
                     if (snapshot != null && snapshot.exists()) {
                         // Get 3 item maps from db and set them to threeShoppingItems
                         threeShoppingItems[i] = snapshot.data as HashMap<String, Any>
+
+
+
+                        // todo: test (delete later)
+                        if (i == 0) {
+                            Log.d(TAG, " " +
+                                    "\nshopRealtime: ${threeShoppingItems[i][NAME_FIELD]}" +
+                                    "\ncost: ${threeShoppingItems[i][COST_FIELD]}" +
+                                    "\npurchased: ${threeShoppingItems[i][COMPLETED_FIELD]}")
+                        }
+
+
+
+
                         populateTheListItemsUI()
                         Log.d(
                             TAG, "setUpRealtimeFetching: " +

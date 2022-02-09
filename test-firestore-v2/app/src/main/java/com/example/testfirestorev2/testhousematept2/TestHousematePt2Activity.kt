@@ -80,7 +80,7 @@ class TestHousematePt2Activity : AppCompatActivity() {
         // try to get the groupId from shared preferences
         val currentClientGroupID = housemate2ViewModel.getCurrentGroupID()
 
-        // if null, in a dialog box ask user what their group
+        // if null, in a dialog box ask user what their group is
         if (currentClientGroupID == null) {
             makeDialogBoxAndSetGroupID()
         } else {
@@ -101,8 +101,10 @@ class TestHousematePt2Activity : AppCompatActivity() {
                 housemate2ViewModel.userName = inputNameDialog.text.toString()
                 Log.i(TAG, "makeDialogBoxAndSetUserName: accept clicked " +
                         "${housemate2ViewModel.userName}")
-                housemate2ViewModel.sendDataToSP(housemate2ViewModel.userNameSPTag,
-                    housemate2ViewModel.userName!!)
+                housemate2ViewModel.sendDataToSP(
+                    housemate2ViewModel.userNameSPTag,
+                    housemate2ViewModel.userName!!
+                )
                 dialog.dismiss()
             }
             .setNegativeButton("Anonymous") { dialog, _ ->
@@ -132,16 +134,11 @@ class TestHousematePt2Activity : AppCompatActivity() {
                 housemate2ViewModel.setChoreItemsRealtime()
                 dialog.dismiss()
             }
-            .setNegativeButton("New Group") { dialog, _ ->
-                Log.i(TAG, "makeDialogBoxAndSetGroupID: negative button called")
-                housemate2ViewModel.generateClientGroupID()
-                dialog.dismiss()
-            }
-            .show()
+
     }
 
     private fun setUpObservers() {
-        // observe these viewModel variables
+        // Observe these viewModel variables
         housemate2ViewModel.shoppingItems.observe(this, Observer { result ->
             // send the updates list to the ListAdapter
             // submitList() is how the adapter know how many items to display
