@@ -8,7 +8,8 @@ import androidx.room.PrimaryKey
 data class WorkoutBasics (
 
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    @ColumnInfo(name = "id")
+    val id: Int = 0,
 
     @ColumnInfo(name = "workout")
     val name: String
