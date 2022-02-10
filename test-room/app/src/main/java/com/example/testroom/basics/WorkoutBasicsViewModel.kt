@@ -11,11 +11,15 @@ class WorkoutBasicsViewModel(application: Application): ViewModel() {
 
     private val roomDb = WorkoutBasicsRoomDatabase.getDatabase(application)
     private val repository = WorkoutBasicsRepository(roomDb.workoutBasicsDao())
-    val allWords: LiveData<List<WorkoutBasics>> = repository.allWorkouts.asLiveData()
+    val allWorkouts: LiveData<List<WorkoutBasics>> = repository.allWorkouts.asLiveData()
 
     // Launching a new coroutine to insert the data in a non-blocking way.
     fun insert(workoutBasics: WorkoutBasics) = viewModelScope.launch {
         repository.insert(workoutBasics)
+    }
+
+    fun deleteAllWorkouts() = viewModelScope.launch {
+        repository.deleteAll()
     }
 }
 

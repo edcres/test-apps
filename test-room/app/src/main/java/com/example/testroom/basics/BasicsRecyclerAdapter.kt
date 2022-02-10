@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testroom.R
 import com.example.testroom.basics.data.WorkoutBasics
+import com.example.testroom.databinding.WorkoutRecyclerItemBinding
 
 class BasicsRecyclerAdapter :
     ListAdapter<WorkoutBasics, BasicsRecyclerAdapter.WorkoutViewHolder>(WorkoutsComparator()) {
@@ -22,18 +23,20 @@ class BasicsRecyclerAdapter :
         holder.bind(current.name)
     }
 
-    class WorkoutViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val wordItemView: TextView = itemView.findViewById(R.id.workout_txt)
+    class WorkoutViewHolder private constructor(
+        private val binding: WorkoutRecyclerItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(text: String?) {
-            wordItemView.text = text
+            binding.workoutTxt.text = text
         }
 
         companion object {
             fun create(parent: ViewGroup): WorkoutViewHolder {
-                val view: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.workout_recycler_item, parent, false)
-                return WorkoutViewHolder(view)
+                val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
+                val binding =
+                    WorkoutRecyclerItemBinding.inflate(layoutInflater, parent, false)
+                return WorkoutViewHolder(binding)
             }
         }
     }
