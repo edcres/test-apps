@@ -2,6 +2,7 @@ package com.example.testroom.basics.data
 
 import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
+import java.text.FieldPosition
 
 class WorkoutBasicsRepository(private val workoutBasicsDao: WorkoutBasicsDao) {
 
@@ -25,5 +26,10 @@ class WorkoutBasicsRepository(private val workoutBasicsDao: WorkoutBasicsDao) {
     }
     suspend fun updateWorkout(workout: WorkoutBasics) {
         workoutBasicsDao.updateWorkout(workout)
+    }
+    suspend fun updateWorkout(moveUp: Boolean, position: Int) {
+        if (moveUp) {
+            workoutBasicsDao.updatePositionUp(position)
+        } else workoutBasicsDao.updatePositionDown(position)
     }
 }

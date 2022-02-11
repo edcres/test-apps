@@ -31,17 +31,17 @@ class BasicsRecyclerAdapter(val viewModel: WorkoutBasicsViewModel) :
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: WorkoutBasics) {
+            // id name, position
+            Log.d("adapterTAG", "item= ${item.id}, ${item.name}, position= ${item.position}\n ")
+
             binding.apply {
                 workoutTxt.text = item.name
                 upBtn.setOnClickListener{
-                    // todo: change recycler item position and save it to Room
-                    //  check if it's at the top
                     item.position --
-                    viewModel.updateWorkout(item)
+                    viewModel.moveRecyclerItem(moveUp = true, item)
                 }
                 downBtn.setOnClickListener {
-                    // todo: change recycler item position and save it to Room
-                    //  check if it's at the bottom
+                    viewModel.moveRecyclerItem(moveUp = false, item)
                     item.position ++
                 }
             }

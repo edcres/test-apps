@@ -20,4 +20,12 @@ interface WorkoutBasicsDao {
 
     @Update
     suspend fun updateWorkout(workout: WorkoutBasics)
+
+    // todo: update the workout's position up (--)
+    @Query("SELECT * FROM workout_table ORDER BY position ASC")
+    suspend fun updatePositionUp(position: Int)
+
+    // todo: update the workout's position down (++)
+    @Query("SELECT * FROM workout_table ORDER BY position ASC")
+    suspend fun updatePositionDown(position: Int)
 }

@@ -13,7 +13,15 @@ class WorkoutBasicsViewModel(application: Application): ViewModel() {
     private val repository = WorkoutBasicsRepository(roomDb.workoutBasicsDao())
     val allWorkouts: LiveData<List<WorkoutBasics>> = repository.allWorkouts.asLiveData()
 
-    // Launching a new coroutine to insert the data in a non-blocking way.
+    // HELPER //
+    fun moveRecyclerItem(moveUp: Boolean, item: WorkoutBasics) {
+
+        // todo: check if it's at the bottom or the top, if so, do nothing.
+        // todo: change the position of this item and the one that is being replaced.
+        updateWorkout(item)
+    }
+
+    // DATABASE //
     fun insert(workoutBasics: WorkoutBasics) = viewModelScope.launch {
         repository.insert(workoutBasics)
     }
@@ -23,6 +31,7 @@ class WorkoutBasicsViewModel(application: Application): ViewModel() {
     fun updateWorkout(workoutBasics: WorkoutBasics) = viewModelScope.launch {
         repository.updateWorkout(workoutBasics)
     }
+    // DATABASE //
 }
 
 class WorkoutBasicsViewModelFactory(var application: Application): ViewModelProvider.Factory {
