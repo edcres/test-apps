@@ -17,8 +17,13 @@ class WorkoutBasicsRepository(private val workoutBasicsDao: WorkoutBasicsDao) {
     suspend fun insert(workout: WorkoutBasics) {
         workoutBasicsDao.insert(workout)
     }
-
+    suspend fun delete(workout: WorkoutBasics) {
+        workoutBasicsDao.delete(workout)
+    }
     suspend fun deleteAll() {
         workoutBasicsDao.deleteAll()
+    }
+    suspend fun updateWorkout(workout: WorkoutBasics) {
+        workoutBasicsDao.updateWorkout(workout)
     }
 }

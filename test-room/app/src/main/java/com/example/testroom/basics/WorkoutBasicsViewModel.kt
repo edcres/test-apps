@@ -17,9 +17,11 @@ class WorkoutBasicsViewModel(application: Application): ViewModel() {
     fun insert(workoutBasics: WorkoutBasics) = viewModelScope.launch {
         repository.insert(workoutBasics)
     }
-
     fun deleteAllWorkouts() = viewModelScope.launch {
         repository.deleteAll()
+    }
+    fun updateWorkout(workoutBasics: WorkoutBasics) = viewModelScope.launch {
+        repository.updateWorkout(workoutBasics)
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.testroom.basics
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,32 +12,47 @@ import com.example.testroom.R
 import com.example.testroom.basics.data.WorkoutBasics
 import com.example.testroom.databinding.WorkoutRecyclerItemBinding
 
-class BasicsRecyclerAdapter :
+class BasicsRecyclerAdapter(val viewModel: WorkoutBasicsViewModel) :
     ListAdapter<WorkoutBasics, BasicsRecyclerAdapter.WorkoutViewHolder>(WorkoutsComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutViewHolder {
-        return WorkoutViewHolder.create(parent)
+        return WorkoutViewHolder.create(viewModel, parent)
     }
 
     override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
-        val current = getItem(position)
-        holder.bind(current.name)
+        val item = getItem(position)
+        Log.d("adapterTAG", "position in recycler: $position")
+        holder.bind(item)
     }
 
     class WorkoutViewHolder private constructor(
+        val viewModel: WorkoutBasicsViewModel,
         private val binding: WorkoutRecyclerItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(text: String?) {
-            binding.workoutTxt.text = text
+        fun bind(item: WorkoutBasics) {
+            binding.apply {
+                workoutTxt.text = item.name
+                upBtn.setOnClickListener{
+                    // todo: change recycler item position and save it to Room
+                    //  check if it's at the top
+                    item.position --
+                    viewModel.updateWorkout(item)
+                }
+                downBtn.setOnClickListener {
+                    // todo: change recycler item position and save it to Room
+                    //  check if it's at the bottom
+                    item.position ++
+                }
+            }
         }
 
         companion object {
-            fun create(parent: ViewGroup): WorkoutViewHolder {
+            fun create(viewModel: WorkoutBasicsViewModel, parent: ViewGroup): WorkoutViewHolder {
                 val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
                 val binding =
                     WorkoutRecyclerItemBinding.inflate(layoutInflater, parent, false)
-                return WorkoutViewHolder(binding)
+                return WorkoutViewHolder(viewModel, binding)
             }
         }
     }

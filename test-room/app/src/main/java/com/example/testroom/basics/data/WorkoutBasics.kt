@@ -11,6 +11,9 @@ data class WorkoutBasics (
     @ColumnInfo(name = "id")
     val id: Int = 0,
 
-    @ColumnInfo(name = "workout")
-    val name: String
+    @ColumnInfo(name = "name")
+    val name: String,
+
+    @ColumnInfo(name = "position")
+    var position: Int
 )

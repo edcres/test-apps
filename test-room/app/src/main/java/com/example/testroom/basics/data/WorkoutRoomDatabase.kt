@@ -6,7 +6,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = arrayOf(WorkoutBasics::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(WorkoutBasics::class), version = 2, exportSchema = false)
 abstract class WorkoutBasicsRoomDatabase : RoomDatabase() {
     abstract fun workoutBasicsDao(): WorkoutBasicsDao
 
@@ -27,7 +27,8 @@ abstract class WorkoutBasicsRoomDatabase : RoomDatabase() {
                     context.applicationContext,
                     WorkoutBasicsRoomDatabase::class.java,
                     DATABASE_NAME
-                ).build()
+                // todo: probable don't allow destructive migration in a real app
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 // return instance
                 instance

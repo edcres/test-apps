@@ -22,7 +22,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
  *      main thread.
  */
 
-// todo: check if the id is autoIncrementing
+// todo: delete db data and add more
+// todo: add a position attribute to the Entity
+//  - default position is at the bottom. So list size (add item to vm list first)
 
 class RoomBasicsFragment : Fragment() {
 
@@ -42,12 +44,10 @@ class RoomBasicsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_room_basics, container, false)
-        setUpRecyclerView(view)
-        setUpWidgets(view)
-
         viewModelFactory = WorkoutBasicsViewModelFactory(requireActivity().application)
         viewModel= ViewModelProvider(this, viewModelFactory)[WorkoutBasicsViewModel::class.java]
-
+        setUpRecyclerView(view)
+        setUpWidgets(view)
         addItemFab.setOnClickListener {
             workoutEdtTxt.setText("")
             hideWidgets()
@@ -57,7 +57,9 @@ class RoomBasicsFragment : Fragment() {
         }
         saveBtn.setOnClickListener {
             val workoutName = workoutEdtTxt.text.toString()
-            viewModel.insert(WorkoutBasics(name = workoutName))
+            val workoutsList = viewModel.allWorkouts.value as MutableList<WorkoutBasics>
+            Log.d(fragmentTAG, "Workout added:\nname= $workoutName\nlist= ${workoutsList.size}")
+            viewModel.insert( WorkoutBasics(name = workoutName, position = workoutsList.size) )
             hideWidgets()
         }
         viewModel.allWorkouts.observe(viewLifecycleOwner) { workouts ->
@@ -73,7 +75,7 @@ class RoomBasicsFragment : Fragment() {
     // SETUP //
     private fun setUpRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.recyclerview)
-        recyclerAdapter = BasicsRecyclerAdapter()
+        recyclerAdapter = BasicsRecyclerAdapter(viewModel)
         recyclerView.adapter = recyclerAdapter
         recyclerView.layoutManager= LinearLayoutManager(requireContext())
     }
