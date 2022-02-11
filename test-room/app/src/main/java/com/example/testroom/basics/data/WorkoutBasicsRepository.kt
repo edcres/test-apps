@@ -27,9 +27,10 @@ class WorkoutBasicsRepository(private val workoutBasicsDao: WorkoutBasicsDao) {
     suspend fun updateWorkout(workout: WorkoutBasics) {
         workoutBasicsDao.updateWorkout(workout)
     }
-    suspend fun updateWorkout(moveUp: Boolean, position: Int) {
-        if (moveUp) {
-            workoutBasicsDao.updatePositionUp(position)
-        } else workoutBasicsDao.updatePositionDown(position)
+    suspend fun moveItemReplaced(moveUp: Boolean, pastPosition: Int, newPosition: Int) {
+//        if (moveUp) {
+//            workoutBasicsDao.updatePositionUp(pastPosition, newPosition)
+//        } else workoutBasicsDao.updatePositionDown(pastPosition, newPosition)
+        workoutBasicsDao.updatePosition(pastPosition, newPosition)
     }
 }

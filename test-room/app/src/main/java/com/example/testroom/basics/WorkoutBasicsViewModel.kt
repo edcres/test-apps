@@ -1,24 +1,37 @@
 package com.example.testroom.basics
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.testroom.basics.data.WorkoutBasics
 import com.example.testroom.basics.data.WorkoutBasicsRepository
 import com.example.testroom.basics.data.WorkoutBasicsRoomDatabase
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class WorkoutBasicsViewModel(application: Application): ViewModel() {
 
+    private val TAG = "ViewModelTAG"
     private val roomDb = WorkoutBasicsRoomDatabase.getDatabase(application)
     private val repository = WorkoutBasicsRepository(roomDb.workoutBasicsDao())
     val allWorkouts: LiveData<List<WorkoutBasics>> = repository.allWorkouts.asLiveData()
 
     // HELPER //
-    fun moveRecyclerItem(moveUp: Boolean, item: WorkoutBasics) {
-
-        // todo: check if it's at the bottom or the top, if so, do nothing.
-        // todo: change the position of this item and the one that is being replaced.
-        updateWorkout(item)
+    fun moveRecyclerItems(moveUp: Boolean, item: WorkoutBasics) = viewModelScope.launch {
+        // Check if list is filled and if item can move up or down
+        if(allWorkouts.value?.size!! > 1) {
+            if(moveUp && item.position > 0) {
+                // move up
+                item.position --
+                repository.moveItemReplaced(moveUp, item.position, item.position+1)
+                updateWorkout(item)
+            } else if (!moveUp && item.position < allWorkouts.value!!.size-1) {
+                // move down
+                item.position ++
+                repository.moveItemReplaced(!moveUp, item.position, item.position-1)
+                updateWorkout(item)
+            }
+        }
     }
 
     // DATABASE //

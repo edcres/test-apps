@@ -21,11 +21,37 @@ interface WorkoutBasicsDao {
     @Update
     suspend fun updateWorkout(workout: WorkoutBasics)
 
-    // todo: update the workout's position up (--)
-    @Query("SELECT * FROM workout_table ORDER BY position ASC")
-    suspend fun updatePositionUp(position: Int)
 
-    // todo: update the workout's position down (++)
-    @Query("SELECT * FROM workout_table ORDER BY position ASC")
-    suspend fun updatePositionDown(position: Int)
+
+
+
+    // todo: update the workout's position up (--)
+    // todo: change the position of this item and the one that is being replaced.
+    @Query("UPDATE workout_table SET position=:newPosition WHERE position=:pastPosition")
+    suspend fun updatePosition(pastPosition: Int, newPosition: Int)
+
+//    // todo: update the workout's position down (++)
+//    // todo: change the position of this item and the one that is being replaced.
+//    @Query("UPDATE workout_table SET position=:newPosition WHERE position=:pastPosition")
+//    suspend fun updatePositionDown(pastPosition: Int, newPosition: Int)
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

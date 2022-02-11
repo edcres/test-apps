@@ -2,13 +2,10 @@ package com.example.testroom.basics
 
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.testroom.R
 import com.example.testroom.basics.data.WorkoutBasics
 import com.example.testroom.databinding.WorkoutRecyclerItemBinding
 
@@ -21,7 +18,6 @@ class BasicsRecyclerAdapter(val viewModel: WorkoutBasicsViewModel) :
 
     override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
         val item = getItem(position)
-        Log.d("adapterTAG", "position in recycler: $position")
         holder.bind(item)
     }
 
@@ -31,18 +27,13 @@ class BasicsRecyclerAdapter(val viewModel: WorkoutBasicsViewModel) :
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: WorkoutBasics) {
-            // id name, position
-            Log.d("adapterTAG", "item= ${item.id}, ${item.name}, position= ${item.position}\n ")
-
             binding.apply {
                 workoutTxt.text = item.name
                 upBtn.setOnClickListener{
-                    item.position --
-                    viewModel.moveRecyclerItem(moveUp = true, item)
+                    viewModel.moveRecyclerItems(moveUp = true, item)
                 }
                 downBtn.setOnClickListener {
-                    viewModel.moveRecyclerItem(moveUp = false, item)
-                    item.position ++
+                    viewModel.moveRecyclerItems(moveUp = false, item)
                 }
             }
         }
