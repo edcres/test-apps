@@ -9,11 +9,15 @@ import com.example.testroom.R
 
 class RoomOneToOneFragment : Fragment() {
 
+    private val fragmentTAG = "OneToOneFragTAG"
+    private lateinit var viewModelFactory: OneToOneViewModelFactory
+    private lateinit var viewModel: OneToOneViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_room_one_to_one, container, false)
+        val view = inflater.inflate(R.layout.fragment_room_one_to_one, container, false)
+        return view
     }
 }

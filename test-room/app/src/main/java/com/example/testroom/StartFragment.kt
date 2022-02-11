@@ -10,9 +10,10 @@ import androidx.navigation.Navigation
 
 class StartFragment : Fragment() {
 
-    lateinit var basicsBtn: Button
-    lateinit var oneToOneBtn: Button
-    lateinit var oneToManyBtn: Button
+    private lateinit var basicsBtn: Button
+    private lateinit var oneToOneBtn: Button
+    private lateinit var oneToManyBtn: Button
+    private lateinit var manyToManyBtn: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,6 +23,7 @@ class StartFragment : Fragment() {
         basicsBtn = view.findViewById(R.id.basics_btn)
         oneToOneBtn = view.findViewById(R.id.one_to_one_btn)
         oneToManyBtn = view.findViewById(R.id.one_to_many_btn)
+        manyToManyBtn = view.findViewById(R.id.many_to_many_btn)
 
         basicsBtn.setOnClickListener {
             Navigation.findNavController(view)
@@ -32,6 +34,9 @@ class StartFragment : Fragment() {
                 .navigate(R.id.action_startFragment_to_roomOneToOneFragment)
         }
         oneToManyBtn.setOnClickListener {
+            // todo:
+        }
+        manyToManyBtn.setOnClickListener {
             // todo:
         }
 

@@ -21,10 +21,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
  *      main thread.
  */
 
-// todo: delete db data and add more
-// todo: add a position attribute to the Entity
-//  - default position is at the bottom. So list size (add item to vm list first)
-
 class RoomBasicsFragment : Fragment() {
 
     private val fragmentTAG = "BasicFragTAG"
