@@ -1,12 +1,13 @@
-package com.example.testroom.onetoone.Data
+package com.example.testroom.onetoone.data
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.testroom.onetoone.Data.entities.WorkoutOneToOne
+import com.example.testroom.onetoone.data.entities.CarOneToOne
+import com.example.testroom.onetoone.data.entities.PersonOneToOne
 
-@Database(entities = arrayOf(WorkoutOneToOne::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(PersonOneToOne::class, CarOneToOne::class), version = 1, exportSchema = false)
 abstract class OneToOneDatabase : RoomDatabase() {
 
     abstract fun oneToOneDao(): OneToOneDao
@@ -14,7 +15,7 @@ abstract class OneToOneDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: OneToOneDatabase? = null
-        private const val DATABASE_NAME = "workout_one_to_one_database"
+        private const val DATABASE_NAME = "cars_one_to_one_database"
 
         fun getDatabase(context: Context): OneToOneDatabase {
             return INSTANCE ?: synchronized(this) {

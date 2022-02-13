@@ -21,7 +21,7 @@ interface WorkoutBasicsDao {
     @Update
     suspend fun updateWorkout(workout: WorkoutBasics)
 
-    @Query("UPDATE workout_table SET position=:newPosition WHERE position=:pastPosition")
+    @Query("UPDATE workout_table SET position = :newPosition WHERE position=:pastPosition")
     suspend fun updatePosition(pastPosition: Int, newPosition: Int)
 }
 

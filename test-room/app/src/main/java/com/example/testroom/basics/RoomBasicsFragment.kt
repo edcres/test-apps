@@ -40,7 +40,7 @@ class RoomBasicsFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_room_basics, container, false)
         viewModelFactory = WorkoutBasicsViewModelFactory(requireActivity().application)
-        viewModel= ViewModelProvider(this, viewModelFactory)[WorkoutBasicsViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[WorkoutBasicsViewModel::class.java]
         setUpRecyclerView(view)
         setUpWidgets(view)
         addItemFab.setOnClickListener {

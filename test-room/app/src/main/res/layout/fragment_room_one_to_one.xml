@@ -1,9 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".onetoone.RoomOneToOneFragment">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".onetoone.RoomOneToOneFragment">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/delete_all_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:src="@android:drawable/ic_menu_delete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/item_1_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:background="#FDCD85"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+
+                    <EditText
+                        android:id="@+id/person_txt_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="person"
+                        android:inputType="textPersonName" />
+
+                    <EditText
+                        android:id="@+id/car_txt_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="car"
+                        android:inputType="textPersonName" />
+
+                    <Button
+                        android:id="@+id/save_1_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginEnd="8dp"
+                        android:text="Save" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/item_2_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:background="#FDCD85"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+
+                    <EditText
+                        android:id="@+id/person_txt_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="person"
+                        android:inputType="textPersonName" />
+
+                    <EditText
+                        android:id="@+id/car_txt_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="car"
+                        android:inputType="textPersonName" />
+
+                    <Button
+                        android:id="@+id/save_2_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginEnd="8dp"
+                        android:text="Save" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/item_3_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:background="#FDCD85"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+
+                    <EditText
+                        android:id="@+id/person_txt_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="person"
+                        android:inputType="textPersonName" />
+
+                    <EditText
+                        android:id="@+id/car_txt_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="car"
+                        android:inputType="textPersonName" />
+
+                    <Button
+                        android:id="@+id/save_3_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginEnd="8dp"
+                        android:text="Save" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/item_4_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:background="#FDCD85"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+
+                    <EditText
+                        android:id="@+id/person_txt_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="person"
+                        android:inputType="textPersonName" />
+
+                    <EditText
+                        android:id="@+id/car_txt_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="car"
+                        android:inputType="textPersonName" />
+
+                    <Button
+                        android:id="@+id/save_4_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginEnd="8dp"
+                        android:text="Save" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/item_5_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:background="#FDCD85"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+
+                    <EditText
+                        android:id="@+id/person_txt_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="person"
+                        android:inputType="textPersonName" />
+
+                    <EditText
+                        android:id="@+id/car_txt_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="car"
+                        android:inputType="textPersonName" />
+
+                    <Button
+                        android:id="@+id/save_5_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginEnd="8dp"
+                        android:text="Save" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
