@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.testroom.onetoone.Data.OneToOneDatabase
 import com.example.testroom.onetoone.Data.OneToOneRepository
-import com.example.testroom.onetoone.Data.WorkoutOneToOne
+import com.example.testroom.onetoone.Data.entities.WorkoutOneToOne
 import kotlinx.coroutines.launch
 
 class OneToOneViewModel(application: Application): ViewModel() {
