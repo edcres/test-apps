@@ -9,7 +9,7 @@ import com.example.testroom.onetoone.data.entities.PersonOneToOne
 
 @Database(
     entities = arrayOf(PersonOneToOne::class, CarOneToOne::class),
-    version = 3,
+    version = 6,
     exportSchema = false
 )
 abstract class OneToOneDatabase : RoomDatabase() {

@@ -1,6 +1,5 @@
 package com.example.testroom.onetoone
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,9 +11,6 @@ import com.example.testroom.databinding.FragmentRoomOneToOneBinding
 import com.example.testroom.onetoone.data.entities.CarOneToOne
 import com.example.testroom.onetoone.data.entities.PersonAndCarOneToOne
 import com.example.testroom.onetoone.data.entities.PersonOneToOne
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 // https://developer.android.com/training/data-storage/room/relationships#kotlin
 
@@ -83,9 +79,8 @@ class RoomOneToOneFragment : Fragment() {
 //                    btnClicked(personTxt2.text.toString(), carTxt2.text.toString())
 //                    save2Btn.visibility = View.GONE
 //                }
-                viewModel.setPsAnsCsVar()
-                Log.d(fragmentTAG, "${viewModel.allPersonsAndCars}")
-
+                Log.d(fragmentTAG, "fragment: data pc = ${viewModel.allPersonsAndCars.value}")
+                Log.d(fragmentTAG, "fragment: data p = ${viewModel.allPersons.value}")
             }
             save3Btn.setOnClickListener {
                 if(personTxt3.text.toString().isNotEmpty() && carTxt3.text.toString().isNotEmpty()) {
@@ -111,7 +106,7 @@ class RoomOneToOneFragment : Fragment() {
     private fun btnClicked(personName: String, carName: String) {
         val person = PersonOneToOne(name = personName)
         // idk if I can add the 'personId' just yet to the car entity
-        val car = CarOneToOne(name = carName, personId = person.id)
+        val car = CarOneToOne(name = carName, personName = personName)
         Log.d(fragmentTAG, "btnClicked:\npersonObj: $person\ncarObj:$car")
         viewModel.insert(person)
         viewModel.insert(car)

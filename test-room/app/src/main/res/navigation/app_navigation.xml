@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_startFragment_to_roomBasicsFragment"
             app:destination="@id/roomBasicsFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_oneToManyFragment"
+            app:destination="@id/oneToManyFragment" />
     </fragment>
     <fragment
         android:id="@+id/roomOneToOneFragment"
@@ -27,4 +30,9 @@
         android:name="com.example.testroom.basics.RoomBasicsFragment"
         android:label="fragment_room_basics"
         tools:layout="@layout/fragment_room_basics" />
+    <fragment
+        android:id="@+id/oneToManyFragment"
+        android:name="com.example.testroom.onetomany.OneToManyFragment"
+        android:label="fragment_one_to_many"
+        tools:layout="@layout/fragment_one_to_many" />
 </navigation>

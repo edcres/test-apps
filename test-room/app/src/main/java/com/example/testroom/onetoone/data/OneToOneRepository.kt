@@ -8,10 +8,9 @@ import kotlinx.coroutines.flow.Flow
 class OneToOneRepository(private val oneToOneDao: OneToOneDao) {
 
     // todo: uncomment this
-//    val allPersonsAndCars: List<PersonAndCarOneToOne> = oneToOneDao.getPersonsAndCars()
-    fun getAllPersonsAndCars(): List<PersonAndCarOneToOne> {
-        return oneToOneDao.getPersonsAndCars()
-    }
+    val allPersonsAndCars: Flow<List<PersonAndCarOneToOne>> = oneToOneDao.getPersonsAndCars()
+
+    val allPersons: Flow<List<PersonOneToOne>> = oneToOneDao.getPersons()
 
 //    suspend fun getPersonsAndCarNames(): Flow<List<PersonAndCarOneToOne>> {
 //        return oneToOneDao.getPersonsAndCarNames()

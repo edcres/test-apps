@@ -11,9 +11,11 @@ interface OneToOneDao {
 
     // returns all instances of the data class that pairs the parent entity and the child entity.
     @Transaction    // Ensures that the whole operation is performed atomically.
-    @Query("SELECT * FROM one_to_one_person")
-//    fun getPersonsAndCars(): Flow<List<PersonAndCarOneToOne>>
-    fun getPersonsAndCars(): List<PersonAndCarOneToOne>
+    @Query("SELECT * FROM personOneToOne")
+    fun getPersonsAndCars(): Flow<List<PersonAndCarOneToOne>>
+
+    @Query("SELECT * FROM personOneToOne")
+    fun getPersons(): Flow<List<PersonOneToOne>>
 
 //    // todo: bug here
 //    @Query("SELECT one_to_one_person.name, one_to_one_car.name " +
@@ -33,10 +35,10 @@ interface OneToOneDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCar(carOneToOne: CarOneToOne)
 
-    @Query("DELETE FROM one_to_one_person")
+    @Query("DELETE FROM personOneToOne")
     suspend fun deleteAllPersons()
 
-    @Query("DELETE FROM one_to_one_car")
+    @Query("DELETE FROM carOneToOne")
     suspend fun deleteAllCars()
 
     // idk if I have to delete the relationship as well

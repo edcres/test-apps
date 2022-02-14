@@ -34,7 +34,8 @@ class StartFragment : Fragment() {
                 .navigate(R.id.action_startFragment_to_roomOneToOneFragment)
         }
         oneToManyBtn.setOnClickListener {
-            // todo:
+            Navigation.findNavController(view)
+                .navigate(R.id.action_startFragment_to_oneToManyFragment)
         }
         manyToManyBtn.setOnClickListener {
             // todo:

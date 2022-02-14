@@ -1,14 +1,13 @@
 package com.example.testroom.onetoone
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.testroom.onetoone.data.OneToOneDatabase
 import com.example.testroom.onetoone.data.OneToOneRepository
 import com.example.testroom.onetoone.data.entities.CarOneToOne
 import com.example.testroom.onetoone.data.entities.PersonAndCarOneToOne
 import com.example.testroom.onetoone.data.entities.PersonOneToOne
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class OneToOneViewModel(application: Application): ViewModel() {
@@ -17,12 +16,12 @@ class OneToOneViewModel(application: Application): ViewModel() {
     private val roomDb = OneToOneDatabase.getDatabase(application)
     private val repository = OneToOneRepository(roomDb.oneToOneDao())
     // todo: uncomment this
-    var allPersonsAndCars: List<PersonAndCarOneToOne>? = null
+    val allPersonsAndCars: LiveData<List<PersonAndCarOneToOne>> = repository.allPersonsAndCars.asLiveData()
+    val allPersons: LiveData<List<PersonOneToOne>> = repository.allPersons.asLiveData()
 
-    fun setPsAnsCsVar() {
-        CoroutineScope(Dispatchers.IO).launch {
-            allPersonsAndCars = repository.getAllPersonsAndCars()
-        }
+    init {
+        Log.d(TAG, "viewModel pc: ${allPersonsAndCars.value}")
+        Log.d(TAG, "viewModel c: ${allPersons.value}")
     }
 
     // DATABASE //

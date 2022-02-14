@@ -4,10 +4,12 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 data class PersonAndCarOneToOne (
-    @Embedded val person: PersonOneToOne,
+    @Embedded val personOneToOne: PersonOneToOne,
     @Relation(
-        parentColumn = "id",
-        entityColumn = "person_id"
+        parentColumn = "name",
+        entityColumn = "personName"
+//        parentColumn = "id",
+//        entityColumn = "person_id"
     )
-    val car: CarOneToOne
+    val carOneToOne: CarOneToOne
 )
