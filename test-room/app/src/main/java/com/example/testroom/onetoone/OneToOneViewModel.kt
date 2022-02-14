@@ -7,6 +7,8 @@ import com.example.testroom.onetoone.data.OneToOneRepository
 import com.example.testroom.onetoone.data.entities.CarOneToOne
 import com.example.testroom.onetoone.data.entities.PersonAndCarOneToOne
 import com.example.testroom.onetoone.data.entities.PersonOneToOne
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class OneToOneViewModel(application: Application): ViewModel() {
@@ -14,7 +16,14 @@ class OneToOneViewModel(application: Application): ViewModel() {
     private val TAG = "ViewModelTAG"
     private val roomDb = OneToOneDatabase.getDatabase(application)
     private val repository = OneToOneRepository(roomDb.oneToOneDao())
-    val allPersonsAndCars: LiveData<List<PersonAndCarOneToOne>> = repository.allPersonsAndCars.asLiveData()
+    // todo: uncomment this
+    var allPersonsAndCars: List<PersonAndCarOneToOne>? = null
+
+    fun setPsAnsCsVar() {
+        CoroutineScope(Dispatchers.IO).launch {
+            allPersonsAndCars = repository.getAllPersonsAndCars()
+        }
+    }
 
     // DATABASE //
     fun insert(person: PersonOneToOne) = viewModelScope.launch {

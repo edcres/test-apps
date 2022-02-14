@@ -12,17 +12,20 @@ interface OneToOneDao {
     // returns all instances of the data class that pairs the parent entity and the child entity.
     @Transaction    // Ensures that the whole operation is performed atomically.
     @Query("SELECT * FROM one_to_one_person")
-    fun getPersonsAndCars(): Flow<List<PersonAndCarOneToOne>>
+//    fun getPersonsAndCars(): Flow<List<PersonAndCarOneToOne>>
+    fun getPersonsAndCars(): List<PersonAndCarOneToOne>
 
-    @Query("SELECT one_to_one_person.name AS person_id, one_to_one_car.car AS car_id " +
-            "FROM one_to_one_person, one_to_one_car " +
-            "WHERE one_to_one_person.id = one_to_one_car.person_id")
-    suspend fun getPersonsAndCarNames(): Flow<List<PersonAndCarOneToOne>>
+//    // todo: bug here
+//    @Query("SELECT one_to_one_person.name, one_to_one_car.name " +
+//            "FROM one_to_one_person, one_to_one_car " +
+//            "WHERE one_to_one_person.id = one_to_one_car.person_id")
+//    fun getPersonsAndCarNames(): Flow<List<PersonAndCarOneToOne>>
 
-    @Transaction
-    @Query("SELECT * FROM one_to_one_car WHERE person_name = :personName")
-    suspend fun getPersonAndCarWithPersonName(personName: String):
-            Flow<List<PersonAndCarOneToOne>>
+//    // todo: bug here
+//    @Transaction
+//    @Query("SELECT * FROM one_to_one_car WHERE name = :personName")
+//    fun getPersonAndCarWithPersonName(personName: String):
+//            Flow<List<PersonAndCarOneToOne>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPerson(personOneToOne: PersonOneToOne)

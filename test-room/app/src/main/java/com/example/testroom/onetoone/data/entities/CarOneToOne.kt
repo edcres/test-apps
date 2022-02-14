@@ -11,12 +11,10 @@ data class CarOneToOne (
     @ColumnInfo(name = "id")
     val id: Long = 0,
 
-    @ColumnInfo(name = "car")
-    val car: String,
+    @ColumnInfo(name = "name")
+    val name: String,
 
-    @ColumnInfo(name = "person_name")
-    val personName: String,
-
+    // this is the relation
     @ColumnInfo(name = "person_id")
     val personId: Long
 )

@@ -7,7 +7,11 @@ import androidx.room.RoomDatabase
 import com.example.testroom.onetoone.data.entities.CarOneToOne
 import com.example.testroom.onetoone.data.entities.PersonOneToOne
 
-@Database(entities = arrayOf(PersonOneToOne::class, CarOneToOne::class), version = 1, exportSchema = false)
+@Database(
+    entities = arrayOf(PersonOneToOne::class, CarOneToOne::class),
+    version = 3,
+    exportSchema = false
+)
 abstract class OneToOneDatabase : RoomDatabase() {
 
     abstract fun oneToOneDao(): OneToOneDao

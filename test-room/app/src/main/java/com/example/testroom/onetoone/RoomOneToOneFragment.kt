@@ -12,6 +12,9 @@ import com.example.testroom.databinding.FragmentRoomOneToOneBinding
 import com.example.testroom.onetoone.data.entities.CarOneToOne
 import com.example.testroom.onetoone.data.entities.PersonAndCarOneToOne
 import com.example.testroom.onetoone.data.entities.PersonOneToOne
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // https://developer.android.com/training/data-storage/room/relationships#kotlin
 
@@ -55,9 +58,13 @@ class RoomOneToOneFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
             lifecycleOwner = viewLifecycleOwner
-            viewModel.allPersonsAndCars.observe(viewLifecycleOwner) { personAndCar ->
-                setStartDataToView(personAndCar)
-            }
+
+            // todo: uncomment this
+//            Log.d(fragmentTAG, "allPersonsAndCars \n${viewModel.allPersonsAndCars.value}")
+//            viewModel.allPersonsAndCars.observe(viewLifecycleOwner) { personAndCar ->
+//                Log.d(fragmentTAG, "onViewCreated: ${personAndCar}")
+////                setStartDataToView(personAndCar)
+//            }
             deleteAllBtn.setOnClickListener{
                 viewModel.deleteAll()
             }
@@ -65,13 +72,20 @@ class RoomOneToOneFragment : Fragment() {
                 if(personTxt1.text.toString().isNotEmpty() && carTxt1.text.toString().isNotEmpty()) {
                     btnClicked(personTxt1.text.toString(), carTxt1.text.toString())
                     save1Btn.visibility = View.GONE
+
+                    Log.d(fragmentTAG, "\nperson1: ${personTxt1.text.toString()}, " +
+                            "car1: ${carTxt1.text.toString()}")
                 }
             }
             save2Btn.setOnClickListener {
-                if(personTxt2.text.toString().isNotEmpty() && carTxt2.text.toString().isNotEmpty()) {
-                    btnClicked(personTxt2.text.toString(), carTxt2.text.toString())
-                    save2Btn.visibility = View.GONE
-                }
+                // todo: uncomment this
+//                if(personTxt2.text.toString().isNotEmpty() && carTxt2.text.toString().isNotEmpty()) {
+//                    btnClicked(personTxt2.text.toString(), carTxt2.text.toString())
+//                    save2Btn.visibility = View.GONE
+//                }
+                viewModel.setPsAnsCsVar()
+                Log.d(fragmentTAG, "${viewModel.allPersonsAndCars}")
+
             }
             save3Btn.setOnClickListener {
                 if(personTxt3.text.toString().isNotEmpty() && carTxt3.text.toString().isNotEmpty()) {
@@ -97,7 +111,8 @@ class RoomOneToOneFragment : Fragment() {
     private fun btnClicked(personName: String, carName: String) {
         val person = PersonOneToOne(name = personName)
         // idk if I can add the 'personId' just yet to the car entity
-        val car = CarOneToOne(car = carName, personName = personName, personId = person.id)
+        val car = CarOneToOne(name = carName, personId = person.id)
+        Log.d(fragmentTAG, "btnClicked:\npersonObj: $person\ncarObj:$car")
         viewModel.insert(person)
         viewModel.insert(car)
     }
@@ -106,14 +121,14 @@ class RoomOneToOneFragment : Fragment() {
         binding?.apply {
             val personTexts = listOf(personTxt1, personTxt2, personTxt3, personTxt4, personTxt5)
             val carTexts = listOf(carTxt1, carTxt2, carTxt3, carTxt4, carTxt5)
-            for (i in personAndCar.indices) {
-                val personTxtMsg = "${personAndCar[i].person.id} ${personAndCar[i].person.name}"
-                val carTxtMsg = "${personAndCar[i].car.id} ${personAndCar[i].car.car}"
-                personTexts[i].setText(personTxtMsg)
-                carTexts[i].setText(carTxtMsg)
-                Log.d(fragmentTAG, "relation proof: ${personAndCar[i].person.name}" +
-                        " ${personAndCar[i].car.personName}")
-            }
+//            for (i in personAndCar.indices) {
+//                val personTxtMsg = "${personAndCar[i].person.id} ${personAndCar[i].person.name}"
+//                val carTxtMsg = "${personAndCar[i].car.id} ${personAndCar[i].car.name}"
+//                personTexts[i].setText(personTxtMsg)
+//                carTexts[i].setText(carTxtMsg)
+//                Log.d(fragmentTAG, "relation proof: ${personAndCar[i].person.name}" +
+//                        " ${personAndCar[i].car.personName}")
+//            }
         }
 
     }

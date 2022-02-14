@@ -6,8 +6,8 @@ import androidx.room.Relation
 data class PersonAndCarOneToOne (
     @Embedded val person: PersonOneToOne,
     @Relation(
-        parentColumn = "person_id",
-        entityColumn = "car_id"
+        parentColumn = "id",
+        entityColumn = "person_id"
     )
     val car: CarOneToOne
 )
