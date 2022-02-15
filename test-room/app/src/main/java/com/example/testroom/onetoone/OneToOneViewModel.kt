@@ -14,7 +14,7 @@ class OneToOneViewModel(application: Application): ViewModel() {
 
     private val TAG = "ViewModelTAG"
     private val roomDb = OneToOneDatabase.getDatabase(application)
-    private val repository = OneToOneRepository(roomDb.oneToOneDao())
+    private val repository = OneToOneRepository(roomDb.oneToOneDao)
     // todo: uncomment this
     val allPersonsAndCars: LiveData<List<PersonAndCarOneToOne>> = repository.allPersonsAndCars.asLiveData()
     val allPersons: LiveData<List<PersonOneToOne>> = repository.allPersons.asLiveData()

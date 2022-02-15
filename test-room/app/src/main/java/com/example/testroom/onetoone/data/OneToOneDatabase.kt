@@ -14,7 +14,8 @@ import com.example.testroom.onetoone.data.entities.PersonOneToOne
 )
 abstract class OneToOneDatabase : RoomDatabase() {
 
-    abstract fun oneToOneDao(): OneToOneDao
+    abstract val oneToOneDao: OneToOneDao
+//    abstract fun oneToOneDao(): OneToOneDao
 
     companion object {
         @Volatile
@@ -27,7 +28,7 @@ abstract class OneToOneDatabase : RoomDatabase() {
                     context.applicationContext,
                     OneToOneDatabase::class.java,
                     DATABASE_NAME
-                // todo: probable don't allow destructive migration in a real app
+                // todo: probably don't allow destructive migration in a real app
                 ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 instance

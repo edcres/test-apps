@@ -1,39 +1,77 @@
 package com.example.testroom.onetomany
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.example.testroom.R
+import com.example.testroom.databinding.FragmentOneToManyBinding
+import com.example.testroom.onetomany.data.OneToManyDao
+import com.example.testroom.onetomany.data.OneToManyDatabase
+import com.example.testroom.onetomany.data.entities.Director
+import com.example.testroom.onetomany.data.entities.School
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class OneToManyFragment : Fragment() {
+
+    private val fragmentTAG = "OneToManyFragTAG"
+    private var binding: FragmentOneToManyBinding? = null
+    private lateinit var dao: OneToManyDao
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_one_to_many, container, false)
+        val fragmentBinding = FragmentOneToManyBinding
+            .inflate(inflater, container, false)
+        binding = fragmentBinding
+        return fragmentBinding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment OneToManyFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            OneToManyFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        dao = OneToManyDatabase.getDatabase(requireContext()).oneToManyDao
+        binding?.apply {
+            saveBtn.setOnClickListener {
+                if (directorEt.text.isNotEmpty() && schoolEt.text.isNotEmpty()) {
+                    Log.i(fragmentTAG, "save pressed")
+                    CoroutineScope(Dispatchers.IO).launch {
+                        dao.insertSchool(School(schoolEt.text.toString()))
+                        dao.insertDirector(
+                            Director(directorEt.text.toString(), schoolEt.text.toString())
+                        )
+                        withContext(Dispatchers.Main) {
+                            schoolEt.text.clear()
+                            directorEt.text.clear()
+                        }
+                    }
+                } else Log.i(fragmentTAG, "Type something")
+            }
+
+            deleteAllBtn.setOnClickListener {
+                Log.i(fragmentTAG, "delete all pressed")
+                CoroutineScope(Dispatchers.IO).launch {
+                    dao.deleteAllSchool()
+                    dao.deleteAllDirector()
                 }
             }
+
+            actionBtn.setOnClickListener {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val schoolsAndDirectors = dao.getSchoolsAndDirectors()
+                    Log.d(fragmentTAG, "schoolsAndDirectors size: ${schoolsAndDirectors.size}")
+                    for(i in 0 until schoolsAndDirectors.size) {
+                        Log.d(fragmentTAG, "schoolsAndDirectors: \n ${schoolsAndDirectors[i]}")
+                    }
+                }
+            }
+        }
     }
 }
