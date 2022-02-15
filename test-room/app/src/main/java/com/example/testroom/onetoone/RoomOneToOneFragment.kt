@@ -55,12 +55,11 @@ class RoomOneToOneFragment : Fragment() {
         binding?.apply {
             lifecycleOwner = viewLifecycleOwner
 
-            // todo: uncomment this
-//            Log.d(fragmentTAG, "allPersonsAndCars \n${viewModel.allPersonsAndCars.value}")
-//            viewModel.allPersonsAndCars.observe(viewLifecycleOwner) { personAndCar ->
-//                Log.d(fragmentTAG, "onViewCreated: ${personAndCar}")
-////                setStartDataToView(personAndCar)
-//            }
+            Log.d(fragmentTAG, "allPersonsAndCars \n${viewModel.allPersonsAndCars.value}")
+            viewModel.allPersonsAndCars.observe(viewLifecycleOwner) { personAndCar ->
+                Log.d(fragmentTAG, "onViewCreated: ${personAndCar}")
+                setStartDataToView(personAndCar)
+            }
             deleteAllBtn.setOnClickListener{
                 viewModel.deleteAll()
             }
@@ -74,13 +73,10 @@ class RoomOneToOneFragment : Fragment() {
                 }
             }
             save2Btn.setOnClickListener {
-                // todo: uncomment this
-//                if(personTxt2.text.toString().isNotEmpty() && carTxt2.text.toString().isNotEmpty()) {
-//                    btnClicked(personTxt2.text.toString(), carTxt2.text.toString())
-//                    save2Btn.visibility = View.GONE
-//                }
-                Log.d(fragmentTAG, "fragment: data pc = ${viewModel.allPersonsAndCars.value}")
-                Log.d(fragmentTAG, "fragment: data p = ${viewModel.allPersons.value}")
+                if(personTxt2.text.toString().isNotEmpty() && carTxt2.text.toString().isNotEmpty()) {
+                    btnClicked(personTxt2.text.toString(), carTxt2.text.toString())
+                    save2Btn.visibility = View.GONE
+                }
             }
             save3Btn.setOnClickListener {
                 if(personTxt3.text.toString().isNotEmpty() && carTxt3.text.toString().isNotEmpty()) {
@@ -116,14 +112,15 @@ class RoomOneToOneFragment : Fragment() {
         binding?.apply {
             val personTexts = listOf(personTxt1, personTxt2, personTxt3, personTxt4, personTxt5)
             val carTexts = listOf(carTxt1, carTxt2, carTxt3, carTxt4, carTxt5)
-//            for (i in personAndCar.indices) {
-//                val personTxtMsg = "${personAndCar[i].person.id} ${personAndCar[i].person.name}"
-//                val carTxtMsg = "${personAndCar[i].car.id} ${personAndCar[i].car.name}"
-//                personTexts[i].setText(personTxtMsg)
-//                carTexts[i].setText(carTxtMsg)
-//                Log.d(fragmentTAG, "relation proof: ${personAndCar[i].person.name}" +
-//                        " ${personAndCar[i].car.personName}")
-//            }
+            for (i in personAndCar.indices) {
+                val personTxtMsg = personAndCar[i].personOneToOne.name
+                val carTxtMsg = "${personAndCar[i].carOneToOne.name} of" +
+                        " ${personAndCar[i].carOneToOne.personName}"
+                personTexts[i].setText(personTxtMsg)
+                carTexts[i].setText(carTxtMsg)
+                Log.d(fragmentTAG, "relation $i: ${personAndCar[i].personOneToOne.name}" +
+                        " ${personAndCar[i].carOneToOne.personName}")
+            }
         }
 
     }
