@@ -4,19 +4,20 @@ import androidx.room.*
 import com.example.testroom.onetomany.data.entities.Director
 import com.example.testroom.onetomany.data.entities.School
 import com.example.testroom.onetomany.data.entities.SchoolAndDirector
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface OneToManyDao {
 
     @Transaction
     @Query("SELECT * FROM school")
-    fun getSchoolsAndDirectors(): List<SchoolAndDirector>
+    fun getSchoolsAndDirectors(): Flow<List<SchoolAndDirector>>
 
     @Query("DELETE FROM school")
-    fun deleteAllSchool()
+    suspend fun deleteAllSchool()
 
     @Query("DELETE FROM director")
-    fun deleteAllDirector()
+    suspend fun deleteAllDirector()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSchool(school: School)

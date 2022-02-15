@@ -8,20 +8,43 @@ import com.example.testroom.onetoone.data.OneToOneRepository
 import com.example.testroom.onetoone.data.entities.CarOneToOne
 import com.example.testroom.onetoone.data.entities.PersonAndCarOneToOne
 import com.example.testroom.onetoone.data.entities.PersonOneToOne
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class OneToOneViewModel(application: Application): ViewModel() {
 
     private val TAG = "ViewModelTAG"
     private val roomDb = OneToOneDatabase.getDatabase(application)
     private val repository = OneToOneRepository(roomDb.oneToOneDao)
-    // todo: uncomment this
-    val allPersonsAndCars: LiveData<List<PersonAndCarOneToOne>> = repository.allPersonsAndCars.asLiveData()
-    val allPersons: LiveData<List<PersonOneToOne>> = repository.allPersons.asLiveData()
+    private var _allPersonsAndCars = MutableLiveData<MutableList<PersonAndCarOneToOne>>()
+    val allPersonsAndCars: LiveData<MutableList<PersonAndCarOneToOne>> get() = _allPersonsAndCars
+    private var _allPersons = MutableLiveData<MutableList<PersonOneToOne>>()
+    val allPersons: LiveData<MutableList<PersonOneToOne>> get() = _allPersons
 
     init {
-        Log.d(TAG, "viewModel pc: ${allPersonsAndCars.value}")
-        Log.d(TAG, "viewModel c: ${allPersons.value}")
+        Log.d(TAG, "ViewModel init")
+        setStoredToLiveData()
+    }
+
+    // HELPER //
+    private fun setStoredToLiveData() {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.allPersonsAndCars.collect {
+                Log.d(TAG, "pc collect happens")
+                _allPersonsAndCars.postValue(it.toMutableList())
+                Log.d(TAG, "vm: allPersonsAndCars\n$it")
+            }
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.allPersons.collect {
+                Log.d(TAG, "p collect happens")
+                _allPersons.postValue(it.toMutableList())
+                Log.d(TAG, "vm: allPersons\n$it")
+            }
+        }
     }
 
     // DATABASE //
