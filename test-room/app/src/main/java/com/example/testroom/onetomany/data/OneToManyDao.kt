@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.Flow
 interface OneToManyDao {
 
     @Transaction
-    @Query("SELECT * FROM school")
+    @Query("SELECT * FROM school_table")
     fun getSchoolsAndDirectors(): Flow<List<SchoolAndDirector>>
 
-    @Query("DELETE FROM school")
+    @Query("DELETE FROM school_table")
     suspend fun deleteAllSchool()
 
-    @Query("DELETE FROM director")
+    @Query("DELETE FROM director_table")
     suspend fun deleteAllDirector()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

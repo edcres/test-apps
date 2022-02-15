@@ -12,7 +12,7 @@ import com.example.testroom.onetomany.data.entities.School
         School::class,
         Director::class
     ],
-    version = 1,
+    version = 4,
     exportSchema = false
 )
 abstract class OneToManyDatabase : RoomDatabase() {

@@ -48,9 +48,12 @@ class OneToManyFragment : Fragment() {
                 if (directorEt.text.isNotEmpty() && schoolEt.text.isNotEmpty()) {
                     Log.i(fragmentTAG, "save pressed")
                     CoroutineScope(Dispatchers.IO).launch {
-                        dao.insertSchool(School(schoolEt.text.toString()))
+                        dao.insertSchool(School(schoolName = schoolEt.text.toString()))
                         dao.insertDirector(
-                            Director(directorEt.text.toString(), schoolEt.text.toString())
+                            Director(
+                                directorName = directorEt.text.toString(),
+                                schoolName = schoolEt.text.toString()
+                            )
                         )
                         withContext(Dispatchers.Main) {
                             schoolEt.text.clear()
@@ -71,22 +74,13 @@ class OneToManyFragment : Fragment() {
             actionBtn.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
 
-
                     dao.getSchoolsAndDirectors().collect {
-//                        _schoolsAndDirectors.postValue(it.toMutableList())
-
+                        _schoolsAndDirectors.postValue(it.toMutableList())
                         Log.d(fragmentTAG, "schoolsAndDirectors size: ${it.size}")
                         for(i in 0 until it.size) {
                             Log.d(fragmentTAG, "schoolsAndDirectors: \n ${it[i]}")
                         }
                     }
-
-//                    val schoolsAndDirectorsLiveData = dao.getSchoolsAndDirectors().asLiveData()
-//                    val schoolsAndDirectors = schoolsAndDirectorsLiveData.value!!
-//                    Log.d(fragmentTAG, "schoolsAndDirectors size: ${schoolsAndDirectors.size}")
-//                    for(i in 0 until schoolsAndDirectors.size) {
-//                        Log.d(fragmentTAG, "schoolsAndDirectors: \n ${schoolsAndDirectors[i]}")
-//                    }
                 }
             }
         }

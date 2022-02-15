@@ -4,10 +4,10 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 data class SchoolAndDirector(
-    @Embedded val school: School,
+    @Embedded val school_table: School,
     @Relation(
-        parentColumn = "schoolName",
-        entityColumn = "schoolName"
+        parentColumn = "school_name",
+        entityColumn = "school_name"
     )
-    val director: Director
+    val director_table: Director
 )
