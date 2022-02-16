@@ -26,6 +26,9 @@ import kotlinx.coroutines.withContext
 //      entity and entityColumn set to the name of the column of the child
 //      entity that references the parent entity's primary key.
 
+// todo: find a good way to get the foreign key into the Workout entity.
+// maybe the answer is here: https://www.youtube.com/watch?v=DyEmgDTQmxw
+
 class OneToManyFragment : Fragment() {
 
     private val fragmentTAG = "OneToManyFragTAG"
@@ -54,17 +57,23 @@ class OneToManyFragment : Fragment() {
                     CoroutineScope(Dispatchers.IO).launch {
 
 
-
+                        /**
+                         * TODO: to figure out another time
+                         *
+                         * I need to get the group id when I set the group to th db, the use that
+                         *      as a foreign key in the Workout entity.
+                         * - The obvious solution is to make a separate query and get the Group id
+                         * - But I think there is a better solution. (the correct solution)
+                         */
 
                         // todo: get the group id concurrently
-                        val groupId = 1 //dao.insertGroup(Group(groupName = groupEt.text.toString()))
                         dao.insertGroup(Group(groupName = groupEt.text.toString()))
-                        dao.insertWorkout(
-                            Workout(
-                                workoutName = workoutEt.text.toString(),
-                                groupId = groupId
-                            )
-                        )
+//                        dao.insertWorkout(
+//                            Workout(
+//                                workoutName = workoutEt.text.toString(),
+//                                groupId = groupId
+//                            )
+//                        )
 
 
 

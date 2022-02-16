@@ -21,6 +21,7 @@ interface OneToManyDao {
     suspend fun deleteAllWorkouts()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @PrimaryKey
     suspend fun insertGroup(workout: Group)//: Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

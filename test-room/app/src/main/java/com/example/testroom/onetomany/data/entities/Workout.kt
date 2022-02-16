@@ -2,9 +2,21 @@ package com.example.testroom.onetomany.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "workout_table")
+@Entity(
+    tableName = "workout_table",
+    foreignKeys = [
+        ForeignKey(
+            entity = Group::class,
+            parentColumns = ["id"],
+            childColumns = ["group_id"],
+            onUpdate = ForeignKey.CASCADE,
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class Workout(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
