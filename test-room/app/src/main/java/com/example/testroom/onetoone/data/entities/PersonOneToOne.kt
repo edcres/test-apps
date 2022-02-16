@@ -1,6 +1,5 @@
 package com.example.testroom.onetoone.data.entities
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

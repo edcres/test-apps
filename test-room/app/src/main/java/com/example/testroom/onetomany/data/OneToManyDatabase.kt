@@ -4,15 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.testroom.onetomany.data.entities.Director
-import com.example.testroom.onetomany.data.entities.School
+import com.example.testroom.onetomany.data.entities.Group
+import com.example.testroom.onetomany.data.entities.Workout
 
 @Database(
     entities = [
-        School::class,
-        Director::class
+        Workout::class,
+        Group::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class OneToManyDatabase : RoomDatabase() {

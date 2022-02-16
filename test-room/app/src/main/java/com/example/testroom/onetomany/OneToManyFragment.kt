@@ -7,27 +7,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.lifecycleScope
-import com.example.testroom.R
 import com.example.testroom.databinding.FragmentOneToManyBinding
 import com.example.testroom.onetomany.data.OneToManyDao
 import com.example.testroom.onetomany.data.OneToManyDatabase
-import com.example.testroom.onetomany.data.entities.Director
-import com.example.testroom.onetomany.data.entities.School
-import com.example.testroom.onetomany.data.entities.SchoolAndDirector
+import com.example.testroom.onetomany.data.entities.Group
+import com.example.testroom.onetomany.data.entities.Workout
+import com.example.testroom.onetomany.data.entities.GroupAndWorkout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// The child entity must include a variable that is a reference to the
+//      primary key of the parent entity.
+
+// With parentColumn set to the name of the primary key column of the parent
+//      entity and entityColumn set to the name of the column of the child
+//      entity that references the parent entity's primary key.
+
 class OneToManyFragment : Fragment() {
 
     private val fragmentTAG = "OneToManyFragTAG"
     private var binding: FragmentOneToManyBinding? = null
     private lateinit var dao: OneToManyDao
-    private var _schoolsAndDirectors = MutableLiveData<MutableList<SchoolAndDirector>>()
+    private var _groupAndWorkouts = MutableLiveData<MutableList<GroupAndWorkout>>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,19 +49,29 @@ class OneToManyFragment : Fragment() {
         dao = OneToManyDatabase.getDatabase(requireContext()).oneToManyDao
         binding?.apply {
             saveBtn.setOnClickListener {
-                if (directorEt.text.isNotEmpty() && schoolEt.text.isNotEmpty()) {
+                if (groupEt.text.isNotEmpty() && workoutEt.text.isNotEmpty()) {
                     Log.i(fragmentTAG, "save pressed")
                     CoroutineScope(Dispatchers.IO).launch {
-                        dao.insertSchool(School(schoolName = schoolEt.text.toString()))
-                        dao.insertDirector(
-                            Director(
-                                directorName = directorEt.text.toString(),
-                                schoolName = schoolEt.text.toString()
+
+
+
+
+                        // todo: get the group id concurrently
+                        val groupId = 1 //dao.insertGroup(Group(groupName = groupEt.text.toString()))
+                        dao.insertGroup(Group(groupName = groupEt.text.toString()))
+                        dao.insertWorkout(
+                            Workout(
+                                workoutName = workoutEt.text.toString(),
+                                groupId = groupId
                             )
                         )
+
+
+
+
                         withContext(Dispatchers.Main) {
-                            schoolEt.text.clear()
-                            directorEt.text.clear()
+                            groupEt.text.clear()
+                            workoutEt.text.clear()
                         }
                     }
                 } else Log.i(fragmentTAG, "Type something")
@@ -66,19 +80,19 @@ class OneToManyFragment : Fragment() {
             deleteAllBtn.setOnClickListener {
                 Log.i(fragmentTAG, "delete all pressed")
                 CoroutineScope(Dispatchers.IO).launch {
-                    dao.deleteAllSchool()
-                    dao.deleteAllDirector()
+                    dao.deleteAllGroups()
+                    dao.deleteAllWorkouts()
                 }
             }
 
             actionBtn.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
 
-                    dao.getSchoolsAndDirectors().collect {
-                        _schoolsAndDirectors.postValue(it.toMutableList())
-                        Log.d(fragmentTAG, "schoolsAndDirectors size: ${it.size}")
+                    dao.getGroupsAndWorkouts().collect {
+                        _groupAndWorkouts.postValue(it.toMutableList())
+                        Log.d(fragmentTAG, "getGroupsAndWorkouts size: ${it.size}")
                         for(i in 0 until it.size) {
-                            Log.d(fragmentTAG, "schoolsAndDirectors: \n ${it[i]}")
+                            Log.d(fragmentTAG, "getGroupsAndWorkouts: \n ${it[i]}")
                         }
                     }
                 }
