@@ -7,6 +7,24 @@
     android:background="#7463B3"
     tools:context=".addwidgettolayout.AddWidgetToLayoutActivity">
 
+    <Button
+        android:id="@+id/add_layout_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="add layout"
+        android:layout_margin="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/remove_layout_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="remove layout"
+        android:layout_margin="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/add_layout_btn" />
+
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -17,7 +35,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/added_widget_containers"
+            android:id="@+id/added_widget_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
