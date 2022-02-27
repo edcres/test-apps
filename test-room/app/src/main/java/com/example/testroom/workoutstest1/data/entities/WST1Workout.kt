@@ -2,10 +2,22 @@ package com.example.testroom.workoutstest1.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.example.testroom.FIRST_TAB_TITLE
 
-@Entity(tableName = "wst1_workout_table")
+@Entity(
+    tableName = "wst1_workout_table",
+    foreignKeys = [
+        ForeignKey(
+            entity = WST1Group::class,
+            parentColumns = ["group_name"],
+            childColumns = ["workout_group"],
+            onUpdate = ForeignKey.CASCADE,
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class WST1Workout (
     @PrimaryKey
     @ColumnInfo(name = "this_workout_name")

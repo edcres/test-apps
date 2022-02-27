@@ -16,14 +16,22 @@
             app:layout_constraintTop_toBottomOf="@+id/action_btn" />
 
         <Button
-            android:id="@+id/action_btn"
+            android:id="@+id/clear_texts_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="action"
+            android:text="clear texts"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/add_group_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="add group"
+            app:layout_constraintBottom_toTopOf="@+id/clear_texts_btn"
+            app:layout_constraintStart_toEndOf="@+id/group_et" />
 
         <EditText
             android:id="@+id/workout_title_et"
@@ -31,7 +39,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name"
+            android:hint="workout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -129,10 +137,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
             android:hint="group"
-            app:layout_constraintBottom_toTopOf="@+id/action_btn"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/clear_texts_btn"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
