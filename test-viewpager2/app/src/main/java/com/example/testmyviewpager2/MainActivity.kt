@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // todo: make dynamic tabs activity
     private fun dynamicTabsOnClick() {
         val dynamicTabsButton = findViewById<Button>(R.id.dynamic_tabs_button)
         dynamicTabsButton.setOnClickListener {

@@ -14,6 +14,7 @@ class StartFragment : Fragment() {
     private lateinit var oneToOneBtn: Button
     private lateinit var oneToManyBtn: Button
     private lateinit var manyToManyBtn: Button
+    private lateinit var testWorkout1Btn: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,6 +25,7 @@ class StartFragment : Fragment() {
         oneToOneBtn = view.findViewById(R.id.one_to_one_btn)
         oneToManyBtn = view.findViewById(R.id.one_to_many_btn)
         manyToManyBtn = view.findViewById(R.id.many_to_many_btn)
+        testWorkout1Btn = view.findViewById(R.id.test_workout_1_btn)
 
         basicsBtn.setOnClickListener {
             Navigation.findNavController(view)
@@ -39,6 +41,10 @@ class StartFragment : Fragment() {
         }
         manyToManyBtn.setOnClickListener {
             // todo:
+        }
+        testWorkout1Btn.setOnClickListener {
+            Navigation.findNavController(view)
+                .navigate(R.id.action_startFragment_to_workoutsTest1Fragment)
         }
 
         return view

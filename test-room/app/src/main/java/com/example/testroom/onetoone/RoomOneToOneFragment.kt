@@ -20,7 +20,7 @@ import com.example.testroom.onetoone.data.entities.PersonOneToOne
 //      primary key of the other entity.
 /**
  * There are 2 approaches to declare Room relationships.
- * - Intermediate data class (older)
+ * - Intermediate data class (older) (most common)
  *      - Have to declare a separate Class (not @Entity) that represents
  *          the relationship. (ex. UserAndBook)
  * - Multimap return types (newer. Room 2.4.0 and higher)

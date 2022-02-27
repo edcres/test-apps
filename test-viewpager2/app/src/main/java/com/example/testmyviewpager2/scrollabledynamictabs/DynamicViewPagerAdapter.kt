@@ -8,11 +8,11 @@ import com.example.testmyviewpager2.*
 
 class DynamicViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
 
-    private val theActivity = DynamicViewPagerActivity()
+//    private val theActivity = DynamicViewPagerActivity()
 
     override fun createFragment(position: Int): Fragment {
         // Used this to change the text inside each fragment
-        return DynamicFragment.getInstance(titles.size-1)
+        return  DynamicFragment.getInstance(titles.size-1)
     }
 
     override fun getItemCount(): Int {
@@ -41,7 +41,7 @@ class DynamicViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStat
         if(!titlesOrdinals.containsKey(title)) {
             titlesOrdinals[title] = ordinal
         }
-        notifyDataSetChanged()
+        notifyItemInserted(ordinal)
         Log.d("${MY_LOG}created", "\t\t\t $titles")
         Log.d("${MY_LOG}created", "\t\t\t $titlesOrdinals")
     }
@@ -49,6 +49,7 @@ class DynamicViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStat
     fun removeTab(name: String) {
         titles.remove(name)
         notifyDataSetChanged()
+//        notifyItemRemoved(ordinal)
         Log.d("${MY_LOG}removeTab", "----------------")
     }
 

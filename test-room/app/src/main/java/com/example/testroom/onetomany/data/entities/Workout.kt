@@ -24,5 +24,5 @@ data class Workout(
     @ColumnInfo(name = "workout_name")
     val workoutName: String,
     @ColumnInfo(name = "group_id")
-    val groupId: Int     // todo: this might cause a bug when the long can't be turned into an int
+    val groupId: Int
 )

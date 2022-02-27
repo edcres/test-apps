@@ -36,7 +36,10 @@ class DynamicViewPagerActivity : AppCompatActivity() {
         binding!!.dynamicViewPager.adapter = activityViewPagerAdapter
 
         // Set the title of the tabs
-        TabLayoutMediator(binding!!.dynamicTabLayout, binding!!.dynamicViewPager) { tab, position ->
+        TabLayoutMediator(
+            binding!!.dynamicTabLayout,
+            binding!!.dynamicViewPager
+        ) { tab, position ->
             tab.text = titles[position]
         }.attach()
     }
