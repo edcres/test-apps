@@ -11,6 +11,7 @@ import com.example.testroom.workoutstest1.data.entities.WST1Set
 import com.example.testroom.workoutstest1.data.entities.WST1Workout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class WrkTst1ViewModel : ViewModel() {

@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.testroom.workoutstest1.data.daos.WST1GroupDao
+import com.example.testroom.workoutstest1.data.daos.WST1SetDao
+import com.example.testroom.workoutstest1.data.daos.WST1WorkoutDao
 import com.example.testroom.workoutstest1.data.entities.WST1Group
 import com.example.testroom.workoutstest1.data.entities.WST1Set
 import com.example.testroom.workoutstest1.data.entities.WST1Workout
@@ -13,9 +16,9 @@ import com.example.testroom.workoutstest1.data.entities.WST1Workout
     exportSchema = false)
 abstract class WST1Database : RoomDatabase() {
 
-    abstract fun groupDao(): WST1Group
-    abstract fun workoutDao(): WST1Workout
-    abstract fun setDao(): WST1Set
+    abstract fun groupDao(): WST1GroupDao
+    abstract fun workoutDao(): WST1WorkoutDao
+    abstract fun setDao(): WST1SetDao
 
     companion object {
         @Volatile
