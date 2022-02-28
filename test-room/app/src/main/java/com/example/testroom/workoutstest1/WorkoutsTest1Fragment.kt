@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
-import com.example.testroom.R
+import com.example.testroom.FIRST_TAB_TITLE
 import com.example.testroom.databinding.FragmentWorkoutsTest1Binding
 import com.example.testroom.workoutstest1.data.entities.WST1Group
 import com.example.testroom.workoutstest1.data.entities.WST1Set
@@ -52,10 +52,13 @@ class WorkoutsTest1Fragment : Fragment() {
             // (ie: calves inner, calves outer)
             workoutTitleEt.setOnClickListener {
                 if (workoutTitleEt.text.toString() == "") {
+                    val groupTitle = if(groupEt.text.toString().isEmpty()) {
+                        FIRST_TAB_TITLE
+                    } else groupEt.text.toString()
                     viewModel.insertWorkout(
                         WST1Workout(
                             "",
-                            groupEt.text.toString()
+                            groupTitle
                         )
                     )
                 }
@@ -68,79 +71,98 @@ class WorkoutsTest1Fragment : Fragment() {
                 viewModel.updateTitle(thisWorkout)
             }
             repsTxt1.doAfterTextChanged {
-                val workoutName = workoutTitleEt.text.toString()
-                viewModel.updateRep(
-                    WST1Set(
-                        workoutPlusSet = "$workoutName$1",
-                        workoutName,
-                        set = 1,
-                        reps = it.toString().toInt(),
-                        weight = weightTxt1.toString().toDouble()
-                    )
-                )
+                updateReps(1, it.toString().toInt(), weightTxt1.toString().toDouble())
             }
             repsTxt2.doAfterTextChanged {
-                val workoutName = workoutTitleEt.text.toString()
-                viewModel.updateRep(
-                    WST1Set(
-                        workoutPlusSet = "$workoutName$2",
-                        workoutName,
-                        2,
-                        reps = it.toString().toInt(),
-                        weight = weightTxt2.toString().toDouble()
-                    )
-                )
+                updateReps(2, it.toString().toInt(), weightTxt2.toString().toDouble())
             }
             repsTxt3.doAfterTextChanged {
-                val workoutName = workoutTitleEt.text.toString()
-                viewModel.updateRep(
-                    WST1Set(
-                        workoutPlusSet = "$workoutName$3",
-                        workoutName,
-                        3,
-                        reps = it.toString().toInt(),
-                        weight = weightTxt3.toString().toDouble()
-                    )
-                )
+                updateReps(3, it.toString().toInt(), weightTxt3.toString().toDouble())
             }
             weightTxt1.doAfterTextChanged {
-                val workoutName = workoutTitleEt.text.toString()
-                viewModel.updateWeight(
-                    WST1Set(
-                        workoutPlusSet = "$workoutName$1",
-                        workoutName,
-                        1,
-                        reps = repsTxt1.toString().toInt(),
-                        weight = it.toString().toDouble()
-                    )
-                )
+                updateWeight(1, repsTxt1.toString().toInt(), it.toString().toDouble())
             }
             weightTxt2.doAfterTextChanged {
-                val workoutName = workoutTitleEt.text.toString()
-                viewModel.updateWeight(
-                    WST1Set(
-                        workoutPlusSet = "$workoutName$2",
-                        workoutName,
-                        2,
-                        reps = repsTxt2.toString().toInt(),
-                        weight = it.toString().toDouble()
-                    )
-                )
+                updateWeight(2, repsTxt2.toString().toInt(), it.toString().toDouble())
             }
             weightTxt3.doAfterTextChanged {
-                val workoutName = workoutTitleEt.text.toString()
-                viewModel.updateWeight(
-                    WST1Set(
-                        workoutPlusSet = "$workoutName$3",
-                        workoutName,
-                        3,
-                        reps = repsTxt3.toString().toInt(),
-                        weight = it.toString().toDouble()
-                    )
-                )
+                updateWeight(3, repsTxt3.toString().toInt(), it.toString().toDouble())
+            }
+            // Insert Sets
+            repsTxt1.setOnClickListener {
+                if(repsTxt1.text.isEmpty() && weightTxt1.text.isEmpty() && workoutTitleEt.text.toString().isNotEmpty()) {
+                    insertSet(1)
+                }
+            }
+            repsTxt2.setOnClickListener {
+                if(repsTxt2.text.isEmpty() && weightTxt2.text.isEmpty() && workoutTitleEt.text.toString().isNotEmpty()) {
+                    insertSet(2)
+                }
+            }
+            repsTxt3.setOnClickListener {
+                if(repsTxt3.text.isEmpty() && weightTxt3.text.isEmpty() && workoutTitleEt.text.toString().isNotEmpty()) {
+                    insertSet(3)
+                }
+            }
+            weightTxt1.setOnClickListener {
+                if(repsTxt1.text.isEmpty() && weightTxt1.text.isEmpty() && workoutTitleEt.text.toString().isNotEmpty()) {
+                    insertSet(1)
+                }
+            }
+            weightTxt2.setOnClickListener {
+                if(repsTxt2.text.isEmpty() && weightTxt2.text.isEmpty() && workoutTitleEt.text.toString().isNotEmpty()) {
+                    insertSet(2)
+                }
+            }
+            weightTxt3.setOnClickListener {
+                if(repsTxt3.text.isEmpty() && weightTxt3.text.isEmpty() && workoutTitleEt.text.toString().isNotEmpty()) {
+                    insertSet(3)
+                }
             }
         }
         setUpObservers()
+    }
+
+    private fun insertSet(setNum: Int) {
+        Log.d(fragmentTAG, "workout inserted: set = $setNum\n .")
+        val workoutName = binding!!.workoutTitleEt.text.toString()
+        viewModel.insertWorkoutSet(
+            WST1Set(
+                workoutPlusSet = "$workoutName$setNum",
+                workoutName,
+                setNum,
+                0,
+                0.0
+            )
+        )
+    }
+
+    private fun updateReps(set: Int, reps: Int, weight: Double) {
+        Log.d(fragmentTAG, "reps updated: set = $set\n .")
+        val workoutName = binding!!.workoutTitleEt.text.toString()
+        viewModel.updateRep(
+            WST1Set(
+                workoutPlusSet = "$workoutName$set",
+                workoutName,
+                set,
+                reps,
+                weight
+            )
+        )
+    }
+
+    private fun updateWeight(set: Int, reps: Int, weight: Double) {
+        Log.d(fragmentTAG, "weight updated: set = $set\n .")
+        val workoutName = binding!!.workoutTitleEt.text.toString()
+        viewModel.updateRep(
+            WST1Set(
+                workoutPlusSet = "$workoutName$set",
+                workoutName,
+                set,
+                reps,
+                weight
+            )
+        )
     }
 
     private fun setUpObservers() {
