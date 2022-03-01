@@ -13,8 +13,7 @@ class WST1Repo(private val database: WST1Database) {
 
     // todo: might have to make these vars into functions so they
     //  are refreshed every time they are called
-    val allWorkoutGroups: Flow<List<WST1Group>> =
-        database.groupDao().getAlphabetizedWorkoutGroups()
+    val allWorkoutGroups: Flow<List<WST1Group>> = database.groupDao().getAlphabetizedWorkoutGroups()
     //names of Workouts
     val allWorkouts: Flow<List<WST1Workout>> = database.workoutDao().getAlphabetizedWorkouts()
     //names of WorkoutSets
@@ -26,8 +25,8 @@ class WST1Repo(private val database: WST1Database) {
     }
 
     @WorkerThread
-    suspend fun insert(workout: WST1Workout) {
-        database.workoutDao().insert(workout)
+    suspend fun insert(workout: WST1Workout): Long {
+        return database.workoutDao().insert(workout)
     }
 
     @WorkerThread

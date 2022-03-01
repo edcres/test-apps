@@ -21,7 +21,7 @@ class WorkoutsTest1Fragment : Fragment() {
     private val fragmentTAG = "StartFragmentTAG"
     private var binding: FragmentWorkoutsTest1Binding? = null
     private val viewModel: WrkTst1ViewModel by activityViewModels()
-    private var currentWorkout = WST1Workout()
+    private lateinit var currentWorkout: WST1Workout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,24 +71,24 @@ class WorkoutsTest1Fragment : Fragment() {
                     val groupTitle = groupEt.text.toString().ifEmpty {
                         FIRST_TAB_TITLE
                     }
-                    Log.d(fragmentTAG, "workout clicked")
                     val thisWorkout = WST1Workout(
                         thisWorkoutName = "",
                         workoutGroup = groupTitle
                     )
-                    viewModel.insertWorkout(
-                        thisWorkout
-                    )
-                    currentWorkout = thisWorkout
+
+                    // todo: fix this
+                    val workoutId = viewModel.insertWorkout(thisWorkout)
+                    workoutId.observe(viewLifecycleOwner) {
+                        thisWorkout.id = it
+                        Log.d(fragmentTAG, "workout clicked: workout id = ${thisWorkout.id}")
+                        currentWorkout = thisWorkout
+                    }
                 }
             }
             workoutTitleEt.doAfterTextChanged {
-                val thisWorkout = WST1Workout(
-                    thisWorkoutName = it.toString(),
-                    workoutGroup = groupEt.text.toString()
-                )
-                currentWorkout = thisWorkout
-                viewModel.updateWorkout(thisWorkout)
+                currentWorkout.thisWorkoutName = it.toString()
+                Log.d(fragmentTAG, "workout id = ${currentWorkout.id}")
+                viewModel.updateWorkout(currentWorkout)
             }
             repsTxt1.doAfterTextChanged {
                 updateReps(1, it.toString(), weightTxt1.text.toString())

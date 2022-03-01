@@ -24,6 +24,7 @@ class WrkTst1ViewModel : ViewModel() {
 
     private val _groups = MutableLiveData<MutableList<WST1Group>>()
     val groups: LiveData<MutableList<WST1Group>> get() = _groups
+    // todo: 'workouts' will be organized by their 'position' attribute
     private val _workouts = MutableLiveData<MutableList<WST1Workout>>()
     val workouts: LiveData<MutableList<WST1Workout>> get() = _workouts
     private val _sets = MutableLiveData<MutableList<WST1Set>>()
@@ -45,10 +46,14 @@ class WrkTst1ViewModel : ViewModel() {
                 Log.d(TAG, "groups collected")
                 _groups.postValue(it.toMutableList())
             }
+        }
+        CoroutineScope(Dispatchers.IO).launch {
             repository.allWorkouts.collect {
                 Log.d(TAG, "workouts collected")
                 _workouts.postValue(it.toMutableList())
             }
+        }
+        CoroutineScope(Dispatchers.IO).launch {
             repository.allWorkoutSets.collect {
                 Log.d(TAG, "sets collected")
                 _sets.postValue(it.toMutableList())
@@ -59,10 +64,27 @@ class WrkTst1ViewModel : ViewModel() {
 //        _groups.value!!.add(workoutGroup)
         repository.insert(workoutGroup)
     }
-    fun insertWorkout(workout: WST1Workout) = viewModelScope.launch {
-//        _workouts.value!!.add(workout)
-        repository.insert(workout)
+
+
+
+
+    fun insertWorkout(workout: WST1Workout): MutableLiveData<Long> {
+        val itemId = MutableLiveData<Long>()
+        viewModelScope.launch {
+            itemId.postValue(repository.insert(workout))
+            Log.d(TAG, "itemsId: ${itemId.value}")
+        }
+        return itemId
     }
+
+
+
+//    fun insertWorkout(workout: WST1Workout) = viewModelScope.launch {
+////        _workouts.value!!.add(workout)
+//        val itemId = repository.insert(workout)
+//        // todo: itemsId is fetched
+//        Log.d(TAG, "itemsId: $itemId")
+//    }
     fun insertWorkoutSet(workoutSet: WST1Set) = viewModelScope.launch {
 //        _sets.value!!.add(workoutSet)
         repository.insert(workoutSet)
