@@ -12,13 +12,10 @@ interface WST1GroupDao {
     @Query("SELECT * FROM wst1_workout_group_table ORDER BY group_name ASC")
     fun getAlphabetizedWorkoutGroups(): Flow<List<WST1Group>>
 
-    // insert: when user chooses to create a group when adding or editing a workout.
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(workoutGroup: WST1Group)
-
-    // delete group: happens when all workouts in that group are deleted.
     @Delete
-    suspend fun deleteWorkoutGroup(workoutGroup: WST1Group)
+    suspend fun delete(workoutGroup: WST1Group)
 
     // relationship between workoutGroup and workout
     // returns all the instances in which the workoutCategory is the same as the categoryName (ie. all legs with legs, and all chest with chest)

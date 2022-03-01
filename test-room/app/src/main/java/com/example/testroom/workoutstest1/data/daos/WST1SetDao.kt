@@ -11,15 +11,10 @@ interface WST1SetDao {
     @Query("SELECT * FROM wst1_set_table ORDER BY workout_plus_set ASC")
     fun getAlphabetizedSets(): Flow<List<WST1Set>>
 
-    // Insert
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(set: WST1Set)
-
-    // Update Item
     @Update
-    suspend fun updateSet(set: WST1Set)
-
-    // Delete Item
+    suspend fun update(set: WST1Set)
     @Delete
-    suspend fun deleteSet(set: WST1Set)
+    suspend fun delete(set: WST1Set)
 }

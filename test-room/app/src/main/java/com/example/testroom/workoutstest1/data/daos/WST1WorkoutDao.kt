@@ -15,14 +15,10 @@ interface WST1WorkoutDao {
     // Insert
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(workout: WST1Workout)
-
-    // Update Item
     @Update
-    suspend fun updateWorkout(workout: WST1Workout)
-
-    // Delete item
+    suspend fun update(workout: WST1Workout)
     @Delete
-    suspend fun deleteWorkout(workout: WST1Workout)
+    suspend fun delete(workout: WST1Workout)
 
     // relationship between workout and set
     @Transaction

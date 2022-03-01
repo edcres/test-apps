@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/action_btn" />
+            app:layout_constraintTop_toBottomOf="@+id/clear_texts_btn" />
 
         <Button
             android:id="@+id/clear_texts_btn"
@@ -30,18 +30,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="add group"
-            app:layout_constraintBottom_toTopOf="@+id/clear_texts_btn"
-            app:layout_constraintStart_toEndOf="@+id/group_et" />
+            app:layout_constraintStart_toEndOf="@+id/group_et"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/workout_title_et"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
             android:hint="workout"
+            android:inputType="textPersonName"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/group_et" />
 
         <TextView
             android:id="@+id/set_txt_1"
@@ -130,7 +130,7 @@
             android:inputType="number"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/reps_txt_3"
-            app:layout_constraintTop_toTopOf="@+id/reps_txt_3" />
+            app:layout_constraintTop_toBottomOf="@+id/reps_txt_2" />
 
         <EditText
             android:id="@+id/group_et"
@@ -139,8 +139,32 @@
             android:ems="10"
             android:hint="group"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/clear_texts_btn"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/get_groups_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fetch groups"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clear_texts_btn" />
+
+        <Button
+            android:id="@+id/get_workouts_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fetch workouts"
+            app:layout_constraintStart_toEndOf="@+id/get_groups_btn"
+            app:layout_constraintTop_toBottomOf="@+id/clear_texts_btn" />
+
+        <Button
+            android:id="@+id/get_sets_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fetch sets"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/get_workouts_btn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

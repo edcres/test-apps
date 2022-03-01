@@ -33,8 +33,21 @@ class WorkoutsTest1Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // todo update the view widgets when an item is sent to the db (maybe it's done automatically)
+        viewModel.startApplication(requireNotNull(this.activity).application)
         binding?.apply {
             lifecycleOwner = viewLifecycleOwner
+
+            // test click listeners
+            getGroupsBtn.setOnClickListener {
+                viewModel.fetchGroupsClicked()
+            }
+            getWorkoutsBtn.setOnClickListener {
+                viewModel.fetchWorkoutsClicked()
+            }
+            getSetsBtn.setOnClickListener {
+                viewModel.fetchSetsClicked()
+            }
+
             clearTextsBtn.setOnClickListener {
                 groupEt.text.clear()
                 workoutTitleEt.text.clear()
@@ -71,22 +84,22 @@ class WorkoutsTest1Fragment : Fragment() {
                 viewModel.updateTitle(thisWorkout)
             }
             repsTxt1.doAfterTextChanged {
-                updateReps(1, it.toString().toInt(), weightTxt1.toString().toDouble())
+                updateReps(1, it.toString(), weightTxt1.text.toString())
             }
             repsTxt2.doAfterTextChanged {
-                updateReps(2, it.toString().toInt(), weightTxt2.toString().toDouble())
+                updateReps(2, it.toString(), weightTxt2.text.toString())
             }
             repsTxt3.doAfterTextChanged {
-                updateReps(3, it.toString().toInt(), weightTxt3.toString().toDouble())
+                updateReps(3, it.toString(), weightTxt3.text.toString())
             }
             weightTxt1.doAfterTextChanged {
-                updateWeight(1, repsTxt1.toString().toInt(), it.toString().toDouble())
+                updateWeight(1, repsTxt1.text.toString(), it.toString())
             }
             weightTxt2.doAfterTextChanged {
-                updateWeight(2, repsTxt2.toString().toInt(), it.toString().toDouble())
+                updateWeight(2, repsTxt2.text.toString(), it.toString())
             }
             weightTxt3.doAfterTextChanged {
-                updateWeight(3, repsTxt3.toString().toInt(), it.toString().toDouble())
+                updateWeight(3, repsTxt3.text.toString(), it.toString())
             }
             // Insert Sets
             repsTxt1.setOnClickListener {
@@ -137,30 +150,35 @@ class WorkoutsTest1Fragment : Fragment() {
         )
     }
 
-    private fun updateReps(set: Int, reps: Int, weight: Double) {
+    private fun updateReps(set: Int, reps: String, weight: String) {
         Log.d(fragmentTAG, "reps updated: set = $set\n .")
+        val newReps = reps.ifEmpty { "0" }
+        val newWeight = weight.ifEmpty { "0.0" }
+        Log.d(fragmentTAG, "updateReps: newWeight = $newWeight")
         val workoutName = binding!!.workoutTitleEt.text.toString()
         viewModel.updateRep(
             WST1Set(
                 workoutPlusSet = "$workoutName$set",
                 workoutName,
                 set,
-                reps,
-                weight
+                newReps.toInt(),
+                newWeight.toDouble()
             )
         )
     }
 
-    private fun updateWeight(set: Int, reps: Int, weight: Double) {
+    private fun updateWeight(set: Int, reps: String, weight: String) {
         Log.d(fragmentTAG, "weight updated: set = $set\n .")
+        val newReps = reps.ifEmpty { "0" }
+        val newWeight = weight.ifEmpty { "0.0" }
         val workoutName = binding!!.workoutTitleEt.text.toString()
         viewModel.updateRep(
             WST1Set(
                 workoutPlusSet = "$workoutName$set",
                 workoutName,
                 set,
-                reps,
-                weight
+                newReps.toInt(),
+                newWeight.toDouble()
             )
         )
     }
@@ -168,13 +186,13 @@ class WorkoutsTest1Fragment : Fragment() {
     private fun setUpObservers() {
         // todo: display the lists in a more legible way
         viewModel.groups.observe(viewLifecycleOwner) {
-            Log.d(fragmentTAG, "groups: ${it.size}\n\n$it")
+            Log.d(fragmentTAG, "groups observed: ${it.size}\n\n$it")
         }
         viewModel.workouts.observe(viewLifecycleOwner) {
-            Log.d(fragmentTAG, "workouts: ${it.size}\n\n$it")
+            Log.d(fragmentTAG, "workouts observed: ${it.size}\n\n$it")
         }
         viewModel.sets.observe(viewLifecycleOwner) {
-            Log.d(fragmentTAG, "sets: ${it.size}\n\n$it")
+            Log.d(fragmentTAG, "sets observed: ${it.size}\n\n$it")
         }
     }
 }

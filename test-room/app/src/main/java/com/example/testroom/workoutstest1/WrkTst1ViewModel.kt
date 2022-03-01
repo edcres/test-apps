@@ -1,5 +1,6 @@
 package com.example.testroom.workoutstest1
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,6 +27,12 @@ class WrkTst1ViewModel : ViewModel() {
     private val _sets = MutableLiveData<MutableList<WST1Set>>()
     val sets: LiveData<MutableList<WST1Set>> get() = _sets
 
+    fun startApplication(application: Application) {
+        roomDb = WST1Database.getInstance(application)
+        repository = WST1Repo(roomDb)
+        fetchAllWorkouts()
+    }
+
     // todo: I don't know if the workout variables in the repo are updated automatically.
     //      test that in the test app
     //      if they are then i don't need to update the livedata variables from here
@@ -44,20 +51,20 @@ class WrkTst1ViewModel : ViewModel() {
         }
     }
     fun insertWorkoutGroup(workoutGroup: WST1Group) = viewModelScope.launch {
-        _groups.value!!.add(workoutGroup)
+//        _groups.value!!.add(workoutGroup)
         repository.insert(workoutGroup)
     }
     fun insertWorkout(workout: WST1Workout) = viewModelScope.launch {
-        _workouts.value!!.add(workout)
+//        _workouts.value!!.add(workout)
         repository.insert(workout)
     }
     fun insertWorkoutSet(workoutSet: WST1Set) = viewModelScope.launch {
-        _sets.value!!.add(workoutSet)
+//        _sets.value!!.add(workoutSet)
         repository.insert(workoutSet)
     }
     fun updateTitle(workout: WST1Workout) {
         // todo:
-        // update workout Workout entity and  WorkoutSet entity
+        // update workout Workout entity and WorkoutSet entity
     }
     fun updateRep(set: WST1Set) {
         // todo:
@@ -91,6 +98,32 @@ class WrkTst1ViewModel : ViewModel() {
         // todo: check if this group has any workouts
         // if not then delete group
         return true
+    }
+
+
+
+
+    // test functions
+    fun fetchGroupsClicked() {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.allWorkoutGroups.collect {
+                _groups.postValue(it.toMutableList())
+            }
+        }
+    }
+    fun fetchWorkoutsClicked() {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.allWorkouts.collect {
+                _workouts.postValue(it.toMutableList())
+            }
+        }
+    }
+    fun fetchSetsClicked() {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.allWorkoutSets.collect {
+                _sets.postValue(it.toMutableList())
+            }
+        }
     }
     // DATABASE QUERIES //
 }
