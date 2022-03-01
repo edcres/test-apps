@@ -105,6 +105,7 @@ class WorkoutsTest1Fragment : Fragment() {
                 if (chosenWorkout != null) {
                     currentWorkout = chosenWorkout
                     currentWorkout!!.thisWorkoutName = it.toString()
+                    currentWorkout!!.workoutGroup = groupEt.text.toString()
                     Log.d(fragmentTAG, "workout id = ${currentWorkout!!.id},\tname: ${it.toString()}")
                     viewModel.updateWorkout(currentWorkout!!)
                 }
