@@ -43,6 +43,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/group_et" />
 
+        <Button
+            android:id="@+id/lock_workout_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="lock name"
+            app:layout_constraintStart_toEndOf="@+id/workout_title_et"
+            app:layout_constraintTop_toBottomOf="@+id/add_group_btn" />
+
         <TextView
             android:id="@+id/set_txt_1"
             android:layout_width="wrap_content"

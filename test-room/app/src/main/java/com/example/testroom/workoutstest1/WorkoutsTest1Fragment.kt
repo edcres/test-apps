@@ -10,6 +10,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import com.example.testroom.FIRST_TAB_TITLE
 import com.example.testroom.databinding.FragmentWorkoutsTest1Binding
+import com.example.testroom.findIdWithName
 import com.example.testroom.workoutstest1.data.entities.WST1Group
 import com.example.testroom.workoutstest1.data.entities.WST1Set
 import com.example.testroom.workoutstest1.data.entities.WST1Workout
@@ -21,7 +22,9 @@ class WorkoutsTest1Fragment : Fragment() {
     private val fragmentTAG = "StartFragmentTAG"
     private var binding: FragmentWorkoutsTest1Binding? = null
     private val viewModel: WrkTst1ViewModel by activityViewModels()
-    private lateinit var currentWorkout: WST1Workout
+    private var currentWorkout: WST1Workout? = null
+
+    private var workoutLocked = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +67,16 @@ class WorkoutsTest1Fragment : Fragment() {
             addGroupBtn.setOnClickListener {
                 viewModel.insertWorkoutGroup(WST1Group(groupEt.text.toString()))
             }
+            lockWorkoutBtn.setOnClickListener {
+                workoutLocked = !workoutLocked
+                if (workoutLocked) {
+                    // now locked
+                    lockWorkoutBtn.text = "unlock name"
+                } else {
+                    // now unlocked
+                    lockWorkoutBtn.text = "lock name"
+                }
+            }
             // todo: Probably change this to see if it overrides another workout
             // (ie: calves inner, calves outer)
             workoutTitleEt.setOnClickListener {
@@ -75,8 +88,6 @@ class WorkoutsTest1Fragment : Fragment() {
                         thisWorkoutName = "",
                         workoutGroup = groupTitle
                     )
-
-                    // todo: fix this
                     val workoutId = viewModel.insertWorkout(thisWorkout)
                     workoutId.observe(viewLifecycleOwner) {
                         thisWorkout.id = it
@@ -86,9 +97,17 @@ class WorkoutsTest1Fragment : Fragment() {
                 }
             }
             workoutTitleEt.doAfterTextChanged {
-                currentWorkout.thisWorkoutName = it.toString()
-                Log.d(fragmentTAG, "workout id = ${currentWorkout.id}")
-                viewModel.updateWorkout(currentWorkout)
+                var chosenWorkout: WST1Workout? = currentWorkout
+                if (!workoutLocked) {
+                    chosenWorkout = findIdWithName(it.toString(), viewModel.workouts.value!!)
+                }
+                Log.d(fragmentTAG, "chosen workout: $chosenWorkout")
+                if (chosenWorkout != null) {
+                    currentWorkout = chosenWorkout
+                    currentWorkout!!.thisWorkoutName = it.toString()
+                    Log.d(fragmentTAG, "workout id = ${currentWorkout!!.id},\tname: ${it.toString()}")
+                    viewModel.updateWorkout(currentWorkout!!)
+                }
             }
             repsTxt1.doAfterTextChanged {
                 updateReps(1, it.toString(), weightTxt1.text.toString())
@@ -151,7 +170,7 @@ class WorkoutsTest1Fragment : Fragment() {
 
     private fun insertSet(set: Int) {
         Log.d(fragmentTAG, "workout inserted: set = $set\n .")
-        val workoutId = currentWorkout.id
+        val workoutId = currentWorkout!!.id
         val workoutName = binding!!.workoutTitleEt.text.toString()
         viewModel.insertWorkoutSet(
             WST1Set(
@@ -167,7 +186,7 @@ class WorkoutsTest1Fragment : Fragment() {
 
     private fun updateReps(set: Int, reps: String, weight: String) {
         Log.d(fragmentTAG, "reps to update: set = $set\n reps: $reps.")
-        val workoutId = currentWorkout.id
+        val workoutId = currentWorkout!!.id
         val newReps = reps.ifEmpty { "0" }
         val newWeight = weight.ifEmpty { "0.0" }
         val workoutName = binding!!.workoutTitleEt.text.toString()
@@ -185,7 +204,7 @@ class WorkoutsTest1Fragment : Fragment() {
 
     private fun updateWeight(set: Int, reps: String, weight: String) {
         Log.d(fragmentTAG, "weight to update: set = $set\n, weight: $weight.")
-        val workoutId = currentWorkout.id
+        val workoutId = currentWorkout!!.id
         val newReps = reps.ifEmpty { "0" }
         val newWeight = weight.ifEmpty { "0.0" }
         val workoutName = binding!!.workoutTitleEt.text.toString()

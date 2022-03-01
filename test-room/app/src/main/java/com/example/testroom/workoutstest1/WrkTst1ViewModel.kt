@@ -64,10 +64,6 @@ class WrkTst1ViewModel : ViewModel() {
 //        _groups.value!!.add(workoutGroup)
         repository.insert(workoutGroup)
     }
-
-
-
-
     fun insertWorkout(workout: WST1Workout): MutableLiveData<Long> {
         val itemId = MutableLiveData<Long>()
         viewModelScope.launch {
@@ -76,15 +72,6 @@ class WrkTst1ViewModel : ViewModel() {
         }
         return itemId
     }
-
-
-
-//    fun insertWorkout(workout: WST1Workout) = viewModelScope.launch {
-////        _workouts.value!!.add(workout)
-//        val itemId = repository.insert(workout)
-//        // todo: itemsId is fetched
-//        Log.d(TAG, "itemsId: $itemId")
-//    }
     fun insertWorkoutSet(workoutSet: WST1Set) = viewModelScope.launch {
 //        _sets.value!!.add(workoutSet)
         repository.insert(workoutSet)
