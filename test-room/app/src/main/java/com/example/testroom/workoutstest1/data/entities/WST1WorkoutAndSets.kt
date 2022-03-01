@@ -6,8 +6,8 @@ import androidx.room.Relation
 class WST1WorkoutAndSets (
     @Embedded val workout: WST1Workout,
     @Relation(
-        parentColumn = "this_workout_name",
-        entityColumn = "workout_name"
+        parentColumn = "id",
+        entityColumn = "workout_id"
     )
     val workoutSets: List<WST1Set>
 )

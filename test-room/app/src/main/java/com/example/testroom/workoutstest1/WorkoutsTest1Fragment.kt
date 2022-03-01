@@ -14,11 +14,14 @@ import com.example.testroom.workoutstest1.data.entities.WST1Group
 import com.example.testroom.workoutstest1.data.entities.WST1Set
 import com.example.testroom.workoutstest1.data.entities.WST1Workout
 
+// I have to click some et twice to create them: Workout entity; Set entity
+
 class WorkoutsTest1Fragment : Fragment() {
 
     private val fragmentTAG = "StartFragmentTAG"
     private var binding: FragmentWorkoutsTest1Binding? = null
     private val viewModel: WrkTst1ViewModel by activityViewModels()
+    private var currentWorkout = WST1Workout()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,23 +68,27 @@ class WorkoutsTest1Fragment : Fragment() {
             // (ie: calves inner, calves outer)
             workoutTitleEt.setOnClickListener {
                 if (workoutTitleEt.text.toString() == "") {
-                    val groupTitle = if(groupEt.text.toString().isEmpty()) {
+                    val groupTitle = groupEt.text.toString().ifEmpty {
                         FIRST_TAB_TITLE
-                    } else groupEt.text.toString()
-                    viewModel.insertWorkout(
-                        WST1Workout(
-                            "",
-                            groupTitle
-                        )
+                    }
+                    Log.d(fragmentTAG, "workout clicked")
+                    val thisWorkout = WST1Workout(
+                        thisWorkoutName = "",
+                        workoutGroup = groupTitle
                     )
+                    viewModel.insertWorkout(
+                        thisWorkout
+                    )
+                    currentWorkout = thisWorkout
                 }
             }
             workoutTitleEt.doAfterTextChanged {
                 val thisWorkout = WST1Workout(
-                    workoutTitleEt.text.toString(),
-                    groupEt.text.toString()
+                    thisWorkoutName = it.toString(),
+                    workoutGroup = groupEt.text.toString()
                 )
-                viewModel.updateTitle(thisWorkout)
+                currentWorkout = thisWorkout
+                viewModel.updateWorkout(thisWorkout)
             }
             repsTxt1.doAfterTextChanged {
                 updateReps(1, it.toString(), weightTxt1.text.toString())
@@ -104,31 +111,37 @@ class WorkoutsTest1Fragment : Fragment() {
             // Insert Sets
             repsTxt1.setOnClickListener {
                 if(repsTxt1.text.isEmpty() && weightTxt1.text.isEmpty() && workoutTitleEt.text.toString().isNotEmpty()) {
+                    Log.d(fragmentTAG, "reps1 clicked")
                     insertSet(1)
                 }
             }
             repsTxt2.setOnClickListener {
                 if(repsTxt2.text.isEmpty() && weightTxt2.text.isEmpty() && workoutTitleEt.text.toString().isNotEmpty()) {
+                    Log.d(fragmentTAG, "reps2 clicked")
                     insertSet(2)
                 }
             }
             repsTxt3.setOnClickListener {
                 if(repsTxt3.text.isEmpty() && weightTxt3.text.isEmpty() && workoutTitleEt.text.toString().isNotEmpty()) {
+                    Log.d(fragmentTAG, "reps3 clicked")
                     insertSet(3)
                 }
             }
             weightTxt1.setOnClickListener {
                 if(repsTxt1.text.isEmpty() && weightTxt1.text.isEmpty() && workoutTitleEt.text.toString().isNotEmpty()) {
+                    Log.d(fragmentTAG, "weight1 clicked")
                     insertSet(1)
                 }
             }
             weightTxt2.setOnClickListener {
                 if(repsTxt2.text.isEmpty() && weightTxt2.text.isEmpty() && workoutTitleEt.text.toString().isNotEmpty()) {
+                    Log.d(fragmentTAG, "weight2 clicked")
                     insertSet(2)
                 }
             }
             weightTxt3.setOnClickListener {
                 if(repsTxt3.text.isEmpty() && weightTxt3.text.isEmpty() && workoutTitleEt.text.toString().isNotEmpty()) {
+                    Log.d(fragmentTAG, "weight3 clicked")
                     insertSet(3)
                 }
             }
@@ -136,14 +149,16 @@ class WorkoutsTest1Fragment : Fragment() {
         setUpObservers()
     }
 
-    private fun insertSet(setNum: Int) {
-        Log.d(fragmentTAG, "workout inserted: set = $setNum\n .")
+    private fun insertSet(set: Int) {
+        Log.d(fragmentTAG, "workout inserted: set = $set\n .")
+        val workoutId = currentWorkout.id
         val workoutName = binding!!.workoutTitleEt.text.toString()
         viewModel.insertWorkoutSet(
             WST1Set(
-                workoutPlusSet = "$workoutName$setNum",
+                workoutPlusSet = "$workoutId$set",
+                workoutId,
                 workoutName,
-                setNum,
+                set,
                 0,
                 0.0
             )
@@ -151,14 +166,15 @@ class WorkoutsTest1Fragment : Fragment() {
     }
 
     private fun updateReps(set: Int, reps: String, weight: String) {
-        Log.d(fragmentTAG, "reps updated: set = $set\n .")
+        Log.d(fragmentTAG, "reps to update: set = $set\n reps: $reps.")
+        val workoutId = currentWorkout.id
         val newReps = reps.ifEmpty { "0" }
         val newWeight = weight.ifEmpty { "0.0" }
-        Log.d(fragmentTAG, "updateReps: newWeight = $newWeight")
         val workoutName = binding!!.workoutTitleEt.text.toString()
         viewModel.updateRep(
             WST1Set(
-                workoutPlusSet = "$workoutName$set",
+                workoutPlusSet = "$workoutId$set",
+                workoutId,
                 workoutName,
                 set,
                 newReps.toInt(),
@@ -168,13 +184,15 @@ class WorkoutsTest1Fragment : Fragment() {
     }
 
     private fun updateWeight(set: Int, reps: String, weight: String) {
-        Log.d(fragmentTAG, "weight updated: set = $set\n .")
+        Log.d(fragmentTAG, "weight to update: set = $set\n, weight: $weight.")
+        val workoutId = currentWorkout.id
         val newReps = reps.ifEmpty { "0" }
         val newWeight = weight.ifEmpty { "0.0" }
         val workoutName = binding!!.workoutTitleEt.text.toString()
         viewModel.updateRep(
             WST1Set(
-                workoutPlusSet = "$workoutName$set",
+                workoutPlusSet = "$workoutId$set",
+                workoutId,
                 workoutName,
                 set,
                 newReps.toInt(),
@@ -186,13 +204,19 @@ class WorkoutsTest1Fragment : Fragment() {
     private fun setUpObservers() {
         // todo: display the lists in a more legible way
         viewModel.groups.observe(viewLifecycleOwner) {
-            Log.d(fragmentTAG, "groups observed: ${it.size}\n\n$it")
+            var groupsString = ""
+            it.forEach { group -> groupsString = "$groupsString\n$group" }
+            Log.d(fragmentTAG, "groups observed: ${it.size}$groupsString\n.")
         }
         viewModel.workouts.observe(viewLifecycleOwner) {
-            Log.d(fragmentTAG, "workouts observed: ${it.size}\n\n$it")
+            var workoutsString = ""
+            it.forEach { workout -> workoutsString = "$workoutsString\n$workout" }
+            Log.d(fragmentTAG, "workouts observed: ${it.size}$workoutsString\n.")
         }
         viewModel.sets.observe(viewLifecycleOwner) {
-            Log.d(fragmentTAG, "sets observed: ${it.size}\n\n$it")
+            var setsString = ""
+            it.forEach { set -> setsString = "$setsString\n$set" }
+            Log.d(fragmentTAG, "sets observed: ${it.size}$setsString\n.")
         }
     }
 }

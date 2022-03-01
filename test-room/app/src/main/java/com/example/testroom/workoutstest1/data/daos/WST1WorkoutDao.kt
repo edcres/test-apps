@@ -1,5 +1,6 @@
 package com.example.testroom.workoutstest1.data.daos
 
+import android.util.Log
 import androidx.room.*
 import com.example.testroom.workoutstest1.data.entities.WST1Workout
 import com.example.testroom.workoutstest1.data.entities.WST1WorkoutAndSets
@@ -9,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface WST1WorkoutDao {
 
     // getting workout names alphabetically
-    @Query("SELECT * FROM wst1_workout_table ORDER BY this_workout_name ASC")
+    @Query("SELECT * FROM wst1_workout_table ORDER BY id ASC")
     fun getAlphabetizedWorkouts(): Flow<List<WST1Workout>>
 
     // Insert

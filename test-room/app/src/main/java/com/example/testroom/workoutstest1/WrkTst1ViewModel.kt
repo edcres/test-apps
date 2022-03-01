@@ -1,6 +1,7 @@
 package com.example.testroom.workoutstest1
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 
 class WrkTst1ViewModel : ViewModel() {
 
+    private val TAG = "ViewModel TAG"
     private lateinit var roomDb: WST1Database
     private lateinit var repository: WST1Repo
 
@@ -40,12 +42,15 @@ class WrkTst1ViewModel : ViewModel() {
     private fun fetchAllWorkouts() {
         CoroutineScope(Dispatchers.IO).launch {
             repository.allWorkoutGroups.collect {
+                Log.d(TAG, "groups collected")
                 _groups.postValue(it.toMutableList())
             }
             repository.allWorkouts.collect {
+                Log.d(TAG, "workouts collected")
                 _workouts.postValue(it.toMutableList())
             }
             repository.allWorkoutSets.collect {
+                Log.d(TAG, "sets collected")
                 _sets.postValue(it.toMutableList())
             }
         }
@@ -62,9 +67,11 @@ class WrkTst1ViewModel : ViewModel() {
 //        _sets.value!!.add(workoutSet)
         repository.insert(workoutSet)
     }
-    fun updateTitle(workout: WST1Workout) {
+    fun updateWorkout(workout: WST1Workout) = viewModelScope.launch {
         // todo:
         // update workout Workout entity and WorkoutSet entity
+        Log.d(TAG, "workout to update: $workout")
+        repository.updateWorkout(workout)
     }
     fun updateRep(set: WST1Set) {
         // todo:
@@ -99,9 +106,6 @@ class WrkTst1ViewModel : ViewModel() {
         // if not then delete group
         return true
     }
-
-
-
 
     // test functions
     fun fetchGroupsClicked() {
