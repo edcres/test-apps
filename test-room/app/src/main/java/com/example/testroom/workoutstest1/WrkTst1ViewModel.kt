@@ -60,7 +60,7 @@ class WrkTst1ViewModel : ViewModel() {
             }
         }
     }
-    fun insertWorkoutGroup(workoutGroup: WST1Group) = viewModelScope.launch {
+    fun insertWorkoutGroup(workoutGroup: WST1Group) = CoroutineScope(Dispatchers.IO).launch {
 //        _groups.value!!.add(workoutGroup)
         repository.insert(workoutGroup)
     }
@@ -72,22 +72,28 @@ class WrkTst1ViewModel : ViewModel() {
         }
         return itemId
     }
-    fun insertWorkoutSet(workoutSet: WST1Set) = viewModelScope.launch {
+    fun insertWorkoutSet(workoutSet: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
 //        _sets.value!!.add(workoutSet)
         repository.insert(workoutSet)
     }
-    fun updateWorkout(workout: WST1Workout) = viewModelScope.launch {
+    fun updateWorkout(workout: WST1Workout) = CoroutineScope(Dispatchers.IO).launch {
         // todo:
         // update workout Workout entity and WorkoutSet entity
         Log.d(TAG, "workout to update: $workout")
         repository.updateWorkout(workout)
     }
-    fun updateRep(set: WST1Set) {
+
+
+
+
+    fun updateSet(set: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
         // todo:
+        repository.updateSet(set)
     }
-    fun updateWeight(set: WST1Set) {
-        // todo:
-    }
+
+
+
+
     fun removeSet(set: WST1Set) {
         // todo:
     }

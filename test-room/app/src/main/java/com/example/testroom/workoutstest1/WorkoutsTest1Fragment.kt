@@ -175,7 +175,7 @@ class WorkoutsTest1Fragment : Fragment() {
         val workoutName = binding!!.workoutTitleEt.text.toString()
         viewModel.insertWorkoutSet(
             WST1Set(
-                workoutPlusSet = "$workoutId$set",
+                workoutPlusSet = "$workoutId-$set",
                 workoutId,
                 workoutName,
                 set,
@@ -191,7 +191,7 @@ class WorkoutsTest1Fragment : Fragment() {
         val newReps = reps.ifEmpty { "0" }
         val newWeight = weight.ifEmpty { "0.0" }
         val workoutName = binding!!.workoutTitleEt.text.toString()
-        viewModel.updateRep(
+        viewModel.updateSet(
             WST1Set(
                 workoutPlusSet = "$workoutId$set",
                 workoutId,
@@ -209,7 +209,7 @@ class WorkoutsTest1Fragment : Fragment() {
         val newReps = reps.ifEmpty { "0" }
         val newWeight = weight.ifEmpty { "0.0" }
         val workoutName = binding!!.workoutTitleEt.text.toString()
-        viewModel.updateRep(
+        viewModel.updateSet(
             WST1Set(
                 workoutPlusSet = "$workoutId$set",
                 workoutId,
