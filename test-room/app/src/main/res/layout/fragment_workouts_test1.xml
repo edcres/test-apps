@@ -33,6 +33,15 @@
             app:layout_constraintStart_toEndOf="@+id/group_et"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <Button
+            android:id="@+id/delete_group_btn"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="x"
+            app:layout_constraintStart_toEndOf="@+id/add_group_btn"
+            app:layout_constraintTop_toTopOf="@+id/add_group_btn" />
+
         <EditText
             android:id="@+id/workout_title_et"
             android:layout_width="wrap_content"
@@ -50,6 +59,15 @@
             android:text="lock name"
             app:layout_constraintStart_toEndOf="@+id/workout_title_et"
             app:layout_constraintTop_toBottomOf="@+id/add_group_btn" />
+
+        <Button
+            android:id="@+id/delete_workout_btn"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="x"
+            app:layout_constraintStart_toEndOf="@+id/lock_workout_btn"
+            app:layout_constraintTop_toTopOf="@+id/lock_workout_btn" />
 
         <TextView
             android:id="@+id/set_txt_1"
@@ -80,6 +98,13 @@
             app:layout_constraintStart_toEndOf="@+id/reps_txt_1"
             app:layout_constraintTop_toTopOf="@+id/reps_txt_1" />
 
+        <Button
+            android:id="@+id/delete_set_1_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="delete"
+            app:layout_constraintStart_toEndOf="@+id/weight_txt_1"
+            app:layout_constraintTop_toBottomOf="@+id/lock_workout_btn" />
 
         <TextView
             android:id="@+id/set_txt_2"
@@ -110,6 +135,13 @@
             app:layout_constraintStart_toEndOf="@+id/reps_txt_2"
             app:layout_constraintTop_toTopOf="@+id/reps_txt_2" />
 
+        <Button
+            android:id="@+id/delete_set_2_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="delete"
+            app:layout_constraintStart_toEndOf="@+id/weight_txt_1"
+            app:layout_constraintTop_toTopOf="@+id/weight_txt_2" />
 
         <TextView
             android:id="@+id/set_txt_3"
@@ -138,7 +170,15 @@
             android:inputType="number"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/reps_txt_3"
-            app:layout_constraintTop_toBottomOf="@+id/reps_txt_2" />
+            app:layout_constraintTop_toTopOf="@+id/reps_txt_3" />
+
+        <Button
+            android:id="@+id/delete_set_3_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="delete"
+            app:layout_constraintStart_toEndOf="@+id/weight_txt_1"
+            app:layout_constraintTop_toBottomOf="@+id/weight_txt_2" />
 
         <EditText
             android:id="@+id/group_et"

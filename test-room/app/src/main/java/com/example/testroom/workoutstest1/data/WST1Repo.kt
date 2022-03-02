@@ -23,12 +23,10 @@ class WST1Repo(private val database: WST1Database) {
     suspend fun insert(workoutGroup: WST1Group) {
         database.groupDao().insert(workoutGroup)
     }
-
     @WorkerThread
     suspend fun insert(workout: WST1Workout): Long {
         return database.workoutDao().insert(workout)
     }
-
     @WorkerThread
     suspend fun insert(workoutSet: WST1Set) {
         database.setDao().insert(workoutSet)
@@ -39,10 +37,25 @@ class WST1Repo(private val database: WST1Database) {
         Log.d(TAG, "workout to update: $workout")
         database.workoutDao().update(workout)
     }
-
     @WorkerThread
     suspend fun updateSet(set: WST1Set) {
         Log.d(TAG, "set to update: $set")
         database.setDao().update(set)
+    }
+
+    @WorkerThread
+    suspend fun deleteGroup(group: WST1Group) {
+        Log.d(TAG, "group to delete: $group")
+        database.groupDao().delete(group)
+    }
+    @WorkerThread
+    suspend fun deleteWorkout(workout: WST1Workout) {
+        Log.d(TAG, "workout to delete: $workout")
+        database.workoutDao().delete(workout)
+    }
+    @WorkerThread
+    suspend fun deleteSet(set: WST1Set) {
+        Log.d(TAG, "set to delete: $set")
+        database.setDao().delete(set)
     }
 }

@@ -10,7 +10,9 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import com.example.testroom.FIRST_TAB_TITLE
 import com.example.testroom.databinding.FragmentWorkoutsTest1Binding
-import com.example.testroom.findIdWithName
+import com.example.testroom.getGroupWithName
+import com.example.testroom.getSetWithName
+import com.example.testroom.getWorkoutWithName
 import com.example.testroom.workoutstest1.data.entities.WST1Group
 import com.example.testroom.workoutstest1.data.entities.WST1Set
 import com.example.testroom.workoutstest1.data.entities.WST1Workout
@@ -52,6 +54,66 @@ class WorkoutsTest1Fragment : Fragment() {
             }
             getSetsBtn.setOnClickListener {
                 viewModel.fetchSetsClicked()
+            }
+
+            deleteGroupBtn.setOnClickListener {
+                val group = getGroupWithName(groupEt.text.toString(), viewModel.groups.value!!)
+                if (group != null) {
+                    Log.d(fragmentTAG, "remove group called")
+                    viewModel.removeGroup(group)
+                } else {
+                    Log.d(fragmentTAG, "group is null")
+                }
+            }
+            deleteWorkoutBtn.setOnClickListener {
+                val workout = getWorkoutWithName(workoutTitleEt.text.toString(), viewModel.workouts.value!!)
+                if (workout != null) {
+                    viewModel.removeWorkout(workout)
+                } else {
+                    Log.d(fragmentTAG, "workout is null")
+                }
+            }
+            deleteSet1Btn.setOnClickListener {
+                val workout = getWorkoutWithName(workoutTitleEt.text.toString(), viewModel.workouts.value!!)
+                if(workout != null) {
+                    val set = getSetWithName(
+                        "${workout.id}-1",
+                        viewModel.sets.value!!
+                    )
+                    if (set != null) {
+                        viewModel.removeSet(set)
+                    } else {
+                        Log.d(fragmentTAG, "set is null")
+                    }
+                }
+            }
+            deleteSet2Btn.setOnClickListener {
+                val workout = getWorkoutWithName(workoutTitleEt.text.toString(), viewModel.workouts.value!!)
+                if(workout != null) {
+                    val set = getSetWithName(
+                        "${workout.id}-2",
+                        viewModel.sets.value!!
+                    )
+                    if (set != null) {
+                        viewModel.removeSet(set)
+                    } else {
+                        Log.d(fragmentTAG, "set is null")
+                    }
+                }
+            }
+            deleteSet3Btn.setOnClickListener {
+                val workout = getWorkoutWithName(workoutTitleEt.text.toString(), viewModel.workouts.value!!)
+                if(workout != null) {
+                    val set = getSetWithName(
+                        "${workout.id}-3",
+                        viewModel.sets.value!!
+                    )
+                    if (set != null) {
+                        viewModel.removeSet(set)
+                    } else {
+                        Log.d(fragmentTAG, "set is null")
+                    }
+                }
             }
 
             clearTextsBtn.setOnClickListener {
@@ -99,7 +161,7 @@ class WorkoutsTest1Fragment : Fragment() {
             workoutTitleEt.doAfterTextChanged {
                 var chosenWorkout: WST1Workout? = currentWorkout
                 if (!workoutLocked) {
-                    chosenWorkout = findIdWithName(it.toString(), viewModel.workouts.value!!)
+                    chosenWorkout = getWorkoutWithName(it.toString(), viewModel.workouts.value!!)
                 }
                 Log.d(fragmentTAG, "chosen workout: $chosenWorkout")
                 if (chosenWorkout != null) {
@@ -193,7 +255,7 @@ class WorkoutsTest1Fragment : Fragment() {
         val workoutName = binding!!.workoutTitleEt.text.toString()
         viewModel.updateSet(
             WST1Set(
-                workoutPlusSet = "$workoutId$set",
+                workoutPlusSet = "$workoutId-$set",
                 workoutId,
                 workoutName,
                 set,
@@ -211,7 +273,7 @@ class WorkoutsTest1Fragment : Fragment() {
         val workoutName = binding!!.workoutTitleEt.text.toString()
         viewModel.updateSet(
             WST1Set(
-                workoutPlusSet = "$workoutId$set",
+                workoutPlusSet = "$workoutId-$set",
                 workoutId,
                 workoutName,
                 set,
@@ -222,7 +284,6 @@ class WorkoutsTest1Fragment : Fragment() {
     }
 
     private fun setUpObservers() {
-        // todo: display the lists in a more legible way
         viewModel.groups.observe(viewLifecycleOwner) {
             var groupsString = ""
             it.forEach { group -> groupsString = "$groupsString\n$group" }

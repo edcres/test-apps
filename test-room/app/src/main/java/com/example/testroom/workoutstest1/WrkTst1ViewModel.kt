@@ -43,19 +43,16 @@ class WrkTst1ViewModel : ViewModel() {
     private fun fetchAllWorkouts() {
         CoroutineScope(Dispatchers.IO).launch {
             repository.allWorkoutGroups.collect {
-                Log.d(TAG, "groups collected")
                 _groups.postValue(it.toMutableList())
             }
         }
         CoroutineScope(Dispatchers.IO).launch {
             repository.allWorkouts.collect {
-                Log.d(TAG, "workouts collected")
                 _workouts.postValue(it.toMutableList())
             }
         }
         CoroutineScope(Dispatchers.IO).launch {
             repository.allWorkoutSets.collect {
-                Log.d(TAG, "sets collected")
                 _sets.postValue(it.toMutableList())
             }
         }
@@ -82,20 +79,18 @@ class WrkTst1ViewModel : ViewModel() {
         Log.d(TAG, "workout to update: $workout")
         repository.updateWorkout(workout)
     }
-
-
-
-
     fun updateSet(set: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
         // todo:
         repository.updateSet(set)
     }
-
-
-
-
-    fun removeSet(set: WST1Set) {
-        // todo:
+    fun removeGroup(group: WST1Group) = CoroutineScope(Dispatchers.IO).launch {
+        repository.deleteGroup(group)
+    }
+    fun removeWorkout(workout: WST1Workout) = CoroutineScope(Dispatchers.IO).launch {
+        repository.deleteWorkout(workout)
+    }
+    fun removeSet(set: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
+        repository.deleteSet(set)
     }
     fun getWorkoutsOfThisGroup(group: WST1Group): List<WST1Workout> {
         // todo: do a query that gets all the workouts that are part of the group
