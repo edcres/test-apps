@@ -8,7 +8,7 @@ import com.example.testroom.FIRST_TAB_TITLE
 
 // TODO: warning
 // With this setup, when a group is removed, all its workouts are removed
-//  probably bc od 'onDelete = ForeignKey.CASCADE' here
+//  probably bc of 'onDelete = ForeignKey.CASCADE' here
 @Entity(
     tableName = "wst1_workout_table",
     foreignKeys = [
@@ -17,7 +17,7 @@ import com.example.testroom.FIRST_TAB_TITLE
             parentColumns = ["group_name"],
             childColumns = ["workout_group"],
             onUpdate = ForeignKey.CASCADE,
-            onDelete = ForeignKey.SET_DEFAULT
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )

@@ -19,6 +19,10 @@ import com.example.testroom.workoutstest1.data.entities.WST1Workout
 
 // I have to click some et twice to create them: Workout entity; Set entity
 
+// With this setup, when a group is removed, all its workouts are removed
+//  bc of 'onDelete = ForeignKey.CASCADE' in the WST1Workout entity.
+//  I don't know how to stop the workouts from deleting when the group is deleted.
+
 class WorkoutsTest1Fragment : Fragment() {
 
     private val fragmentTAG = "StartFragmentTAG"

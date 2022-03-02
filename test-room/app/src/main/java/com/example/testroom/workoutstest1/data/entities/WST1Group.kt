@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-// with this setup, when a group is removed, all its workouts are removed
 @Entity(tableName = "wst1_workout_group_table")
 data class WST1Group (
     @PrimaryKey

@@ -17,4 +17,8 @@ interface WST1SetDao {
     suspend fun update(set: WST1Set)
     @Delete
     suspend fun delete(set: WST1Set)
+
+    // todo: all the sets who have this workoutID,
+    //  change the workoutName attribute to this workoutName
+    suspend fun updateWorkoutOnSets
 }

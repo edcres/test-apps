@@ -58,7 +58,6 @@ class WrkTst1ViewModel : ViewModel() {
         }
     }
     fun insertWorkoutGroup(workoutGroup: WST1Group) = CoroutineScope(Dispatchers.IO).launch {
-//        _groups.value!!.add(workoutGroup)
         repository.insert(workoutGroup)
     }
     fun insertWorkout(workout: WST1Workout): MutableLiveData<Long> {
@@ -70,14 +69,15 @@ class WrkTst1ViewModel : ViewModel() {
         return itemId
     }
     fun insertWorkoutSet(workoutSet: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
-//        _sets.value!!.add(workoutSet)
         repository.insert(workoutSet)
     }
     fun updateWorkout(workout: WST1Workout) = CoroutineScope(Dispatchers.IO).launch {
-        // todo:
-        // update workout Workout entity and WorkoutSet entity
         Log.d(TAG, "workout to update: $workout")
         repository.updateWorkout(workout)
+        // todo: because these 2 functions are being called from within the same launch function,
+        //  idk if below will execute
+        Log.d(TAG, "workouts on sets will be updated. Workout name = ${workout.thisWorkoutName}")
+        repository.updateWorkoutOnSets(workout)
     }
     fun updateSet(set: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
         // todo:

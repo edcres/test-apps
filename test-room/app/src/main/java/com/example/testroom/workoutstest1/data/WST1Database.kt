@@ -12,7 +12,7 @@ import com.example.testroom.workoutstest1.data.entities.WST1Set
 import com.example.testroom.workoutstest1.data.entities.WST1Workout
 
 @Database(entities = [WST1Group::class, WST1Workout::class, WST1Set::class],
-    version = 5,
+    version = 7,
     exportSchema = false)
 abstract class WST1Database : RoomDatabase() {
 
