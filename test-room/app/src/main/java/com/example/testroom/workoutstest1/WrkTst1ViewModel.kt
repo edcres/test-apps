@@ -71,13 +71,13 @@ class WrkTst1ViewModel : ViewModel() {
     fun insertWorkoutSet(workoutSet: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
         repository.insert(workoutSet)
     }
-    fun updateWorkout(workout: WST1Workout) = CoroutineScope(Dispatchers.IO).launch {
+    fun updateWorkout(previousWorkoutName: String, workout: WST1Workout) = CoroutineScope(Dispatchers.IO).launch {
         Log.d(TAG, "workout to update: $workout")
         repository.updateWorkout(workout)
         // todo: because these 2 functions are being called from within the same launch function,
         //  idk if below will execute
         Log.d(TAG, "workouts on sets will be updated. Workout name = ${workout.thisWorkoutName}")
-        repository.updateWorkoutOnSets(workout)
+        repository.updateWorkoutOnSets(previousWorkoutName, workout.thisWorkoutName)
     }
     fun updateSet(set: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
         // todo:

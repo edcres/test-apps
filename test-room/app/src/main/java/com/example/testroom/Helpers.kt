@@ -35,3 +35,13 @@ fun getSetWithName(name: String, objects: List<WST1Set>): WST1Set? {
     }
     return set
 }
+
+fun getSetWithId(id: Long, objects: List<WST1Set>): WST1Set? {
+    var set: WST1Set? = null
+    objects.forEach {
+        if(id == it.workoutId) {
+            set = it
+        }
+    }
+    return set
+}

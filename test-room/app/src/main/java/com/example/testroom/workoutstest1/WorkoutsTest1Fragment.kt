@@ -162,6 +162,7 @@ class WorkoutsTest1Fragment : Fragment() {
                     }
                 }
             }
+            var previousWorkoutName: String? = null
             workoutTitleEt.doAfterTextChanged {
                 var chosenWorkout: WST1Workout? = currentWorkout
                 if (!workoutLocked) {
@@ -170,10 +171,13 @@ class WorkoutsTest1Fragment : Fragment() {
                 Log.d(fragmentTAG, "chosen workout: $chosenWorkout")
                 if (chosenWorkout != null) {
                     currentWorkout = chosenWorkout
+                    if (previousWorkoutName.isNullOrEmpty()) {
+                        previousWorkoutName = currentWorkout!!.thisWorkoutName
+                    }
                     currentWorkout!!.thisWorkoutName = it.toString()
                     currentWorkout!!.workoutGroup = groupEt.text.toString()
                     Log.d(fragmentTAG, "workout id = ${currentWorkout!!.id},\tname: ${it.toString()}")
-                    viewModel.updateWorkout(currentWorkout!!)
+                    viewModel.updateWorkout(previousWorkoutName, currentWorkout!!)
                 }
             }
             repsTxt1.doAfterTextChanged {

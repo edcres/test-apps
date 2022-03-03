@@ -58,7 +58,7 @@ class WST1Repo(private val database: WST1Database) {
     }
 
     @WorkerThread
-    suspend fun updateWorkoutOnSets(workout: WST1Workout) {
-        database.setDao().updateWorkoutOnSets(workout.id, workout.thisWorkoutName)
+    suspend fun updateWorkoutOnSets(oldWorkout: String, newWorkout: String) {
+        database.setDao().updateWorkoutOnSets(oldWorkout, newWorkout)
     }
 }
