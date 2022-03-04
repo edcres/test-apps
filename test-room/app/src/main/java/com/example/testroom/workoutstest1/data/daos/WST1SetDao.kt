@@ -27,6 +27,6 @@ interface WST1SetDao {
     )
     suspend fun updateWorkoutOnSets(oldWorkout: String, newWorkout: String)
 
-    @Update
-    suspend fun updateSets(sets: WST1Set)
+//    @Update
+//    suspend fun updateSets(sets: WST1Set)
 }
