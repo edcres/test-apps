@@ -55,17 +55,20 @@ class WST1Repo(private val database: WST1Database) {
         Log.d(TAG, "set to delete: $set")
         database.setDao().delete(set)
     }
-
     @WorkerThread
     suspend fun updateWorkoutOnSets(oldWorkout: String, newWorkout: String) {
         database.setDao().updateWorkoutOnSets(oldWorkout, newWorkout)
     }
-
+    @WorkerThread
     suspend fun getWorkoutsOfThisGroup(group: String): List<WST1Workout> {
         return database.workoutDao().getWorkoutsOfThisGroup(group)
     }
-
+    @WorkerThread
     suspend fun getSetsOfWorkout(workoutId: Long): List<WST1Set> {
         return database.setDao().getSetsOfWorkout(workoutId)
+    }
+    @WorkerThread
+    suspend fun getNextSetNum(workoutId: Long): Int {
+        return database.setDao().getSetNumList(workoutId).size
     }
 }

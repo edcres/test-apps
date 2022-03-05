@@ -229,5 +229,13 @@
             android:text="get_sets_of_workout_btn"
             app:layout_constraintBottom_toTopOf="@+id/get_workouts_of_group_btn"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/get_next_set_num_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="get_next_set_num"
+            app:layout_constraintBottom_toTopOf="@+id/get_sets_of_workout_btn"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

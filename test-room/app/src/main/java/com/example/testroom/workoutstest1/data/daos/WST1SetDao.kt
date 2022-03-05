@@ -28,8 +28,16 @@ interface WST1SetDao {
     @Query(
         "SELECT * FROM wst1_set_table " +
                 "WHERE workout_id = :workoutId " +
-                "ORDER BY `set` ASC")
+                "ORDER BY `set` ASC"
+    )
     suspend fun getSetsOfWorkout(workoutId: Long): List<WST1Set>
+
+    @Query(
+        "SELECT `set` FROM wst1_set_table " +
+                "WHERE workout_id = :workoutId " +
+                "ORDER BY `set` ASC"
+    )
+    suspend fun getSetNumList(workoutId: Long): List<Int>
 
 //    @Update
 //    suspend fun updateSets(sets: WST1Set)

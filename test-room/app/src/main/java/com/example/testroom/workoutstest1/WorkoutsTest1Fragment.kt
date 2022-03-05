@@ -246,7 +246,16 @@ class WorkoutsTest1Fragment : Fragment() {
             getSetsOfWorkoutBtn.setOnClickListener {
                 if(currentWorkout != null) {
                     viewModel.getSetsOfWorkout(currentWorkout!!.id).observe(viewLifecycleOwner) {
-                        Log.d(fragmentTAG, "${it.size}\n$it")
+                        Log.d(fragmentTAG, "${it.size}\n$it")/**/
+                    }
+                } else {
+                    Log.e(fragmentTAG, "currentWorkout is null")
+                }
+            }
+            getNextSetNumBtn.setOnClickListener {
+                if(currentWorkout != null) {
+                    viewModel.getNextSetNum(currentWorkout!!.id).observe(viewLifecycleOwner) {
+                        Log.d(fragmentTAG, "Next set:\n$it")
                     }
                 } else {
                     Log.e(fragmentTAG, "currentWorkout is null")

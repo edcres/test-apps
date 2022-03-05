@@ -98,10 +98,14 @@ class WrkTst1ViewModel : ViewModel() {
         }
         return setsOfWorkout
     }
-    fun getNextSetNum(workoutName: String): Int {
+    fun getNextSetNum(workoutId: Long): MutableLiveData<Int> {
         // todo: do a query that gets the next set in that workout
         //  check how many sets are part of that workout
-        return 2
+        val nextNum = MutableLiveData<Int>()
+        CoroutineScope(Dispatchers.IO).launch {
+            nextNum.postValue(repository.getNextSetNum(workoutId) + 1)
+        }
+        return nextNum
     }
     fun addGroupToWorkout(workout: WST1Workout) {
         // todo: add the 'groupSelected' to the workout_group in Workout Entity in the database
