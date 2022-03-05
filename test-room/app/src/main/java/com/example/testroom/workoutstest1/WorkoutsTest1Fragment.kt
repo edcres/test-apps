@@ -237,6 +237,13 @@ class WorkoutsTest1Fragment : Fragment() {
                     insertSet(3)
                 }
             }
+
+            getWorkoutsOfGroupBtn.setOnClickListener {
+                viewModel.getWorkoutsOfThisGroup(groupEt.text.toString()).observe(viewLifecycleOwner) {
+
+                    Log.d(fragmentTAG, "${it.size}\n$it")
+                }
+            }
         }
         setUpObservers()
     }

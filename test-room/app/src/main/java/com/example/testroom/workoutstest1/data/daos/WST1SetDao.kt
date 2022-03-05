@@ -18,12 +18,10 @@ interface WST1SetDao {
     @Delete
     suspend fun delete(set: WST1Set)
 
-    // todo: all the sets who have this workoutID,
-    //  change the workoutName attribute to this workoutName
-    @Query("" +
-            "UPDATE wst1_set_table " +
-            "SET workout_name = :newWorkout " +
-            "WHERE workout_name = :oldWorkout"
+    @Query(
+        "UPDATE wst1_set_table " +
+                "SET workout_name = :newWorkout " +
+                "WHERE workout_name = :oldWorkout"
     )
     suspend fun updateWorkoutOnSets(oldWorkout: String, newWorkout: String)
 

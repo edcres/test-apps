@@ -2,6 +2,7 @@ package com.example.testroom.workoutstest1.data
 
 import android.util.Log
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.LiveData
 import com.example.testroom.workoutstest1.data.entities.WST1Group
 import com.example.testroom.workoutstest1.data.entities.WST1Set
 import com.example.testroom.workoutstest1.data.entities.WST1Workout
@@ -11,8 +12,6 @@ class WST1Repo(private val database: WST1Database) {
 
     private val TAG = "Repo TAG"
 
-    // todo: might have to make these vars into functions so they
-    //  are refreshed every time they are called
     val allWorkoutGroups: Flow<List<WST1Group>> = database.groupDao().getAlphabetizedWorkoutGroups()
     val allWorkouts: Flow<List<WST1Workout>> = database.workoutDao().getAlphabetizedWorkouts()
     val allWorkoutSets: Flow<List<WST1Set>> = database.setDao().getAlphabetizedSets()
@@ -59,7 +58,10 @@ class WST1Repo(private val database: WST1Database) {
 
     @WorkerThread
     suspend fun updateWorkoutOnSets(oldWorkout: String, newWorkout: String) {
-        Log.d(TAG, "set updated: workout old name = $oldWorkout, new name = $newWorkout")
         database.setDao().updateWorkoutOnSets(oldWorkout, newWorkout)
+    }
+
+    suspend fun getWorkoutsOfThisGroup(group: String): List<WST1Workout> {
+        return database.workoutDao().getWorkoutsOfThisGroup(group)
     }
 }

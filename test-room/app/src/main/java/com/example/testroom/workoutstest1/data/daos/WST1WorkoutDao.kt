@@ -1,7 +1,9 @@
 package com.example.testroom.workoutstest1.data.daos
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.testroom.workoutstest1.data.entities.WST1Group
 import com.example.testroom.workoutstest1.data.entities.WST1Workout
 import com.example.testroom.workoutstest1.data.entities.WST1WorkoutAndSets
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +22,14 @@ interface WST1WorkoutDao {
     suspend fun update(workout: WST1Workout)
     @Delete
     suspend fun delete(workout: WST1Workout)
+
+    // return all the workouts who's group name is :group
+    @Query(
+        "SELECT * FROM wst1_workout_table " +
+                "WHERE workout_group = :group " +
+                "ORDER BY id ASC"
+    )
+    suspend fun getWorkoutsOfThisGroup(group: String): List<WST1Workout>
 
     // relationship between workout and set
     @Transaction

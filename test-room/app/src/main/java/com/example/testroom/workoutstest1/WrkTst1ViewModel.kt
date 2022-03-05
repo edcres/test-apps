@@ -36,9 +36,6 @@ class WrkTst1ViewModel : ViewModel() {
         fetchAllWorkouts()
     }
 
-    // todo: I don't know if the workout variables in the repo are updated automatically.
-    //      test that in the test app
-    //      if they are then i don't need to update the livedata variables from here
     // DATABASE QUERIES //
     private fun fetchAllWorkouts() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -76,7 +73,6 @@ class WrkTst1ViewModel : ViewModel() {
         repository.updateWorkoutOnSets(previousWorkoutName, workout.thisWorkoutName)
     }
     fun updateSet(set: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
-        // todo:
         repository.updateSet(set)
     }
     fun removeGroup(group: WST1Group) = CoroutineScope(Dispatchers.IO).launch {
@@ -88,10 +84,14 @@ class WrkTst1ViewModel : ViewModel() {
     fun removeSet(set: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
         repository.deleteSet(set)
     }
-    fun getWorkoutsOfThisGroup(group: WST1Group): List<WST1Workout> {
+    fun getWorkoutsOfThisGroup(group: String): MutableLiveData<List<WST1Workout>> {
         // todo: do a query that gets all the workouts that are part of the group
         //      group = 'groupToDisplay'
-        return mutableListOf()
+        val workoutsOfGroup = MutableLiveData<List<WST1Workout>>()
+        CoroutineScope(Dispatchers.IO).launch {
+            workoutsOfGroup.postValue(repository.getWorkoutsOfThisGroup(group))
+        }
+        return workoutsOfGroup
     }
     fun getSetsOfThisWorkout(workoutName: String): List<WST1Set> {
         // todo
