@@ -179,7 +179,7 @@ class WorkoutsTest1Fragment : Fragment() {
                     currentWorkout!!.thisWorkoutName = it.toString()
                     currentWorkout!!.workoutGroup = groupEt.text.toString()
                     Log.d(fragmentTAG, "workout id = ${currentWorkout!!.id},\tname: ${it.toString()}")
-                    viewModel.updateWorkout(previousWorkoutName!!, currentWorkout!!)
+                    viewModel.updateWorkoutName(previousWorkoutName!!, currentWorkout!!)
                 }
             }
             repsTxt1.doAfterTextChanged {
@@ -260,6 +260,11 @@ class WorkoutsTest1Fragment : Fragment() {
                 } else {
                     Log.e(fragmentTAG, "currentWorkout is null")
                 }
+            }
+            groupHasWorkoutsBtn.setOnClickListener {
+                val workoutName = groupEt.text.toString()
+                val workoutGroups = viewModel.groups.value!!
+                viewModel.groupHasWorkouts( getGroupWithName(workoutName, workoutGroups)!! )
             }
         }
         setUpObservers()

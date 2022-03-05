@@ -71,4 +71,9 @@ class WST1Repo(private val database: WST1Database) {
     suspend fun getNextSetNum(workoutId: Long): Int {
         return database.setDao().getSetNumList(workoutId).size
     }
+    @WorkerThread
+    suspend fun groupHasWorkouts(groupName: String): Boolean {
+        // If list is empty, returns false, else return true
+        return database.workoutDao().getWorkoutsOfThisGroup(groupName).isNotEmpty()
+    }
 }

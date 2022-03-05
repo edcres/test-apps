@@ -68,9 +68,12 @@ class WrkTst1ViewModel : ViewModel() {
     fun insertWorkoutSet(workoutSet: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
         repository.insert(workoutSet)
     }
-    fun updateWorkout(previousWorkoutName: String, workout: WST1Workout) = CoroutineScope(Dispatchers.IO).launch {
+    fun updateWorkoutName(previousWorkoutName: String, workout: WST1Workout) = CoroutineScope(Dispatchers.IO).launch {
         repository.updateWorkout(workout)
         repository.updateWorkoutOnSets(previousWorkoutName, workout.thisWorkoutName)
+    }
+    fun updateGroupOnWorkout(workout: WST1Workout) = CoroutineScope(Dispatchers.IO).launch {
+        repository.updateWorkout(workout)
     }
     fun updateSet(set: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
         repository.updateSet(set)
@@ -99,23 +102,22 @@ class WrkTst1ViewModel : ViewModel() {
         return setsOfWorkout
     }
     fun getNextSetNum(workoutId: Long): MutableLiveData<Int> {
-        // todo: do a query that gets the next set in that workout
-        //  check how many sets are part of that workout
         val nextNum = MutableLiveData<Int>()
         CoroutineScope(Dispatchers.IO).launch {
             nextNum.postValue(repository.getNextSetNum(workoutId) + 1)
         }
         return nextNum
     }
-    fun addGroupToWorkout(workout: WST1Workout) {
-        // todo: add the 'groupSelected' to the workout_group in Workout Entity in the database
-        //    (watch out for concurrency issues)
-    }
-    fun groupHasWorkouts(group: WST1Group): Boolean {
-        // todo: call this function
-        // todo: check if this group has any workouts
-        // if not then delete group
-        return true
+    fun groupHasWorkouts(group: WST1Group) {
+        // If the group has no workouts, remove it from db.
+        CoroutineScope(Dispatchers.IO).launch {
+            if(repository.groupHasWorkouts(group.groupName)) {
+                Log.i(TAG, "Group ${group.groupName} still has workouts.")
+            } else {
+                repository.deleteGroup(group)
+                Log.i(TAG, "Group ${group.groupName} removed.")
+            }
+        }
     }
 
     // test functions

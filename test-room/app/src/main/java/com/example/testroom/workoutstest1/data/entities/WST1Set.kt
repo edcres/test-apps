@@ -20,6 +20,7 @@ import androidx.room.PrimaryKey
 data class WST1Set (
     @PrimaryKey
     @ColumnInfo(name = "workout_plus_set")
+    // todo: should be 'workout_plus_set_id' bc the set attribute on the entities will change
     val workoutPlusSet: String = "",
     @ColumnInfo(name = "workout_id")   // relation to workout group table
     val workoutId: Long,
