@@ -86,6 +86,11 @@ class WrkTst1ViewModel : ViewModel() {
     }
     fun removeSet(set: WST1Set) = CoroutineScope(Dispatchers.IO).launch {
         repository.deleteSet(set)
+        // todo: When deleting a set, update all the setNumbs from all the other sets.
+        if (sets.value != null) repository.updateSetOnSets(
+            set.set,
+            repository.getSetsOfWorkout(set.workoutId)
+        )
     }
     fun getWorkoutsOfThisGroup(group: String): MutableLiveData<List<WST1Workout>> {
         val workoutsOfGroup = MutableLiveData<List<WST1Workout>>()

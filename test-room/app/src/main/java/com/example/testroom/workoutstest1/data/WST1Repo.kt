@@ -39,6 +39,18 @@ class WST1Repo(private val database: WST1Database) {
         Log.d(TAG, "set to update: $set")
         database.setDao().update(set)
     }
+    @WorkerThread
+    suspend fun updateSetOnSets(startingSet: Int, setsOfThisWorkout: List<WST1Set>) {
+        if(setsOfThisWorkout.isNotEmpty()) {
+            for (i in 1..setsOfThisWorkout.size) {
+                if (startingSet >= setsOfThisWorkout[i].set) {
+                    database.setDao().updateSetOnSets(oldSetNum = i, newSetNum = i - 1)
+                }
+            }
+        } else {
+            Log.i(TAG, "There are no more sets.")
+        }
+    }
 
     @WorkerThread
     suspend fun deleteGroup(group: WST1Group) {

@@ -26,6 +26,13 @@ interface WST1SetDao {
     suspend fun updateWorkoutOnSets(oldWorkout: String, newWorkout: String)
 
     @Query(
+        "UPDATE wst1_set_table " +
+                "SET `set` = :newSetNum " +
+                "WHERE `set` = :oldSetNum"
+    )
+    suspend fun updateSetOnSets(oldSetNum: Int, newSetNum: Int)
+
+    @Query(
         "SELECT * FROM wst1_set_table " +
                 "WHERE workout_id = :workoutId " +
                 "ORDER BY `set` ASC"
