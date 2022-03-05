@@ -85,17 +85,18 @@ class WrkTst1ViewModel : ViewModel() {
         repository.deleteSet(set)
     }
     fun getWorkoutsOfThisGroup(group: String): MutableLiveData<List<WST1Workout>> {
-        // todo: do a query that gets all the workouts that are part of the group
-        //      group = 'groupToDisplay'
         val workoutsOfGroup = MutableLiveData<List<WST1Workout>>()
         CoroutineScope(Dispatchers.IO).launch {
             workoutsOfGroup.postValue(repository.getWorkoutsOfThisGroup(group))
         }
         return workoutsOfGroup
     }
-    fun getSetsOfThisWorkout(workoutName: String): List<WST1Set> {
-        // todo
-        return mutableListOf()
+    fun getSetsOfWorkout(workoutId: Long): MutableLiveData<List<WST1Set>> {
+        val setsOfWorkout = MutableLiveData<List<WST1Set>>()
+        CoroutineScope(Dispatchers.IO).launch {
+            setsOfWorkout.postValue(repository.getSetsOfWorkout(workoutId))
+        }
+        return setsOfWorkout
     }
     fun getNextSetNum(workoutName: String): Int {
         // todo: do a query that gets the next set in that workout

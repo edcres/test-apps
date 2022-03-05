@@ -240,8 +240,16 @@ class WorkoutsTest1Fragment : Fragment() {
 
             getWorkoutsOfGroupBtn.setOnClickListener {
                 viewModel.getWorkoutsOfThisGroup(groupEt.text.toString()).observe(viewLifecycleOwner) {
-
                     Log.d(fragmentTAG, "${it.size}\n$it")
+                }
+            }
+            getSetsOfWorkoutBtn.setOnClickListener {
+                if(currentWorkout != null) {
+                    viewModel.getSetsOfWorkout(currentWorkout!!.id).observe(viewLifecycleOwner) {
+                        Log.d(fragmentTAG, "${it.size}\n$it")
+                    }
+                } else {
+                    Log.e(fragmentTAG, "currentWorkout is null")
                 }
             }
         }

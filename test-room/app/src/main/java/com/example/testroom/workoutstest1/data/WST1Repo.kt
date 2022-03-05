@@ -64,4 +64,8 @@ class WST1Repo(private val database: WST1Database) {
     suspend fun getWorkoutsOfThisGroup(group: String): List<WST1Workout> {
         return database.workoutDao().getWorkoutsOfThisGroup(group)
     }
+
+    suspend fun getSetsOfWorkout(workoutId: Long): List<WST1Set> {
+        return database.setDao().getSetsOfWorkout(workoutId)
+    }
 }
