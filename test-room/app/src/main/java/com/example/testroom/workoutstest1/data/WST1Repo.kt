@@ -42,9 +42,13 @@ class WST1Repo(private val database: WST1Database) {
     @WorkerThread
     suspend fun updateSetOnSets(startingSet: Int, setsOfThisWorkout: List<WST1Set>) {
         if(setsOfThisWorkout.isNotEmpty()) {
+            Log.d(TAG, "updateSetOnSets: \n.\n.")
             for (i in 1..setsOfThisWorkout.size) {
-                if (startingSet >= setsOfThisWorkout[i].set) {
-                    database.setDao().updateSetOnSets(oldSetNum = i, newSetNum = i - 1)
+                Log.d(TAG, "setsOfThisWorkout size = ${setsOfThisWorkout.size}")
+                if (startingSet <= setsOfThisWorkout[i-1].set) {
+                    Log.d(TAG, "this set: ${setsOfThisWorkout[i-1].set}")
+                    database.setDao().updateSetOnSets(setsOfThisWorkout[i-1].set, setsOfThisWorkout[i-1].set-1)
+                    Log.d(TAG, "old num = $i, new num = ${i - 1}")
                 }
             }
         } else {
