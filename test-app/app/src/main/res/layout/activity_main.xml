@@ -46,4 +46,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_layout_widgets_activity_btn" />
 
+    <Button
+        android:id="@+id/recycler_in_recycler_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="recycler in recycler"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/kotlin_rmbr_btn" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

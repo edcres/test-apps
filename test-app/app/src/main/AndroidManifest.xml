@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestApp">
         <activity
+            android:name=".recyclerinrecycler.NestedRecyclerActivity"
+            android:exported="false" />
+        <activity
             android:name=".kotlinremember.KotlinRmbrActivity"
             android:exported="true" />
         <activity

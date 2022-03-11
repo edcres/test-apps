@@ -55,6 +55,10 @@ class WST1Repo(private val database: WST1Database) {
             Log.i(TAG, "There are no more sets.")
         }
     }
+    @WorkerThread
+    suspend fun updateWorkoutOnSets(oldWorkout: String, newWorkout: String) {
+        database.setDao().updateWorkoutOnSets(oldWorkout, newWorkout)
+    }
 
     @WorkerThread
     suspend fun deleteGroup(group: WST1Group) {
@@ -71,10 +75,7 @@ class WST1Repo(private val database: WST1Database) {
         Log.d(TAG, "set to delete: $set")
         database.setDao().delete(set)
     }
-    @WorkerThread
-    suspend fun updateWorkoutOnSets(oldWorkout: String, newWorkout: String) {
-        database.setDao().updateWorkoutOnSets(oldWorkout, newWorkout)
-    }
+
     @WorkerThread
     suspend fun getWorkoutsOfThisGroup(group: String): List<WST1Workout> {
         return database.workoutDao().getWorkoutsOfThisGroup(group)

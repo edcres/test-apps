@@ -58,6 +58,7 @@ class WrkTst1ViewModel : ViewModel() {
         repository.insert(workoutGroup)
     }
     fun insertWorkout(workout: WST1Workout): MutableLiveData<Long> {
+        Log.d(TAG, "insertWorkout: $workout")
         val itemId = MutableLiveData<Long>()
         viewModelScope.launch {
             itemId.postValue(repository.insert(workout))

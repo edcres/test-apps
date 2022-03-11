@@ -17,6 +17,9 @@ import com.example.testroom.workoutstest1.data.entities.WST1Group
 import com.example.testroom.workoutstest1.data.entities.WST1Set
 import com.example.testroom.workoutstest1.data.entities.WST1Workout
 
+// OJO: parent entity needs to be created before child entity. Causes e:
+//  - FOREIGN KEY constraint failed (code 787 SQLITE_CONSTRAINT_FOREIGNKEY)
+
 // I have to click some et twice to create them: Workout entity; Set entity
 
 // With this setup, when a group is removed, all its workouts are removed
