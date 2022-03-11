@@ -38,27 +38,12 @@ class WorkoutsAdapter(
         fun bind(workout: Workout) {
             binding.apply {
                 // TITLE //
-                specificWorkoutInput.doAfterTextChanged {
-                    workout.workoutName = it.toString()
-                    viewModel.updateWorkoutName(workout)
-                }
-                // TITLE //
-                // GROUP SETS //
-                setsAdapter = SetsAdapter(false)
+                specificWorkoutInput.setText(workout.workoutName)
+
+                setsAdapter = SetsAdapter(true)
                 setListRecycler.adapter = setsAdapter
-                viewModel.getSetsOfWorkout(workout.id)
-                    .observe(fragLifecycleOwner) { theseSets ->
-                        Log.d(GLOBAL_TAG, "WorkoutListAdapter observed:\n$theseSets")
-                        setsAdapter.submitList(theseSets)
-                    }
+                setListRecycler.layoutManager = CustomLinearLayoutManager(context)
 
-                // GROUP SETS //
-
-                removeItemBtn.setOnClickListener {
-                    setsAdapter.submitList(viewModel.sets.value)
-                    Log.d(GLOBAL_TAG, "submit clicked\n${viewModel.sets.value}")
-//                    viewModel.removeWorkout(workout, workout.workoutGroup)
-                }
                 binding.executePendingBindings()
             }
         }
