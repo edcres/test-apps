@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aldreduser.testapp.GLOBAL_TAG
 import com.aldreduser.testapp.basicrecyclerview.entities.WorkoutSet
+import com.aldreduser.testapp.databinding.SetLinearLayoutBinding
 
 class SetsAdapter(
     private val setAreRemoved: Boolean
