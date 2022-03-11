@@ -20,6 +20,8 @@
         <entry key="app/src/main/res/layout/layout_widget_item_to_add.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/recycler_item.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/recycler_item_1.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/set_linear_layout.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/workout_item.xml" value="0.3098958333333333" />
       </map>
     </option>
   </component>
