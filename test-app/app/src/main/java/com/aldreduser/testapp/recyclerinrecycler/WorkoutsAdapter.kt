@@ -13,15 +13,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aldreduser.testapp.FIRST_TAB_TITLE
 import com.aldreduser.testapp.GLOBAL_TAG
 import com.aldreduser.testapp.basicrecyclerview.entities.Workout
+import com.aldreduser.testapp.basicrecyclerview.entities.WorkoutSet
 import com.aldreduser.testapp.databinding.WorkoutItemBinding
 
 class WorkoutsAdapter(
     private val context: Context,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val startingSets: List<WorkoutSet>
 ) : ListAdapter<Workout, WorkoutsAdapter.WorkoutsViewHolder>(WorkoutDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutsViewHolder {
-        return WorkoutsViewHolder.from(context, lifecycleOwner, parent)
+        return WorkoutsViewHolder.from(context, lifecycleOwner, startingSets, parent)
     }
 
     override fun onBindViewHolder(holderWorkouts: WorkoutsViewHolder, position: Int) =
@@ -30,6 +32,7 @@ class WorkoutsAdapter(
     class WorkoutsViewHolder private constructor(
         private val context: Context,
         private val fragLifecycleOwner: LifecycleOwner,
+        private val startingSets: List<WorkoutSet>,
         private val binding: WorkoutItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -44,6 +47,11 @@ class WorkoutsAdapter(
                 setListRecycler.adapter = setsAdapter
                 setListRecycler.layoutManager = CustomLinearLayoutManager(context)
 
+                // These will only happen for workout id = 0 bc all sets are of this workout
+                if(startingSets[0].workoutId == workout.id) {
+                    setsAdapter.submitList(startingSets)
+                }
+
                 binding.executePendingBindings()
             }
         }
@@ -52,11 +60,12 @@ class WorkoutsAdapter(
             fun from(
                 context: Context,
                 fragLifecycleOwner: LifecycleOwner,
+                startingSets: List<WorkoutSet>,
                 parent: ViewGroup
             ): WorkoutsViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = WorkoutItemBinding.inflate(layoutInflater, parent, false)
-                return WorkoutsViewHolder(context, fragLifecycleOwner, binding)
+                return WorkoutsViewHolder(context, fragLifecycleOwner, startingSets, binding)
             }
         }
     }

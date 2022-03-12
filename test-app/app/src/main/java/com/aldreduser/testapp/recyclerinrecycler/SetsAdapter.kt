@@ -1,11 +1,10 @@
 package com.aldreduser.testapp.recyclerinrecycler
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -41,12 +40,14 @@ class SetsAdapter(
         fun bind(workoutSet: WorkoutSet) {
             Log.d(GLOBAL_TAG, "set ${workoutSet.set} called from setsAdapter.")
             binding.apply {
+
                 if(setAreRemoved) {
                     // If sets can be removed
                     removeSetBtn.visibility = View.VISIBLE
                     spacer.visibility = View.VISIBLE
                     removeSetBtn.setOnClickListener {
-                        viewModel.removeSet(workoutSet)
+//                        viewModel.removeSet(workoutSet)
+                        Log.d(GLOBAL_TAG, "set ${workoutSet.id} removed")
                     }
                 }
 
@@ -56,11 +57,11 @@ class SetsAdapter(
 
                 repsText.doAfterTextChanged {
                     workoutSet.reps = it.toString().toInt()
-                    viewModel.updateSet(workoutSet)
+                    Log.d(GLOBAL_TAG, "set ${workoutSet.id} reps = ${workoutSet.reps}")
                 }
                 weightText.doAfterTextChanged {
                     workoutSet.weight = it.toString().toDouble()
-                    viewModel.updateSet(workoutSet)
+                    Log.d(GLOBAL_TAG, "set ${workoutSet.id} weight = ${workoutSet.weight}")
                 }
             }
         }
