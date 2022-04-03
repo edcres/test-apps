@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav"
+    app:startDestination="@id/startFragment">
+
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.example.coolfunctions.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_startFragment_to_linkedListFragment"
+            app:destination="@id/linkedListFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_hashMapFragment"
+            app:destination="@id/hashMapFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_arrayListFragment"
+            app:destination="@id/arrayListFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_treeFragment"
+            app:destination="@id/treeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/linkedListFragment"
+        android:name="com.example.coolfunctions.datastructures.LinkedListFragment"
+        android:label="fragment_linked_list"
+        tools:layout="@layout/fragment_linked_list" />
+    <fragment
+        android:id="@+id/hashMapFragment"
+        android:name="com.example.coolfunctions.datastructures.HashMapFragment"
+        android:label="fragment_hash_map"
+        tools:layout="@layout/fragment_hash_map" />
+    <fragment
+        android:id="@+id/arrayListFragment"
+        android:name="com.example.coolfunctions.datastructures.ArrayListFragment"
+        android:label="fragment_array_list"
+        tools:layout="@layout/fragment_array_list" />
+    <fragment
+        android:id="@+id/treeFragment"
+        android:name="com.example.coolfunctions.datastructures.TreeFragment"
+        android:label="fragment_tree"
+        tools:layout="@layout/fragment_tree" />
+</navigation>

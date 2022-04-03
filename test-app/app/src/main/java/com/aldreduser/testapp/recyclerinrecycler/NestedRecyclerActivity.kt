@@ -9,6 +9,9 @@ import com.aldreduser.testapp.R
 import com.aldreduser.testapp.basicrecyclerview.entities.Workout
 import com.aldreduser.testapp.basicrecyclerview.entities.WorkoutSet
 
+// The whole point of this is to have the nested recyclerview
+//      have a custom LayoutManager "CustomLinearLayoutManager"
+
 class NestedRecyclerActivity : AppCompatActivity() {
 
     private lateinit var workoutsAdapter: WorkoutsAdapter
@@ -39,9 +42,9 @@ class NestedRecyclerActivity : AppCompatActivity() {
     private fun startingSets(): List<WorkoutSet> {
         return listOf(
             WorkoutSet(0, 0, "wor1", 1, 0, 0.0),
-            WorkoutSet(1, 0, "wor2", 2, 0, 0.0),
-            WorkoutSet(2, 0, "wor3", 3, 0, 0.0),
-            WorkoutSet(3, 0, "wor4", 4, 0, 0.0)
+            WorkoutSet(1, 0, "wor1", 2, 0, 0.0),
+            WorkoutSet(2, 0, "wor1", 3, 0, 0.0),
+            WorkoutSet(3, 0, "wor1", 4, 0, 0.0)
         )
     }
 }
