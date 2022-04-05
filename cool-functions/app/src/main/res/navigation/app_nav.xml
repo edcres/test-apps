@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_startFragment_to_treeFragment"
             app:destination="@id/treeFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_heapFragment"
+            app:destination="@id/heapFragment" />
     </fragment>
     <fragment
         android:id="@+id/linkedListFragment"
@@ -43,4 +46,9 @@
         android:name="com.example.coolfunctions.datastructures.TreeFragment"
         android:label="fragment_tree"
         tools:layout="@layout/fragment_tree" />
+    <fragment
+        android:id="@+id/heapFragment"
+        android:name="com.example.coolfunctions.HeapFragment"
+        android:label="fragment_heap"
+        tools:layout="@layout/fragment_heap" />
 </navigation>
