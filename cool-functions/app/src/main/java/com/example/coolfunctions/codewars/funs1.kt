@@ -2,6 +2,8 @@ package com.example.coolfunctions.codewars
 
 import kotlin.math.pow
 
+// https://www.techiedelight.com/remove-null-values-from-list-kotlin/
+
 private class funs1 {
 
     private fun sliceFun() {
@@ -26,7 +28,9 @@ private class funs1 {
 
     fun transformFlatFun() {
         val ass = "as df  h ghj"
+        ass.length
         ass.split(" ").flatMap { it.split(" ") }
+        ass.split(" ").toMutableList().removeAll(listOf("-"))
         // Returns a single list of all elements yielded from results of transform function
         // being invoked on each element of original collection.
     }
@@ -87,49 +91,211 @@ private class funs1 {
         a.sortedDescending().asSequence()
             .zip(b.sortedDescending().asSequence())
     }
+
+    // Returns a string containing last characters that satisfy the given predicate.
+    fun takeLastWhileFun(str: String) = str.takeLastWhile { it.isDigit() }.let {
+        if (it.isEmpty()) str + "1"
+        else str.replace(it, "%0${it.length}d".format(it.toInt() + 1))
+
+
+
+    }
 }
 
-fun zipInts() {
-    val arr = Array<String>(3)
-    arr.toMutableList().removeIf()
+//fun zipInts() {
+//    val arr = Array<String>(3)
+//    arr.toMutableList().removeIf()
+//
+//
+//    when()
+//}
 
 
-    when()
-}
 
 
 
 
-object DirReduction {
-    fun dirReduc(arr: Array<String>): Array<String> {
-        println(arr.toMutableList())
-        val directionsMap = mapOf("N" to "NORTH","E" to "EAST","S" to "SOUTH","W" to "WEST")
-        var newDirs = arr.toMutableList()
-        var lookMore = true
-        while (lookMore) {
-            var lastDir = ""
-            lookMore = false
-            for (i in newDirs.size - 1 downTo 0) {
-                if (lastDir == getOpposite( newDirs[i], directionsMap )) {
-                    newDirs.removeAt(i + 1)
-                    lookMore = true
-                }
-                lastDir = newDirs[i]
+// todo: incrementString
+import java.lang.Double.parseDouble
+
+fun incrementString(str: String) : String {
+    // Not taking decimals into account
+    var newStr = str
+    println("-----start----" + newStr)
+    var numberToAdd = ""
+
+
+    if (str.isEmpty() || !isInt(str.last().toString())) {
+        newStr += "1"
+    } else {
+
+        // Take out the number from the string before inserting a new number
+        for (i in newStr.length - 1 downTo 0) {
+            if (isInt(  newStr[i].toString()   )) {
+                numberToAdd += newStr[i]
+            } else {
+                break
             }
         }
-        println(newDirs)
-        return newDirs.toTypedArray()
+        numberToAdd = numberToAdd.reversed()
+        println(numberToAdd)
+
+
+        // if the number starts with 0      if (numberToAdd[0] == "9")
+        if (numberToAdd[0].toString() != "0") {
+            newStr = newStr.dropLast( numberToAdd.length )
+            numberToAdd = (numberToAdd.toInt() + 1).toString()
+            newStr += numberToAdd
+        } else {
+            // count the number of 0s in the begining
+//             var startingZeros = 0
+//             for (i in 0 until numberToAdd.length - 1) {
+//                 if (i == '0') {
+//                     startingZeros ++
+//                 }
+//             }
+
+            println(newStr)
+            newStr = newStr.dropLast( (numberToAdd.toInt().toString().length) + 1 )
+            println(newStr)
+
+            // if carryOne
+            var numberToAddPrev = numberToAdd.toInt().toString()
+
+
+
+            var numberToAddPost = (numberToAdd.toInt() + 1).toString()
+
+            println("prev = " + numberToAddPrev)
+            println("post = " + numberToAddPost)
+
+
+            if (numberToAddPrev.length < numberToAddPost.length) {
+//                 println("post = " + numberToAddPost)
+                numberToAdd = numberToAddPost
+            } else {
+                numberToAdd = "0" + numberToAddPost
+            }
+
+//             println(numberToAdd)
+
+//             if (carries 1 to the 9) {
+//                 newStr += numberToAdd.toInt()
+//             } else {
+//                 newStr += numberToAdd
+//             }
+            newStr += numberToAdd
+
+
+
+
+
+
+//             val addToString = ""
+//             var carryOne = false
+//             var addZero = false
+
+//             for (i in numberToAdd.length-1 downTo 0) {
+//                 if (numberToAdd[0].toString() == "9") {
+//                     addZero = true
+//                 }
+
+//                 if (numberToAdd[i].toString() != "9") {
+//                         numberToAdd[i] = (numberToAdd[i].toInt() + 1).toString()
+//                         carryOne = false
+//                         break
+//                     } else {
+//                         numberToAdd[i] = 0
+//                         carryOne = true
+//                 }
+//             }
+//             if (addZero) {
+//                 numberToAdd = "1" + numberToAdd
+//             }
+
+
+
+
+
+
+//             numberToAdd.forEach {
+//                 if (newStr.last() != "9") {
+//                     newStr.last()
+//                 } else {
+
+//                 }
+//             }
+
+        }
+
+//        if (numberToAdd.toInt() == 0) {
+//             newStr = newStr.dropLast( 1 )
+//             newStr += "1"
+//         } else {
+//             newStr = newStr.dropLast( numberToAdd.length )
+//             numberToAdd = (numberToAdd.toInt() + 1).toString()
+//             newStr += numberToAdd
+//         }
+    }
+    println(newStr)
+    return newStr
+}
+
+fun isInt(num: String): Boolean {
+    return try {
+        num.toInt()
+        true
+    } catch (e: NumberFormatException) {
+        false
     }
 }
 
-fun getOpposite(thisDir: String, directionsMap: Map<String, String>): String {
-    return when (thisDir) {
-        directionsMap["N"] -> directionsMap["S"]!!
-        directionsMap["S"] -> directionsMap["N"]!!
-        directionsMap["W"] -> directionsMap["E"]!!
-        directionsMap["E"] -> directionsMap["W"]!!
-        else -> ""
+
+
+
+
+
+
+
+
+
+
+// todo: reorderWeights
+fun orderWeight(string:String):String {
+    val numsMap =  mutableMapOf<String, String>()
+    var finalString = ""
+    var previousConverted = ""
+    val newWeights = mutableListOf<Int>()
+    val repeatedWeights = mutableListOf<String>()  // original
+    val trimmedNums = string.split(" ").map {
+        val itTrimmed = it.trim()
+        if (itTrimmed.isEmpty()) {
+            "-"
+        } else {
+            numsMap.put(addDigits(it), it)
+            newWeights.add(addDigits(it).toInt())
+
+            if (previousConverted == addDigits(it)) {
+                repeatedWeights.add(it)
+            }
+            previousConverted = addDigits(it)
+            itTrimmed
+        }
+    }.filter { it != "-" }
+    newWeights.sortedBy {
+        finalString += " " + numsMap[it.toString()]
+        numsMap[it.toString()].toInt()
     }
+    return finalString.trim()
+    // Check if the weight of one number is the same as the adjusted weight of
+    //      the number before, if so use alphabetical ordering.
+}
+fun addDigits(num: String): String {
+    var addedDigits = 0
+    num.forEach {
+        addedDigits += num.toInt()
+    }
+    return addedDigits.toString()
 }
 
 

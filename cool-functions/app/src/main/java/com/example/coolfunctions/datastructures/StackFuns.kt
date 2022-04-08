@@ -9,5 +9,7 @@ class StackFuns {
 
         // 'peek' Returns the object at the top of the Stack without removing it.
         stack.peek()
+        // 'pop' Removes and returns the object at the top of the Stack.
+        stack.pop()
     }
 }
