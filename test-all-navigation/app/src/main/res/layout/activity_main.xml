@@ -4,15 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="8dp"
     tools:context=".MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/act_to_act_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:text="Act to Act"
+        android:textAllCaps="false"
+        android:layout_margin="8dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/frag_to_frag_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Frag to Frag"
+        android:textAllCaps="false"
+        android:layout_margin="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/act_to_act_btn" />
+
+    <Button
+        android:id="@+id/frag_nav_component_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Frag Nav Component"
+        android:textAllCaps="false"
+        android:layout_margin="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frag_to_frag_btn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

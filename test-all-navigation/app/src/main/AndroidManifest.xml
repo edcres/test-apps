@@ -10,14 +10,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestAllNavigation">
         <activity
+            android:name=".fragmentsnavcomnponent.FragNavCompActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".fragmenttofragment.FragToFragActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".activitytoactivity.ActToActActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
