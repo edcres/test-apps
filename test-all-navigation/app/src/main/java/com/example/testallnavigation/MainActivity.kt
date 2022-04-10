@@ -23,7 +23,11 @@ class MainActivity : AppCompatActivity() {
         fragNavComponentBtn = findViewById(R.id.frag_nav_component_btn)
 
         actToActBtn.setOnClickListener {
-            val intent = Intent(this, ActToActActivity::class.java)
+            val message = "Intent Receiver Activity"
+            val intent = Intent(this, ActToActActivity::class.java).also {
+                it.putExtra(ACT_TO_ACT_INTENT_TAG, message)
+            }
+//            intent.putExtra(ACT_TO_ACT_INTENT_TAG, message)
             startActivity(intent)
         }
         fragToFragBtn.setOnClickListener {
