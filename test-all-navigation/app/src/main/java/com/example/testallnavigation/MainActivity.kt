@@ -24,10 +24,15 @@ class MainActivity : AppCompatActivity() {
 
         actToActBtn.setOnClickListener {
             val message = "Intent Receiver Activity"
-            val intent = Intent(this, ActToActActivity::class.java).also {
-                it.putExtra(ACT_TO_ACT_INTENT_TAG, message)
-            }
-//            intent.putExtra(ACT_TO_ACT_INTENT_TAG, message)
+            val messagePosition = 1
+            val intentBundle = Bundle()
+            intentBundle.putString(ACT_TO_ACT_MESSAGE_BUNDLE_KEY, message)
+            intentBundle.putInt(ACT_TO_ACT_POSITION_BUNDLE_KEY, messagePosition)
+            val intent = Intent(this, ActToActActivity::class.java)
+            // Don't have to declare a bundle explicitly, can just add more put extras to the 'intent' and acts as a bundle
+//            intent.putExtra(ACT_TO_ACT_MESSAGE_BUNDLE_KEY, message)
+//            intent.putExtra(ACT_TO_ACT_POSITION_BUNDLE_KEY, message)
+            intent.putExtras(intentBundle)
             startActivity(intent)
         }
         fragToFragBtn.setOnClickListener {
