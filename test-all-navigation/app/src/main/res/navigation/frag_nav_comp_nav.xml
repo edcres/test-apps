@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frag_nav_comp_nav"
+    app:startDestination="@id/senderFragment">
+
+    <fragment
+        android:id="@+id/senderFragment"
+        android:name="com.example.testallnavigation.SenderFragment"
+        android:label="fragment_sender"
+        tools:layout="@layout/fragment_sender" >
+        <action
+            android:id="@+id/action_senderFragment_to_receiverFragment"
+            app:destination="@id/receiverFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/receiverFragment"
+        android:name="com.example.testallnavigation.ReceiverFragment"
+        android:label="fragment_receiver"
+        tools:layout="@layout/fragment_receiver" >
+        <argument
+            android:name="number"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+</navigation>

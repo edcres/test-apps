@@ -7,6 +7,8 @@
         <entry key="app/src/main/res/layout/activity_frag_nav_comp.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/activity_frag_to_frag.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3051818847656249" />
+        <entry key="app/src/main/res/layout/fragment_receiver.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_sender.xml" value="0.3098958333333333" />
       </map>
     </option>
   </component>

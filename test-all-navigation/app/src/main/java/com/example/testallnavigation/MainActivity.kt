@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, FragToFragActivity::class.java)
             startActivity(intent)
         }
-        fragToFragBtn.setOnClickListener {
+        fragNavComponentBtn.setOnClickListener {
             val intent = Intent(this, FragNavCompActivity::class.java)
             startActivity(intent)
         }

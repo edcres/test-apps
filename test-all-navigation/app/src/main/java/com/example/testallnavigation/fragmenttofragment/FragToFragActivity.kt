@@ -22,6 +22,15 @@ import com.example.testallnavigation.R
  *
  */
 
+
+// developer.android.com recommends either a sharedViewModel or 'setFragmentResultListener()'
+//setFragmentResultListener("requestKey") { requestKey, bundle ->
+//    // We use a String here, but any type that can be put in a Bundle is supported
+//    val result = bundle.getString("bundleKey")
+//    // Do something with the result
+//}
+
+
 class FragToFragActivity : AppCompatActivity(), ViewCommunicator {
 
     override fun onCreate(savedInstanceState: Bundle?) {
