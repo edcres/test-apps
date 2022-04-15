@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.google.android.material.button.MaterialButton
+        android:textColor="@color/black"
+        android:background="@color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="featured" />
+
+    <com.google.android.material.button.MaterialButton
+        android:textColor="@color/black"
+        android:background="@color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="apartment" />
+
+    <com.google.android.material.button.MaterialButton
+        android:textColor="@color/black"
+        android:background="@color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="accessories" />
+
+    <com.google.android.material.button.MaterialButton
+        android:textColor="@color/black"
+        android:background="@color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="shoes" />
+
+    <com.google.android.material.button.MaterialButton
+        android:textColor="@color/black"
+        android:background="@color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="tops" />
+
+    <com.google.android.material.button.MaterialButton
+        android:textColor="@color/black"
+        android:background="@color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bottoms" />
+
+    <com.google.android.material.button.MaterialButton
+        android:textColor="@color/black"
+        android:background="@color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dresses" />
+
+    <View
+        android:layout_width="56dp"
+        android:layout_height="1dp"
+        android:layout_margin="16dp"
+        android:background="@color/black" />
+
+    <com.google.android.material.button.MaterialButton
+        android:textColor="@color/black"
+        android:background="@color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="account" />
+
+</merge>
