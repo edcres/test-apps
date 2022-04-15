@@ -9,5 +9,30 @@
         android:id="@+id/startFragment"
         android:name="com.example.testui.StartFragment"
         android:label="fragment_start"
-        tools:layout="@layout/fragment_start" />
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_startFragment_to_oneFragment"
+            app:destination="@id/oneFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
+            app:popEnterAnim="@anim/from_right"
+            app:popExitAnim="@anim/to_left" />
+        <action
+            android:id="@+id/action_startFragment_to_twoFragment"
+            app:destination="@id/twoFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/oneFragment"
+        android:name="com.example.testui.OneFragment"
+        android:label="fragment_end"
+        tools:layout="@layout/fragment_one" />
+    <fragment
+        android:id="@+id/twoFragment"
+        android:name="com.example.testui.TwoFragment"
+        android:label="fragment_two"
+        tools:layout="@layout/fragment_two" />
 </navigation>
