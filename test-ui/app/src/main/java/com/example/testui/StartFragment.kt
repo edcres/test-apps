@@ -42,7 +42,8 @@ class StartFragment : Fragment() {
             navController.navigate(R.id.action_startFragment_to_oneFragment)
         }
         frag2Btn.setOnClickListener {
-            navController.navigate(R.id.action_startFragment_to_twoFragment)
+//            navController.navigate(R.id.action_startFragment_to_twoFragment)
+            navController.navigate(R.id.test_action_startFragment_to_twoFragment)
         }
 
         return view

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+<!--    https://www.geeksforgeeks.org/animation-in-android-with-example/-->
+
+<!--    <scale-->
+<!--        android:duration="500"-->
+<!--        android:fromXScale="1.0"-->
+<!--        android:fromYScale="1.0"-->
+<!--        android:interpolator="@android:anim/linear_interpolator"-->
+<!--        android:toXScale="1.0"-->
+<!--        android:toYScale="0.0" />-->
+<!--    <scale-->
+<!--        android:fromXScale="1.0"-->
+<!--        android:fromYScale="1.0"-->
+<!--        android:toXScale="2.0"-->
+<!--        android:toYScale="2.0"-->
+<!--        android:duration="700"-->
+<!--        android:pivotX="50%"-->
+<!--        android:pivotY="50%"/>-->
+<!--    <rotate-->
+<!--        android:duration="3000"-->
+<!--        android:fromDegrees="0"-->
+<!--        android:pivotX="50%"-->
+<!--        android:pivotY="50%"-->
+<!--        android:toDegrees="360" />-->
+<!--    <alpha-->
+<!--        android:duration="1000"-->
+<!--        android:fromAlpha="1"-->
+<!--        android:startOffset="500"-->
+<!--        android:toAlpha="0" />-->
+    <alpha android:fromAlpha="0.0"
+        android:toAlpha="1.0"
+        android:interpolator="@android:anim/accelerate_interpolator"
+        android:duration="500"
+        android:repeatMode="reverse"
+        android:repeatCount="5"/>
+
+</set>

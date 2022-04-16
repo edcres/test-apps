@@ -24,6 +24,12 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+
+<!--        test animation -->
+        <action
+            android:id="@+id/test_action_startFragment_to_twoFragment"
+            app:destination="@id/twoFragment"
+            app:exitAnim="@anim/test_ani"/>
     </fragment>
     <fragment
         android:id="@+id/oneFragment"
