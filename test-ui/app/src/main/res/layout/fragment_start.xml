@@ -11,6 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textSize="32sp"
+        android:padding="24dp"
+        android:background="@drawable/radius_background"
         android:text="start frag"/>
 
     <Button
@@ -26,5 +28,7 @@
         android:layout_height="wrap_content"
         android:text="frag 2"
         android:layout_gravity="center|end"/>
+
+
 
 </FrameLayout>
