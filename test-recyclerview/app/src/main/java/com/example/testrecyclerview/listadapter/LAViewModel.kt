@@ -27,6 +27,14 @@ class LAViewModel: ViewModel() {
         return itemsList
     }
 
+    //    private fun copyList(oldList: MutableList<BasicRecyclerItem>): MutableList<BasicRecyclerItem> {
+//        val newList = mutableListOf<BasicRecyclerItem>()
+//        oldList.forEach {
+//            newList.add(it)
+//        }
+//        return newList
+//    }
+
     fun removeItemAt(position: Int) {
         if (_basicItems.value != null) {
             if (_basicItems.value!!.size > position) {

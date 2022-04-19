@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import android.widget.Button
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testrecyclerview.R
@@ -36,6 +37,7 @@ class LAFragment : Fragment() {
         animController.delay = 0.20f
         animController.order = LayoutAnimationController.ORDER_NORMAL
 
+        // Start animation
         refreshBtn = view.findViewById(R.id.refresh_btn)
         addBtn = view.findViewById(R.id.add_btn)
         removeBtn = view.findViewById(R.id.remove_btn)
@@ -43,6 +45,16 @@ class LAFragment : Fragment() {
         startRecyclerview.layoutAnimation = animController
         startRecyclerview.adapter = recyclerAdapter
         startRecyclerview.layoutManager = LinearLayoutManager(requireContext())
+
+        // Swipe to delete
+        val swipeToDeleteCallback = object : SwipeToDeleteCallback() {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition // position of the item in the UI
+                viewModel.removeItemAt(position)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
+        itemTouchHelper.attachToRecyclerView(startRecyclerview)
 
         viewModel.basicItems.observe(viewLifecycleOwner) {
             recyclerAdapter.submitList(it.toList())
@@ -62,12 +74,4 @@ class LAFragment : Fragment() {
 
         return view
     }
-
-//    private fun copyList(oldList: MutableList<BasicRecyclerItem>): MutableList<BasicRecyclerItem> {
-//        val newList = mutableListOf<BasicRecyclerItem>()
-//        oldList.forEach {
-//            newList.add(it)
-//        }
-//        return newList
-//    }
 }
