@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testrecyclerview.R
 import com.example.testrecyclerview.StartRecyclerAdapter
+import java.util.*
 
 private const val TAG = "LAFrag_TAG"
 
@@ -20,7 +21,6 @@ class LAFragment : Fragment() {
 
     private lateinit var refreshBtn: Button
     private lateinit var addBtn: Button
-    private lateinit var removeBtn: Button
     private lateinit var startRecyclerview: RecyclerView
     private var recyclerAdapter = StartRecyclerAdapter()
     private val viewModel = LAViewModel()
@@ -40,20 +40,35 @@ class LAFragment : Fragment() {
         // Start animation
         refreshBtn = view.findViewById(R.id.refresh_btn)
         addBtn = view.findViewById(R.id.add_btn)
-        removeBtn = view.findViewById(R.id.remove_btn)
         startRecyclerview = view.findViewById(R.id.start_recyclerview)
         startRecyclerview.layoutAnimation = animController
         startRecyclerview.adapter = recyclerAdapter
         startRecyclerview.layoutManager = LinearLayoutManager(requireContext())
 
         // Swipe to delete
-        val swipeToDeleteCallback = object : SwipeToDeleteCallback() {
+        val editItemCallback = object : ItemMoveCallback() {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+
+                val fromPosition = viewHolder.adapterPosition
+                val toPosition = target.adapterPosition
+
+                Collections.swap(viewModel.basicItems.value!!, fromPosition, toPosition)
+                recyclerAdapter.notifyItemMoved(fromPosition, toPosition)
+
+                return false
+            }
+
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition // position of the item in the UI
                 viewModel.removeItemAt(position)
             }
         }
-        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
+        val itemTouchHelper = ItemTouchHelper(editItemCallback)
         itemTouchHelper.attachToRecyclerView(startRecyclerview)
 
         viewModel.basicItems.observe(viewLifecycleOwner) {
@@ -62,10 +77,6 @@ class LAFragment : Fragment() {
 
         addBtn.setOnClickListener {
             viewModel.addItem()
-        }
-
-        removeBtn.setOnClickListener {
-            viewModel.removeItemAt(1)
         }
 
         refreshBtn.setOnClickListener {

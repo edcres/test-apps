@@ -13,6 +13,12 @@ private const val TAG = "StartAdapter_TAG"
 class StartRecyclerAdapter :
     ListAdapter<BasicRecyclerItem, StartRecyclerAdapter.ClickWidgetViewHolder>(BasicItemDiffCallback()) {
 
+    // CODE FOR GESTURES //
+    fun deleteItem() {
+
+    }
+    // CODE FOR GESTURES //
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ClickWidgetViewHolder.from(parent)
 
