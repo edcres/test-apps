@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import android.widget.Button
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,7 +47,10 @@ class LAFragment : Fragment() {
         startRecyclerview.layoutManager = LinearLayoutManager(requireContext())
 
         // Swipe to delete
-        val editItemCallback = object : ItemMoveCallback() {
+        val editItemCallback = object : ItemMoveCallback(
+            ContextCompat.getColor(requireContext(), R.color.delete_color),
+            R.drawable.ic_delete_24
+        ) {
 
             override fun onMove(
                 recyclerView: RecyclerView,

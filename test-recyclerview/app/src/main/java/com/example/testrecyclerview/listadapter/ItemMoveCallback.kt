@@ -1,5 +1,6 @@
 package com.example.testrecyclerview.listadapter
 
+import android.graphics.Canvas
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
@@ -8,19 +9,39 @@ import androidx.recyclerview.widget.RecyclerView
 // Make this class and add the code to the view .kt file
 //  - look for the 'Swipe to delete' comment
 
+// copy 'RecyclerViewSwipeDecorator' class from GitHub to decorate swipe to delete gesture
+// https://github.com/xabaras/RecyclerViewSwipeDecorator/blob/master/recyclerview-swipedecorator/src/main/java/it/xabaras/android/recyclerview/swipedecorator/RecyclerViewSwipeDecorator.java
 
 // another resource for swipe to delete while clicking a btn
 // https://www.youtube.com/watch?v=1s4bMAyK7oM
 
 // video for drag and dropping position
 // https://www.youtube.com/watch?v=AY9KSp8sLzI
-// implement this graddle library to decorate swipe to delete gesture
-// 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
 
-abstract class ItemMoveCallback : ItemTouchHelper.SimpleCallback(
+abstract class ItemMoveCallback(val deleteColor: Int, val deleteIcon: Int) : ItemTouchHelper.SimpleCallback(
     ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
     ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
 ) {
+
+    override fun onChildDraw(
+        c: Canvas,
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        actionState: Int,
+        isCurrentlyActive: Boolean
+    ) {
+        RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            .addSwipeLeftBackgroundColor(deleteColor)
+            .addSwipeLeftActionIcon(deleteIcon)
+            .addSwipeRightBackgroundColor(deleteColor)
+            .addSwipeRightActionIcon(deleteIcon)
+            .create()
+            .decorate()
+
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+    }
 
 //    override fun getMovementFlags(
 //        recyclerView: RecyclerView,
