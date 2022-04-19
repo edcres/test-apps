@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LAFragment">
+    tools:context=".listadapter.LAFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/start_recyclerview"
@@ -18,10 +18,17 @@
         android:text="Refresh" />
 
     <Button
-        android:id="@+id/btn_2"
+        android:id="@+id/remove_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|end"
-        android:text="btn2" />
+        android:text="remove" />
+
+    <Button
+        android:id="@+id/add_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:text="add" />
 
 </FrameLayout>

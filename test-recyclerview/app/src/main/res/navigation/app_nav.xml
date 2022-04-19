@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/LAFragment"
-        android:name="com.example.testrecyclerview.LAFragment"
+        android:name="com.example.testrecyclerview.listadapter.LAFragment"
         android:label="fragment_l_a"
         tools:layout="@layout/fragment_l_a" />
 </navigation>
