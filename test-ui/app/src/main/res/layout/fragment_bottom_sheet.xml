@@ -6,30 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".materialbottomsheet.BottomSheetFragment">
 
-<!--    <FrameLayout-->
-<!--        android:id="@+id/standard_bottom_sheet"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent">-->
-
-<!--        &lt;!&ndash; Bottom sheet contents. &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/str_txt"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="48dp"-->
-<!--            android:background="@color/white"-->
-<!--            android:text="str"-->
-<!--            android:textSize="48sp"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--    </FrameLayout>-->
-
     <Button
         android:id="@+id/sheet_btn"
         android:layout_width="wrap_content"
