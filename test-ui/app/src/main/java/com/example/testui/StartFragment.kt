@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.Navigation
+import com.example.testui.R
 
 /**
  * https://www.youtube.com/watch?v=lejBUeOSnf8
@@ -26,6 +27,7 @@ class StartFragment : Fragment() {
 
     private lateinit var frag1Btn: Button
     private lateinit var frag2Btn: Button
+    private lateinit var bottomSheetBtn: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +39,7 @@ class StartFragment : Fragment() {
 
         frag1Btn = view.findViewById(R.id.frag_1_btn)
         frag2Btn = view.findViewById(R.id.frag_2_btn)
+        bottomSheetBtn = view.findViewById(R.id.bottom_sheet_btn)
 
         frag1Btn.setOnClickListener {
             navController.navigate(R.id.action_startFragment_to_oneFragment)
@@ -44,6 +47,9 @@ class StartFragment : Fragment() {
         frag2Btn.setOnClickListener {
 //            navController.navigate(R.id.action_startFragment_to_twoFragment)
             navController.navigate(R.id.test_action_startFragment_to_twoFragment)
+        }
+        bottomSheetBtn.setOnClickListener {
+            navController.navigate(R.id.action_startFragment_to_bottomSheetFragment)
         }
 
         return view

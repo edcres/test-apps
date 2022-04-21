@@ -30,15 +30,23 @@
             android:id="@+id/test_action_startFragment_to_twoFragment"
             app:destination="@id/twoFragment"
             app:exitAnim="@anim/test_ani"/>
+        <action
+            android:id="@+id/action_startFragment_to_bottomSheetFragment"
+            app:destination="@id/bottomSheetFragment" />
     </fragment>
     <fragment
         android:id="@+id/oneFragment"
-        android:name="com.example.testui.OneFragment"
+        android:name="com.example.testui.fragmenttransitions.OneFragment"
         android:label="fragment_end"
         tools:layout="@layout/fragment_one" />
     <fragment
         android:id="@+id/twoFragment"
-        android:name="com.example.testui.TwoFragment"
+        android:name="com.example.testui.fragmenttransitions.TwoFragment"
         android:label="fragment_two"
         tools:layout="@layout/fragment_two" />
+    <fragment
+        android:id="@+id/bottomSheetFragment"
+        android:name="com.example.testui.materialbottomsheet.BottomSheetFragment"
+        android:label="fragment_bottom_sheet"
+        tools:layout="@layout/fragment_bottom_sheet" />
 </navigation>

@@ -29,6 +29,11 @@
         android:text="frag 2"
         android:layout_gravity="center|end"/>
 
-
+    <Button
+        android:id="@+id/bottom_sheet_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bottom sheet"
+        android:layout_gravity="center|bottom"/>
 
 </FrameLayout>
