@@ -14,34 +14,27 @@ import com.example.testui.R
 class BottomSheetFragment : Fragment() {
 
     private lateinit var sheetBtn: Button
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnBottomSheetCallListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_bottom_sheet, container, false)
-
         sheetBtn = view.findViewById(R.id.sheet_btn)
-
         sheetBtn.setOnClickListener {
-            if (listener != null) {
-                listener!!.sendTestString("test string")
-            }
+            if (listener != null) listener!!.sendTestString("test string")
         }
-
         return view
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener)
-            listener = context
-        else
-            throw IllegalArgumentException("$context must implement OnFragmentInteractionListener")
+        if (context is OnBottomSheetCallListener) listener = context
+        else throw IllegalArgumentException("$context must implement OnFragmentInteractionListener")
     }
 
-    interface OnFragmentInteractionListener {
+    interface OnBottomSheetCallListener {
         fun sendTestString(testString: String)
     }
 }

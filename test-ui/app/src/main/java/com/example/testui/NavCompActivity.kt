@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.example.testui.materialbottomsheet.BottomSheetFragment
 import com.example.testui.materialbottomsheet.ModalBottomSheet
 
-class NavCompActivity : AppCompatActivity(), BottomSheetFragment.OnFragmentInteractionListener {
+class NavCompActivity : AppCompatActivity(), BottomSheetFragment.OnBottomSheetCallListener {
 
     private var modalBottomSheet: ModalBottomSheet? = null
 
@@ -22,6 +22,7 @@ class NavCompActivity : AppCompatActivity(), BottomSheetFragment.OnFragmentInter
 //            modalBottomSheet?.updateContent(testString)
 //        }
         modalBottomSheet = ModalBottomSheet.newInstance(testString)
+//        modalBottomSheet?.setStyle()
         modalBottomSheet?.show(supportFragmentManager, modalBottomSheet?.tag)
     }
 }

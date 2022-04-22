@@ -31,6 +31,11 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
         val view = inflater.inflate(R.layout.modal_bottom_sheet_content, container, false)
         strTxt = view.findViewById(R.id.str_txt)
         strBtn = view.findViewById(R.id.test_btn)
+
+        strBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
         return view
     }
 
@@ -42,20 +47,20 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    fun updateContent(testString: String) {
-        if (activity != null) {
-            Log.d(TAG, "onViewCreated: $testString")
-            strTxt.text = testString
-            strBtn.text = testString
-            dialog.show()
-        }
-    }
-
-    inner class MyHandler {
-        fun onClose(view: View) {
-            dialog.hide()
-        }
-    }
+//    fun updateContent(testString: String) {
+//        if (activity != null) {
+//            Log.d(TAG, "onViewCreated: $testString")
+//            strTxt.text = testString
+//            strBtn.text = testString
+//            dialog.show()
+//        }
+//    }
+//
+//    inner class MyHandler {
+//        fun onClose(view: View) {
+//            dialog.hide()
+//        }
+//    }
 
     companion object {
         const val TAG = "ModalBottomSheet_TAG"
