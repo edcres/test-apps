@@ -36,6 +36,7 @@ android {
 
 dependencies {
     def version_retrofit = '2.9.0'
+    def version_moshi = '1.9.3'
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -50,5 +51,8 @@ dependencies {
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
-    implementation "com.squareup.retrofit2:converter-scalars:$version_retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
+
+    // MOSHI
+    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
 }
