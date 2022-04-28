@@ -10,7 +10,6 @@ private const val BASE_URL = "https://api.thecatapi.com"
 
 // The converter tells Retrofit what to do with the data it gets back from the web service.
 //      - here it's to fetch a JSON response from the web service, and return it as a String
-// todo: MOSHI
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()

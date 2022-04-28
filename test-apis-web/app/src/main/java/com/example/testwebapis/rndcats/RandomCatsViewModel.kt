@@ -1,9 +1,11 @@
 package com.example.testwebapis.rndcats
 
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide
 import com.example.testwebapis.rndcats.network.CatPhoto
 import com.example.testwebapis.rndcats.network.CatsApi
 import kotlinx.coroutines.launch
