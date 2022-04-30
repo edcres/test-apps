@@ -1,11 +1,9 @@
 package com.example.testwebapis.rndcats
 
-import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide
 import com.example.testwebapis.rndcats.network.CatPhoto
 import com.example.testwebapis.rndcats.network.CatsApi
 import kotlinx.coroutines.launch
@@ -26,7 +24,7 @@ class RandomCatsViewModel: ViewModel() {
     }
 
     // Gets photos information from the Mars API Retrofit service and updates the
-    // [MarsPhoto] [List] [LiveData].
+    // [CatPhoto] [List] [LiveData].
     private fun getCatPhotos() {
         viewModelScope.launch {
             _status.value = CatsApiStatus.LOADING

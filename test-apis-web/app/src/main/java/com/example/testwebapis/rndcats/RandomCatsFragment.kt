@@ -46,6 +46,7 @@ class RandomCatsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
             lifecycleOwner = viewLifecycleOwner
+            imagesRecycler.adapter = CatPhotosAdapter()
         }
     }
 
