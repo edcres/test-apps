@@ -1,6 +1,5 @@
 package com.example.testwebapis.rndcats
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.net.toUri
@@ -38,7 +37,7 @@ class CatPhotosAdapter() : ListAdapter<CatPhoto,
                     .apply(
                         RequestOptions()
                         .placeholder(R.drawable.loading_animation)
-                        .error(R.drawable.ic_baseline_broken_image_24))
+                        .error(R.drawable.ic_baseline_broken_image))
                     .into(marsImage)   // todo: idk if this will work.
 
                 executePendingBindings()        // causes the update to execute immediately.
