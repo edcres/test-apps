@@ -1,15 +1,18 @@
 package com.example.testwebapis.rndcats
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.testwebapis.BuildConfig
 import com.example.testwebapis.rndcats.network.CatPhoto
 import com.example.testwebapis.rndcats.network.CatsApi
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 enum class CatsApiStatus { LOADING, ERROR, DONE }
+private const val TAG = "ViewM_TAG"
 
 class RandomCatsViewModel: ViewModel() {
 
@@ -21,6 +24,7 @@ class RandomCatsViewModel: ViewModel() {
 
     init {
         getCatPhotos()
+//        Log.d(TAG, "CAT KEY = ${BuildConfig.CATS_API_KEY}")
     }
 
     // Gets photos information from the Mars API Retrofit service and updates the

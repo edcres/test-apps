@@ -9,6 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.testwebapis.R
 import com.example.testwebapis.databinding.FragmentRandomCatsBinding
 
+// API
+// https://docs.thecatapi.com/authentication
+
 /**
  * Simple API use, app displays pictures of cats in a recyclerview
  *

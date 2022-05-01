@@ -7,7 +7,6 @@ import retrofit2.http.GET
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 // TODO: use the API key for authentication
-//  'api_key=dc6d62fd-0161-42fd-b9a4-e2b0af9f5079'
 
 private const val BASE_URL = "https://api.thecatapi.com"
 
