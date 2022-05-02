@@ -7,8 +7,13 @@ import retrofit2.http.GET
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 // TODO: use the API key for authentication
+//  learn where to insert the key in the URL
+//  learn how to insert the key in the URL
+//      ("Set your API Key as the x-api-key header on evey request.") ("e.g headers[“x-api-key”] = "ABC123"")
+//  https://docs.thecatapi.com/authentication
 
 private const val BASE_URL = "https://api.thecatapi.com"
+//private const val BASE_URL = "https://android-kotlin-fun-mars-server.appspot.com"
 
 // The converter tells Retrofit what to do with the data it gets back from the web service.
 //      - here it's to fetch a JSON response from the web service, and return it as a String
@@ -23,6 +28,12 @@ private val retrofit = Retrofit.Builder()
 interface CatsApiService {
     @GET("images/search")
     suspend fun getPhotos(): List<CatPhoto>
+//    @GET("photos")
+//    suspend fun getPhotos(): List<CatPhoto>
+
+    // todo: idk if i did this correctly, should the '&' separate the filters
+    @GET("v1/images/search?category_ids=2&mime_types=gif")
+    suspend fun getSpaceGifs(): List<CatPhoto>
 }
 
 // Initialize the Retrofit service
