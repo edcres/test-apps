@@ -28,13 +28,14 @@ private val retrofit = Retrofit.Builder()
 
 interface CatsApiService {
 //    @GET("images/search")
-    @GET("v1/images/search?limit=7&page=10&order=Desc")
-    suspend fun getPhotos(): List<CatPhoto>
+//    @GET("v1/images/search?limit=7&page=10&order=Desc")
+//    suspend fun getPhotos(): List<CatPhoto>
 //    @GET("photos")
 //    suspend fun getPhotos(): List<CatPhoto>
 
     // todo: idk if i did this correctly, should the '&' separate the filters
     @GET("v1/images/search?category_ids=2&mime_types=gif")
+    suspend fun getPhotos(): List<CatPhoto>
     suspend fun getSpaceGifs(): List<CatPhoto>
 }
 
