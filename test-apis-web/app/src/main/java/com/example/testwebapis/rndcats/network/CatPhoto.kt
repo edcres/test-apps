@@ -7,10 +7,10 @@ data class CatPhoto (
     val id: String,
 
     // To use a different property name for a key, annotate that property with the @Json annotation and the JSON key name.
-    @Json(name = "img_src")
-    val imgSrcUrl: String,
-//    @Json(name = "url")
+//    @Json(name = "img_src")
 //    val imgSrcUrl: String,
+    @Json(name = "url")
+    val imgSrcUrl: String,
 
 //    val breeds: List<Any>,
 //    val categories: List<Any>,

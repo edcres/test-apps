@@ -14,6 +14,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 private const val BASE_URL = "https://api.thecatapi.com"
 //private const val BASE_URL = "https://android-kotlin-fun-mars-server.appspot.com"
+//https://api.thecatapi.com/v1/images/search?limit=5&page=10&order=Desc
 
 // The converter tells Retrofit what to do with the data it gets back from the web service.
 //      - here it's to fetch a JSON response from the web service, and return it as a String
@@ -26,7 +27,8 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface CatsApiService {
-    @GET("images/search")
+//    @GET("images/search")
+    @GET("v1/images/search?limit=7&page=10&order=Desc")
     suspend fun getPhotos(): List<CatPhoto>
 //    @GET("photos")
 //    suspend fun getPhotos(): List<CatPhoto>
