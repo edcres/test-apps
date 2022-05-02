@@ -24,7 +24,6 @@ class RandomCatsViewModel: ViewModel() {
 
     init {
         getCatPhotos()
-//        Log.d(TAG, "CAT KEY = ${BuildConfig.CATS_API_KEY}")
     }
 
     // Gets photos information from the Mars API Retrofit service and updates the
@@ -33,7 +32,7 @@ class RandomCatsViewModel: ViewModel() {
         viewModelScope.launch {
             _status.value = CatsApiStatus.LOADING
             try {
-                _photos.value = CatsApi.catsApiService.getPhotos()
+                _photos.value = CatsApi.catsApiService.getSpaceGifs()
                 _status.value = CatsApiStatus.DONE
             } catch (e: Exception) {
                 _status.value = CatsApiStatus.ERROR

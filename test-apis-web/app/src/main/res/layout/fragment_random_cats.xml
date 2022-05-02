@@ -6,7 +6,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/black">
 
         <ImageView
             android:id="@+id/status_img"
@@ -23,7 +24,6 @@
             app:spanCount="2"
             tools:itemCount="16"
             tools:listitem="@layout/cat_img_item">
-
 
         </androidx.recyclerview.widget.RecyclerView>
     </FrameLayout>

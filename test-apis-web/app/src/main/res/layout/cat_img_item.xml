@@ -5,7 +5,8 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="2dp">
+            android:backgroundTint="@color/black"
+            android:layout_margin="8dp">
 
                 <ImageView
                     android:id="@+id/mars_image"

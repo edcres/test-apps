@@ -1,16 +1,18 @@
 package com.example.testwebapis.rndcats.network
 
+import com.example.testwebapis.BuildConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-// TODO: use the API key for authentication
+// TODO: use the API key for authentication (I did not need it for some reason)
 //  learn where to insert the key in the URL
 //  learn how to insert the key in the URL
 //      ("Set your API Key as the x-api-key header on evey request.") ("e.g headers[“x-api-key”] = "ABC123"")
 //  https://docs.thecatapi.com/authentication
+// BuildConfig.CATS_API_KEY
 
 private const val BASE_URL = "https://api.thecatapi.com"
 //private const val BASE_URL = "https://android-kotlin-fun-mars-server.appspot.com"
@@ -28,14 +30,12 @@ private val retrofit = Retrofit.Builder()
 
 interface CatsApiService {
 //    @GET("images/search")
-//    @GET("v1/images/search?limit=7&page=10&order=Desc")
-//    suspend fun getPhotos(): List<CatPhoto>
+    @GET("v1/images/search?limit=10")
+    suspend fun getPhotos(): List<CatPhoto>
 //    @GET("photos")
 //    suspend fun getPhotos(): List<CatPhoto>
 
-    // todo: idk if i did this correctly, should the '&' separate the filters
-    @GET("v1/images/search?category_ids=2&mime_types=gif")
-    suspend fun getPhotos(): List<CatPhoto>
+    @GET("v1/images/search?limit=100&category_ids=2&mime_types=gif")
     suspend fun getSpaceGifs(): List<CatPhoto>
 }
 

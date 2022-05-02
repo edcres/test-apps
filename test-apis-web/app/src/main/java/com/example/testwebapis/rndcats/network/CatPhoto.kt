@@ -2,7 +2,7 @@ package com.example.testwebapis.rndcats.network
 
 import com.squareup.moshi.Json
 
-// todo: probably my main problem is getting this class lined up with the JSON data
+// This class need to be lined up with the JSON data
 data class CatPhoto (
     val id: String,
 
