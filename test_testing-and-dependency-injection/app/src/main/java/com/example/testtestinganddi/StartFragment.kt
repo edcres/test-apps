@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.navigation.Navigation
 import com.example.testtestinganddi.databinding.FragmentStartBinding
 
+// integration tests vs integrated tests
+
 /**
  *
  * // https://developer.android.com/codelabs/advanced-android-kotlin-training-testing-basics?authuser=2#0
@@ -93,7 +95,7 @@ class StartFragment : Fragment() {
         }
 
         val navController = Navigation.findNavController(requireParentFragment().requireView())
-        navController.navigate(R.id.)
+        navController.navigate(R.id.action_startFragment_to_basicsHiltAndDagger2Fragment)
     }
 
     override fun onDestroyView() {

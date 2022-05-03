@@ -9,5 +9,14 @@
         android:id="@+id/startFragment"
         android:name="com.example.testtestinganddi.StartFragment"
         android:label="fragment_start"
-        tools:layout="@layout/fragment_start" />
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_startFragment_to_basicsHiltAndDagger2Fragment"
+            app:destination="@id/basicsHiltAndDagger2Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/basicsHiltAndDagger2Fragment"
+        android:name="com.example.testtestinganddi.basicshiltdagger2.BasicsHiltAndDagger2Fragment"
+        android:label="fragment_basics_hilt_and_dagger2"
+        tools:layout="@layout/fragment_basics_hilt_and_dagger2" />
 </navigation>
