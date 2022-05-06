@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_startFragment_to_basicsHiltAndDagger2Fragment"
             app:destination="@id/basicsHiltAndDagger2Fragment" />
+        <action
+            android:id="@+id/action_startFragment_to_basicHiltFragment"
+            app:destination="@id/basicHiltFragment" />
     </fragment>
     <fragment
         android:id="@+id/basicsHiltAndDagger2Fragment"
         android:name="com.example.testtestinganddi.basicshiltdagger2.BasicsHiltAndDagger2Fragment"
         android:label="fragment_basics_hilt_and_dagger2"
         tools:layout="@layout/fragment_basics_hilt_and_dagger2" />
+    <fragment
+        android:id="@+id/basicHiltFragment"
+        android:name="com.example.testtestinganddi.basichilt.BasicHiltFragment"
+        android:label="fragment_basic_hilt"
+        tools:layout="@layout/fragment_basic_hilt" />
 </navigation>

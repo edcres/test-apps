@@ -8,11 +8,18 @@
         tools:context=".StartFragment">
 
         <Button
-            android:id="@+id/asd"
+            android:id="@+id/hilt_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:text="hilt" />
+
+        <Button
+            android:id="@+id/hilt_dagger2_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"
-            android:text="asdf" />
+            android:text="hilt and dagger2" />
 
     </FrameLayout>
 </layout>

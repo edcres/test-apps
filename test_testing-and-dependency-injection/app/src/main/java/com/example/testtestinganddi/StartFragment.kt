@@ -90,12 +90,17 @@ class StartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val navController = Navigation.findNavController(requireParentFragment().requireView())
+
         binding?.apply {
             lifecycleOwner = viewLifecycleOwner
+            hiltBtn.setOnClickListener {
+                navController.navigate(R.id.action_startFragment_to_basicHiltFragment)
+            }
+            hiltDagger2Btn.setOnClickListener {
+                navController.navigate(R.id.action_startFragment_to_basicsHiltAndDagger2Fragment)
+            }
         }
-
-        val navController = Navigation.findNavController(requireParentFragment().requireView())
-        navController.navigate(R.id.action_startFragment_to_basicsHiltAndDagger2Fragment)
     }
 
     override fun onDestroyView() {

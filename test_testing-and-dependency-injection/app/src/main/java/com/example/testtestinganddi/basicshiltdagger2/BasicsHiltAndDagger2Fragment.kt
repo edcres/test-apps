@@ -9,7 +9,7 @@ import com.example.testtestinganddi.R
 
 /**
  * Field injection vs Constructor injection
- * - Constructor injection os better, field injection is simpler.
+ * - Constructor injection is better, field injection is simpler.
  * - The reason for dependency injection (Hilt/ Dagger2) is to make construction injection easier.
  */
 
