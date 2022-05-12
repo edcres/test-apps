@@ -3,9 +3,9 @@
     package="com.example.testhardwareplus">
 
 <!--    camera-->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-feature android:name="android.hardware.camera.any" />
+<!--    <uses-permission android:name="android.permission.CAMERA" />-->
+<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>-->
+<!--    <uses-feature android:name="android.hardware.camera.any" />-->
 <!-- Adding android.hardware.camera.any makes sure that the device has a camera. Specifying .any means that it can be a front camera or a back camera.-->
 
 <!--    bluetooth-->
