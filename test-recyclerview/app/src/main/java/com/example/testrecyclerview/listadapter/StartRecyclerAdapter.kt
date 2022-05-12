@@ -1,4 +1,4 @@
-package com.example.testrecyclerview
+package com.example.testrecyclerview.listadapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

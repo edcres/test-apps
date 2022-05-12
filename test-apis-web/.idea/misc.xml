@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/cat_img_item.xml" value="0.1605" />
+        <entry key="app/src/main/res/drawable/ic_baseline_broken_image.xml" value="0.156" />
         <entry key="app/src/main/res/drawable/ic_baseline_broken_image_24.xml" value="0.1605" />
         <entry key="app/src/main/res/drawable/ic_connection_error.xml" value="0.1605" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1605" />

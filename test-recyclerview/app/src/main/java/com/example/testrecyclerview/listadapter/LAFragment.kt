@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testrecyclerview.R
-import com.example.testrecyclerview.StartRecyclerAdapter
+import com.example.testrecyclerview.listadapter.StartRecyclerAdapter
 import java.util.*
 
 private const val TAG = "LAFrag_TAG"

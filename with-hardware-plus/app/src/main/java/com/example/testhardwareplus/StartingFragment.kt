@@ -36,6 +36,7 @@ class StartingFragment : Fragment() {
     private lateinit var notificationBtn: Button
     private lateinit var bluetoothBtn: Button
     private lateinit var locationBtn: Button
+    private lateinit var internalStoreBtn: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,6 +62,10 @@ class StartingFragment : Fragment() {
             Navigation.findNavController(view)
                 .navigate(R.id.action_startingFragment_to_locationFragment)
         }
+        internalStoreBtn.setOnClickListener {
+            Navigation.findNavController(view)
+                .navigate(R.id.action_startingFragment_to_internalStoreFragment)
+        }
 
         return view
     }
@@ -70,5 +75,6 @@ class StartingFragment : Fragment() {
         notificationBtn = view.findViewById(R.id.notification_btn)
         bluetoothBtn = view.findViewById(R.id.bluetooth_btn)
         locationBtn = view.findViewById(R.id.location_btn)
+        internalStoreBtn = view.findViewById(R.id.internal_store_btn)
     }
 }

@@ -27,6 +27,9 @@
         <action
             android:id="@+id/action_startingFragment_to_locationFragment"
             app:destination="@id/locationFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_internalStoreFragment"
+            app:destination="@id/internalStoreFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
@@ -35,7 +38,7 @@
         tools:layout="@layout/fragment_notification" />
     <fragment
         android:id="@+id/bluetoothFragment"
-        android:name="com.example.testhardwareplus.BluetoothFragment"
+        android:name="com.example.testhardwareplus.bluetooth.BluetoothFragment"
         android:label="fragment_bluetooth"
         tools:layout="@layout/fragment_bluetooth" >
         <action
@@ -44,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/BLEFragment"
-        android:name="com.example.testhardwareplus.BLEFragment"
+        android:name="com.example.testhardwareplus.bluetooth.BLEFragment"
         android:label="fragment_b_l_e"
         tools:layout="@layout/fragment_b_l_e" />
     <fragment
@@ -52,5 +55,10 @@
         android:name="com.example.testhardwareplus.location.LocationFragment"
         android:label="fragment_location"
         tools:layout="@layout/fragment_location" />
+    <fragment
+        android:id="@+id/internalStoreFragment"
+        android:name="com.example.testhardwareplus.InternalStoreFragment"
+        android:label="fragment_internal_store"
+        tools:layout="@layout/fragment_internal_store" />
 
 </navigation>

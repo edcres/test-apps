@@ -38,7 +38,7 @@ class CatPhotosAdapter() : ListAdapter<CatPhoto,
                         RequestOptions()
                         .placeholder(R.drawable.loading_animation)
                         .error(R.drawable.ic_baseline_broken_image))
-                    .into(marsImage)   // todo: idk if this will work.
+                    .into(marsImage)
 
                 executePendingBindings()        // causes the update to execute immediately.
             }

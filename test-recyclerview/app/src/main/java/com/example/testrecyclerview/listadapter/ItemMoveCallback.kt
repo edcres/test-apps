@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 // video for drag and dropping position
 // https://www.youtube.com/watch?v=AY9KSp8sLzI
 
-abstract class ItemMoveCallback(val deleteColor: Int, val deleteIcon: Int) : ItemTouchHelper.SimpleCallback(
+abstract class ItemMoveCallback(private val deleteColor: Int, private val deleteIcon: Int) : ItemTouchHelper.SimpleCallback(
     ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
     ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
 ) {

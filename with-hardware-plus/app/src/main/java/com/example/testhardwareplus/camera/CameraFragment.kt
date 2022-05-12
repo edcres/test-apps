@@ -222,11 +222,9 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
 
         }, ContextCompat.getMainExecutor(requireContext()))
 
-
         // for image capture feature
         imageCapture = ImageCapture.Builder()
             .build()
-
     }
 
     // Implement ImageCapture
@@ -369,6 +367,16 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
         }
     // HELPER FUNCTIONS //
 }
+
+
+
+
+
+
+
+
+
+
 
 
 // recyclerView to display the gallery
