@@ -7,6 +7,16 @@
         android:layout_height="match_parent"
         tools:context=".InternalStoreFragment">
 
+        <TextView
+            android:id="@+id/num_of_photos_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:layout_margin="16dp"
+            android:textSize="32dp"
+            android:textStyle="bold"
+            tools:text="3"/>
+
         <ImageView
             android:id="@+id/photo_img"
             android:layout_width="match_parent"

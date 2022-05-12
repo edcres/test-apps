@@ -32,6 +32,8 @@ import java.util.*
  *          - implementation "androidx.fragment:fragment-ktx:1.3.4"
  */
 
+// The number of stored pics is only updated when 'loadPhotosFromInternalStorageIntoRecyclerView()' is called
+
 class InternalStoreFragment : Fragment() {
 
     private var binding: FragmentInternalStoreBinding? = null
@@ -49,11 +51,14 @@ class InternalStoreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loadPhotosFromInternalStorageIntoRecyclerView()
+
         // TO TAKE A PHOTO //
         val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
             // what to do when a photo is taken
             // random file name , it is the bitmap
-            val isSavedSuccessfully = savePhotoToInternalStorage(UUID.randomUUID().toString(), it)
+            val fileName = UUID.randomUUID().toString() + ".jpg" // todo: use this as a property in an entity
+            val isSavedSuccessfully = savePhotoToInternalStorage(fileName, it)
             if(isSavedSuccessfully) {
                 loadPhotosFromInternalStorageIntoRecyclerView()
                 Toast.makeText(requireContext(), "Photo saved successfully", Toast.LENGTH_SHORT)
@@ -79,7 +84,6 @@ class InternalStoreFragment : Fragment() {
                 }
             }
             takePhotoBtn.setOnClickListener {
-                // todo: need camera permission
                 takePhoto.launch()
             }
         }
@@ -94,6 +98,9 @@ class InternalStoreFragment : Fragment() {
             if(photos.isNotEmpty()) {
                 selectedPhoto = photos[0]
                 binding!!.photoImg.setImageBitmap(selectedPhoto!!.bmp)
+                binding!!.numOfPhotosTxt.text = "${photos.size}"
+            } else {
+                binding!!.numOfPhotosTxt.text = "0"
             }
         }
     }
@@ -121,7 +128,7 @@ class InternalStoreFragment : Fragment() {
 
     private fun savePhotoToInternalStorage(fileName: String, bmp: Bitmap): Boolean {
         return try {
-            requireActivity().openFileOutput("$fileName.jpg", Context.MODE_PRIVATE).use { stream ->
+            requireActivity().openFileOutput(fileName, Context.MODE_PRIVATE).use { stream ->
                 // 'use' closes the stream after written to, or after an exception is thrown
                 if(!bmp.compress(Bitmap.CompressFormat.JPEG, 95, stream)) {
                     throw IOException("Couldn't save bitmap.")
