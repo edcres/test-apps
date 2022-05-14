@@ -1,4 +1,4 @@
-package com.example.testhardwareplus
+package com.example.testhardwareplus.internalstore
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -17,6 +17,7 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.example.testhardwareplus.BuildConfig
 import com.example.testhardwareplus.databinding.FragmentInternalStoreBinding
 import com.example.testhardwareplus.internalstore.InternalStoragePhoto
 import kotlinx.coroutines.Dispatchers
