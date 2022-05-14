@@ -28,15 +28,15 @@
             android:id="@+id/delete_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|end"
+            android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:text="delete photo"/>
+            android:text="delete first (alphabetically) photo"/>
 
         <Button
             android:id="@+id/take_photo_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
+            android:layout_gravity="center|end"
             android:layout_margin="16dp"
             android:text="take photo"/>
 

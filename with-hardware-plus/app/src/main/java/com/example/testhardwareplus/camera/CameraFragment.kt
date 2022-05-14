@@ -15,8 +15,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.launch
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -101,50 +99,28 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
         galleyRecycler.adapter = galleryAdapter
         galleyRecycler.layoutManager = GridLayoutManager(context, 3)
 
-        // todo: put this code back in
-//        // Request camera permissions
-//        if (allPermissionsGranted()) {
-//            startCamera()
-//        } else {
-//            ActivityCompat.requestPermissions(
-//                this.requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
-//            )
-//        }
-
-
-        // todo: take this code out
-        val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-            // what to do when a photo is taken
-            // random file name , it is the bitmap
-//            val fileName = UUID.randomUUID().toString() + ".jpg"
-
-
-
-            Glide.with(pictureView)
-                .load(it)
-                .thumbnail(0.33f)
-                .centerCrop()
-                .into(pictureView)
+        // Request camera permissions
+        if (allPermissionsGranted()) {
+            startCamera()
+        } else {
+            ActivityCompat.requestPermissions(
+                this.requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
+            )
         }
-
-
-
 
         cameraCaptureBtn.setOnClickListener {
             val newImageURI = takePhoto()
-            takePhoto.launch()
-            //todo uncomment these
-//            showChosenImageWidgets()
-//
-//            // it's inefficient to query all the images just to display one.
-//            // but it's fine, this isn't a real app
-////            val newImageURI = imageURIs.last()
-////            val newImage = getImages()[0]
-//            Glide.with(pictureView)
-//                .load(newImageURI)
-//                .thumbnail(0.33f)
-//                .centerCrop()
-//                .into(pictureView)
+            showChosenImageWidgets()
+
+            // it's inefficient to query all the images just to display one.
+            // but it's fine, this isn't a real app
+//            val newImageURI = imageURIs.last()
+//            val newImage = getImages()[0]
+            Glide.with(pictureView)
+                .load(newImageURI)
+                .thumbnail(0.33f)
+                .centerCrop()
+                .into(pictureView)
         }
 
         getImgBtn.setOnClickListener {
@@ -246,9 +222,11 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
 
         }, ContextCompat.getMainExecutor(requireContext()))
 
+
         // for image capture feature
         imageCapture = ImageCapture.Builder()
             .build()
+
     }
 
     // Implement ImageCapture
@@ -391,16 +369,6 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
         }
     // HELPER FUNCTIONS //
 }
-
-
-
-
-
-
-
-
-
-
 
 
 // recyclerView to display the gallery

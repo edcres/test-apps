@@ -23,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -59,7 +60,8 @@ class InternalStoreFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
             if (isSuccess) {
                 latestTmpUri?.let { uri ->
-                    binding!!.photoImg.setImageURI(uri)
+//                    binding!!.photoImg.setImageURI(uri)
+                    loadPhotosFromInternalStorageIntoRecyclerView()
                     Log.d(TAG, "uri = \n$uri")
                 }
             }
@@ -82,8 +84,13 @@ class InternalStoreFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
             takePhotoBtn.setOnClickListener { takeImage() }
+            deleteBtn.setOnClickListener { deleteFileAt(0) }
         }
-        binding!!.photoImg.setImageURI("content://com.example.testhardwareplus.provider/cached_files/tmp_image_file4804381872488905849.jpg".toUri())
+//        binding!!.photoImg.setImageURI("content://com.example.testhardwareplus.provider/cached_files/tmp_image_file4804381872488905849.jpg".toUri())
+
+        // idk why but when i use 'File.createTempFile' the Uri shows up like the top one, and when i use 'cacheDir.' the Uri show up like the bottom one.
+        //  content://com.example.testhardwareplus.provider/cached_files/tmp_image_file4804381872488905849.jpg
+        //  file:///data/user/0/com.example.testhardwareplus/cache/tmp_image_file2767257179138799494.jpg
         loadPhotosFromInternalStorageIntoRecyclerView()
     }
 
@@ -105,11 +112,9 @@ class InternalStoreFragment : Fragment() {
 //    private fun selectImageFromGallery() = selectImageFromGalleryResult.launch("image/*")
 
     private fun getTmpFileUri(): Uri {
-
-//        val tmpFile = File.createTempFile("tmp_image_file", ".jpg", requireActivity().cacheDir)
         val tmpFile = File.createTempFile("tmp_image_file", ".jpg", requireActivity().cacheDir).apply {
             createNewFile()
-            deleteOnExit()      // todo: i think this deletes the content in the Uri
+            deleteOnExit()
         }
         return FileProvider.getUriForFile(requireActivity().applicationContext, "${BuildConfig.APPLICATION_ID}.provider", tmpFile)
     }
@@ -121,10 +126,10 @@ class InternalStoreFragment : Fragment() {
                 loadPhotosFromInternalStorage().let { photos ->
                     Log.d(TAG, "photos: \n$photos")
                     if (photos.isNotEmpty()) {
+                        Log.d(TAG, "last photo bitmap =\n$photos")
                         Glide.with(photoImg.context)
-                            .load(photos.last().bmp)
+                            .load(photos[0].uri)
                             .into(photoImg)
-
                         numOfPhotosTxt.text = "${photos.size}"
                     } else {
                         numOfPhotosTxt.text = "0"
@@ -135,16 +140,28 @@ class InternalStoreFragment : Fragment() {
     }
 
     private suspend fun loadPhotosFromInternalStorage(): List<InternalStoragePhoto> {
-        return withContext(Dispatchers.IO) {
-            // 'filesDir' refers to the root directory of the internal storage
-            val files = requireActivity().filesDir.listFiles()
-            Log.d(TAG, "files: \n$files")
-            files?.filter { it.canRead() && it.isFile && it.name.endsWith(".jpg") }?.map {
-                val bytes = it.readBytes()
-                val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                InternalStoragePhoto(it.name, bmp)
+        return withContext(Dispatchers.IO) { // 'filesDir' refers to the root directory of the internal storage
+            val files = requireActivity().cacheDir.listFiles()
+            // they are probably sorted alphabetically
+            Log.d(TAG, "files: \n${files.size}")
+            files?.filter {
+                Log.d(TAG, "1 file =\n${it.toUri()}\n")
+                it.canRead() && it.isFile && it.name.endsWith(".jpg")
+            }?.map {
+                val uri = it.toUri()
+//                val bytes = it.readBytes()
+//                val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                InternalStoragePhoto(it.name, uri)
             } ?: listOf()
         }
+    }
+
+    private fun deleteFileAt(position: Int): Boolean {
+        val files = requireActivity().cacheDir.listFiles().filter {
+            it.canRead() && it.isFile && it.name.endsWith(".jpg")
+        }
+        loadPhotosFromInternalStorageIntoRecyclerView()
+        return files[position].delete()
     }
 }
 //class InternalStoreFragment : Fragment() {
