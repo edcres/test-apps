@@ -15,6 +15,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -67,7 +69,7 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
     private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
-    
+
     private val imageURIs = mutableListOf<Uri>() // I made this to have a list of image locations
     private lateinit var imagesList: List<MediaStoreImage>
 
@@ -99,28 +101,50 @@ class CameraFragment : Fragment(), GalleryAdapter.OnItemClickListener {
         galleyRecycler.adapter = galleryAdapter
         galleyRecycler.layoutManager = GridLayoutManager(context, 3)
 
-        // Request camera permissions
-        if (allPermissionsGranted()) {
-            startCamera()
-        } else {
-            ActivityCompat.requestPermissions(
-                this.requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
-            )
-        }
+        // todo: put this code back in
+//        // Request camera permissions
+//        if (allPermissionsGranted()) {
+//            startCamera()
+//        } else {
+//            ActivityCompat.requestPermissions(
+//                this.requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
+//            )
+//        }
 
-        cameraCaptureBtn.setOnClickListener {
-            val newImageURI = takePhoto()
-            showChosenImageWidgets()
 
-            // it's inefficient to query all the images just to display one.
-            // but it's fine, this isn't a real app
-//            val newImageURI = imageURIs.last()
-//            val newImage = getImages()[0]
+        // todo: take this code out
+        val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
+            // what to do when a photo is taken
+            // random file name , it is the bitmap
+//            val fileName = UUID.randomUUID().toString() + ".jpg"
+
+
+
             Glide.with(pictureView)
-                .load(newImageURI)
+                .load(it)
                 .thumbnail(0.33f)
                 .centerCrop()
                 .into(pictureView)
+        }
+
+
+
+
+        cameraCaptureBtn.setOnClickListener {
+            val newImageURI = takePhoto()
+            takePhoto.launch()
+            //todo uncomment these
+//            showChosenImageWidgets()
+//
+//            // it's inefficient to query all the images just to display one.
+//            // but it's fine, this isn't a real app
+////            val newImageURI = imageURIs.last()
+////            val newImage = getImages()[0]
+//            Glide.with(pictureView)
+//                .load(newImageURI)
+//                .thumbnail(0.33f)
+//                .centerCrop()
+//                .into(pictureView)
         }
 
         getImgBtn.setOnClickListener {
