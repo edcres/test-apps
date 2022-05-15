@@ -57,7 +57,7 @@
         tools:layout="@layout/fragment_location" />
     <fragment
         android:id="@+id/internalStoreFragment"
-        android:name="com.example.testhardwareplus.InternalStoreFragment"
+        android:name="com.example.testhardwareplus.internalstore.InternalStoreFragment"
         android:label="fragment_internal_store"
         tools:layout="@layout/fragment_internal_store" />
 

@@ -1,7 +1,5 @@
 package com.example.testhardwareplus.internalstore
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
@@ -10,31 +8,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.launch
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.testhardwareplus.BuildConfig
 import com.example.testhardwareplus.databinding.FragmentInternalStoreBinding
-import com.example.testhardwareplus.internalstore.InternalStoragePhoto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.lang.Exception
-import java.text.SimpleDateFormat
-import java.util.*
 
 // more code in the manifest file (file providers, <provider>), and an .xml paths file
-
-// todo:
-//      - create a URI
-//      - send it to ActivityResultContracts.TakePicture(), using .launch(uri)
 
 // https://www.youtube.com/watch?v=EeLz1DPMsW8&list=PLtO7tIzYX2lUaX0Isy0zbjg0A1Ci--Q3l&index=3&t=602s
 // https://medium.com/codex/how-to-use-the-android-activity-result-api-for-selecting-and-taking-images-5dbcc3e6324b
@@ -59,12 +45,43 @@ class InternalStoreFragment : Fragment() {
     private val allPicsUris = mutableListOf<Uri>()
     private val takeImageResult =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            // todo: compress to jpg
+
+            // get the file using the uri, decompress, check if it's null
+
             if (isSuccess) {
+//
+
+
+
                 latestTmpUri?.let { uri ->
 //                    binding!!.photoImg.setImageURI(uri)
                     loadPhotosFromInternalStorageIntoRecyclerView()
                     Log.d(TAG, "uri = \n$uri")
                 }
+            } else {
+                // happens if the camera starts and the user navigates up before taking a picture, or user click x on the picture
+//              val file = requireActivity().cacheDir.listFiles().filter {
+//                  it.toUri() == latestTmpUri
+//              }[0]
+                val file = File(latestTmpUri!!.path!!)
+//                Log.d(TAG, "file: \n$file")
+//                Log.d(TAG, "exists: ${file.exists()}")
+//                Log.d(TAG, "deleted: ${file.delete()}")
+//                Log.d(TAG, "file: \n${file.name}")
+//                Log.d(TAG, "deleted: ${requireActivity().deleteFile(file.name)}")
+                Log.d(TAG, "deleted: ${deleteFile(file.name)}")
+                loadPhotosFromInternalStorageIntoRecyclerView()
+
+//                    val bytes = file.readBytes()
+//                    val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+//                    if (bmp == null) {
+//                        file.delete()
+//                        Log.d(TAG, "bmp is null")
+//                    } else {
+//                        Log.d(TAG, "bmp: $bmp")
+//                    }
+                Log.d(TAG, "pic not taken")
             }
         }
 //    private val selectImageFromGalleryResult =
@@ -84,8 +101,17 @@ class InternalStoreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
-            takePhotoBtn.setOnClickListener { takeImage() }
-            deleteBtn.setOnClickListener { deleteFileAt(0) }
+            takePhotoBtn.setOnClickListener {
+                takeImage()
+            }
+            deleteBtn.setOnClickListener {
+                deleteFileAt(0)
+//                Log.d(TAG, "uri to delete: \n$latestTmpUri")
+//                val file = File(latestTmpUri!!.path!!)
+//                Log.d(TAG, "exists: ${file.exists()}")
+//                Log.d(TAG, "deleted: ${file.delete()}")
+//                loadPhotosFromInternalStorageIntoRecyclerView()
+            }
         }
 //        binding!!.photoImg.setImageURI("content://com.example.testhardwareplus.provider/cached_files/tmp_image_file4804381872488905849.jpg".toUri())
 
@@ -102,7 +128,7 @@ class InternalStoreFragment : Fragment() {
 
     private fun takeImage() {
         lifecycleScope.launchWhenStarted {
-            getTmpFileUri().let { uri ->
+            makeTmpFile().let { uri ->
                 latestTmpUri = uri
                 takeImageResult.launch(uri)
             }
@@ -112,11 +138,12 @@ class InternalStoreFragment : Fragment() {
 
 //    private fun selectImageFromGallery() = selectImageFromGalleryResult.launch("image/*")
 
-    private fun getTmpFileUri(): Uri {
+    private fun makeTmpFile(): Uri {
         val tmpFile = File.createTempFile("tmp_image_file", ".jpg", requireActivity().cacheDir).apply {
             createNewFile()
             deleteOnExit()
         }
+
         return FileProvider.getUriForFile(requireActivity().applicationContext, "${BuildConfig.APPLICATION_ID}.provider", tmpFile)
     }
 
@@ -125,13 +152,14 @@ class InternalStoreFragment : Fragment() {
         lifecycleScope.launch {
             binding?.apply {
                 loadPhotosFromInternalStorage().let { photos ->
-                    Log.d(TAG, "photos: \n$photos")
                     if (photos.isNotEmpty()) {
-                        Log.d(TAG, "last photo bitmap =\n$photos")
                         Glide.with(photoImg.context)
                             .load(photos[0].uri)
                             .into(photoImg)
                         numOfPhotosTxt.text = "${photos.size}"
+                        photos.forEach {
+                            Log.d(TAG, ".\n${it.uri}")
+                        }
                     } else {
                         numOfPhotosTxt.text = "0"
                     }
@@ -144,9 +172,7 @@ class InternalStoreFragment : Fragment() {
         return withContext(Dispatchers.IO) { // 'filesDir' refers to the root directory of the internal storage
             val files = requireActivity().cacheDir.listFiles()
             // they are probably sorted alphabetically
-            Log.d(TAG, "files: \n${files.size}")
             files?.filter {
-                Log.d(TAG, "1 file =\n${it.toUri()}\n")
                 it.canRead() && it.isFile && it.name.endsWith(".jpg")
             }?.map {
                 val uri = it.toUri()
@@ -154,6 +180,23 @@ class InternalStoreFragment : Fragment() {
 //                val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                 InternalStoragePhoto(it.name, uri)
             } ?: listOf()
+        }
+    }
+
+    private fun deleteFile(name: String): Boolean {
+        val files = requireActivity().cacheDir.listFiles()
+        if (files.isNullOrEmpty()) {
+            Log.e(TAG, "deleteFile: Error loading files.")
+            return false
+        } else {
+            files.filter {
+                it.canRead() && it.isFile && it.name.endsWith(".jpg")
+            }.forEach {
+                if (it.name == name) {
+                    return it.delete()
+                }
+            }
+            return false
         }
     }
 
