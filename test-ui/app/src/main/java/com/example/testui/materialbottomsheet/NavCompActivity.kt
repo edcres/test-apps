@@ -1,9 +1,8 @@
-package com.example.testui
+package com.example.testui.materialbottomsheet
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.testui.materialbottomsheet.BottomSheetFragment
-import com.example.testui.materialbottomsheet.ModalBottomSheet
+import com.example.testui.R
 
 class NavCompActivity : AppCompatActivity(), BottomSheetFragment.OnBottomSheetCallListener {
 

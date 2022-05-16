@@ -1,6 +1,5 @@
 package com.example.testhardwareplus.internalstore
 
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -64,13 +63,13 @@ class InternalStoreFragment : Fragment() {
 //              val file = requireActivity().cacheDir.listFiles().filter {
 //                  it.toUri() == latestTmpUri
 //              }[0]
-                val file = File(latestTmpUri!!.path!!)
+                val file = File(latestTmpUri!!.path!!).name
 //                Log.d(TAG, "file: \n$file")
 //                Log.d(TAG, "exists: ${file.exists()}")
 //                Log.d(TAG, "deleted: ${file.delete()}")
 //                Log.d(TAG, "file: \n${file.name}")
 //                Log.d(TAG, "deleted: ${requireActivity().deleteFile(file.name)}")
-                Log.d(TAG, "deleted: ${deleteFile(file.name)}")
+                Log.d(TAG, "deleted: ${deleteFilWithName(file)}")
                 loadPhotosFromInternalStorageIntoRecyclerView()
 
 //                    val bytes = file.readBytes()
@@ -143,7 +142,6 @@ class InternalStoreFragment : Fragment() {
             createNewFile()
             deleteOnExit()
         }
-
         return FileProvider.getUriForFile(requireActivity().applicationContext, "${BuildConfig.APPLICATION_ID}.provider", tmpFile)
     }
 
@@ -183,7 +181,7 @@ class InternalStoreFragment : Fragment() {
         }
     }
 
-    private fun deleteFile(name: String): Boolean {
+    private fun deleteFilWithName(name: String): Boolean {
         val files = requireActivity().cacheDir.listFiles()
         if (files.isNullOrEmpty()) {
             Log.e(TAG, "deleteFile: Error loading files.")

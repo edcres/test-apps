@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestUI">
         <activity
-            android:name=".NavCompActivity"
+            android:name=".materialbottomsheet.NavCompActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

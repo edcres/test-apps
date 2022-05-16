@@ -54,4 +54,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/kotlin_rmbr_btn" />
 
+    <Button
+        android:id="@+id/date_view_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="date view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recycler_in_recycler_btn" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

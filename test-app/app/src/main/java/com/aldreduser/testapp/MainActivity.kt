@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import com.aldreduser.testapp.addwidgettolayout.AddWidgetToLayoutActivity
 import com.aldreduser.testapp.basicrecyclerview.RecyclerviewActivity
+import com.aldreduser.testapp.dateclass.DateActivity
 import com.aldreduser.testapp.kotlinremember.KotlinRmbrActivity
 import com.aldreduser.testapp.recyclerviewclicklistener.RecyclerClickListener
 import com.aldreduser.testapp.recyclerinrecycler.NestedRecyclerActivity
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var addLayoutWidgetsActivityBtn: Button
     private lateinit var kotlinRmbrBtn: Button
     private lateinit var recyclerInRecyclerBtn: Button
+    private lateinit var dateViewBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +57,10 @@ class MainActivity : AppCompatActivity() {
             val goToActivity = Intent(this, NestedRecyclerActivity::class.java)
             startActivity(goToActivity)
         }
+        dateViewBtn.setOnClickListener {
+            val goToActivity = Intent(this, DateActivity::class.java)
+            startActivity(goToActivity)
+        }
     }
 
     private fun bindUIWidgets() {
@@ -64,5 +70,6 @@ class MainActivity : AppCompatActivity() {
         addLayoutWidgetsActivityBtn = findViewById(R.id.add_layout_widgets_activity_btn)
         kotlinRmbrBtn = findViewById(R.id.kotlin_rmbr_btn)
         recyclerInRecyclerBtn = findViewById(R.id.recycler_in_recycler_btn)
+        dateViewBtn = findViewById(R.id.date_view_btn)
     }
 }
