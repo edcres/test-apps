@@ -22,6 +22,9 @@ package com.aldreduser.testapp.callbacklambdaclosures
  * the main purpose of callbacks and closures are asynchronous programming and event listening
  */
 
+// Below link is an example of a lambda with a return type (Boolean)
+// https://www.youtube.com/watch?v=wnyN8umZIRM
+
 fun main() {
 //    rollDice(1..6, 4, {
 //        println(it)
@@ -36,7 +39,7 @@ fun main() {
 // taking a function as an argument (lambda)
 fun rollDice(
     range: IntRange,
-    time: Int,      // how many tomed to roll the dice
+    time: Int,      // how many times to roll the dice
     callback: (result: Int) -> Unit        // returning 'Unit' means the same as returning nothing
 ) {
     for(i in 0 until time) {
@@ -44,27 +47,3 @@ fun rollDice(
         callback(result)
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
