@@ -6,6 +6,22 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.Headers
+
+// The Ultimate Retrofit Crash Course - Philipp Lackner
+// https://www.youtube.com/watch?v=t6Sql3WMAnk
+
+// @Body annotations provide Object conversion to request body (e.g., JSON, protocol buffers)
+
+/** NOTES:
+ *
+ * Static vs Dynamic Headers:
+ *      - static:       @Headers("User-Agent: codersee-application")
+ *                      @GET("users")
+ *                      fun getUsersSingleStaticHeader(): Call<List<User>>
+ *
+ *      - dynamic:      fun getSpaceGifs(@Header(BuildConfig.CATS_API_KEY) apiKey: String)
+ */
 
 // TODO: use the API key for authentication (I did not need it for some reason)
 //  learn where to insert the key in the URL
@@ -35,8 +51,14 @@ interface CatsApiService {
 //    @GET("photos")
 //    suspend fun getPhotos(): List<CatPhoto>
 
+    // todo: Maybe the name of the header is related to how the API names their API key header
+    @Headers("x-api-key: ${BuildConfig.CATS_API_KEY}")
     @GET("v1/images/search?limit=100&category_ids=2&mime_types=gif")
-    suspend fun getSpaceGifs(): List<CatPhoto>
+    suspend fun getSpaceGifs(
+//        @Header("x-api-key") apiKey: String
+    ): List<CatPhoto>
+
+//    : Response<CatPhoto>
 }
 
 // Initialize the Retrofit service

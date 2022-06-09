@@ -12,7 +12,7 @@ import com.example.testwebapis.R
 import com.example.testwebapis.databinding.CatImgItemBinding
 import com.example.testwebapis.rndcats.network.CatPhoto
 
-class CatPhotosAdapter() : ListAdapter<CatPhoto,
+class CatPhotosAdapter : ListAdapter<CatPhoto,
         CatPhotosAdapter.CatPhotoViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatPhotoViewHolder {
