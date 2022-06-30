@@ -5,6 +5,8 @@
       <map>
         <entry key="app/src/main/res/drawable/nav_graph.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2451202392578125" />
+        <entry key="app/src/main/res/layout/fragment_hello_charts.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_m_p_android_chart.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_start.xml" value="0.3098958333333333" />
       </map>
     </option>

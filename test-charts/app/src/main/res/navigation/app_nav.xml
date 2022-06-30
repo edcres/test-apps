@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_startFragment_to_helloChartsFragment"
             app:destination="@id/helloChartsFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_MPAndroidChartFragment"
+            app:destination="@id/MPAndroidChartFragment" />
     </fragment>
     <fragment
         android:id="@+id/helloChartsFragment"
         android:name="com.example.testcharts.HelloChartsFragment"
         android:label="fragment_hello_charts"
         tools:layout="@layout/fragment_hello_charts" />
+    <fragment
+        android:id="@+id/MPAndroidChartFragment"
+        android:name="com.example.testcharts.MPAndroidChartFragment"
+        android:label="fragment_m_p_android_chart"
+        tools:layout="@layout/fragment_m_p_android_chart" />
 </navigation>

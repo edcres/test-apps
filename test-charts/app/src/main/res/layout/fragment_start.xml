@@ -12,4 +12,11 @@
         android:layout_gravity="center|end"
         android:text="HelloCharts Fragment"/>
 
+    <Button
+        android:id="@+id/mp_android_chart_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:text="MPAndroidChart"/>
+
 </FrameLayout>

@@ -8,7 +8,7 @@ import android.os.Bundle
  * Most popular by far:
  * - https://github.com/PhilJay/MPAndroidChart
  *
- * Probably easy to use
+ * Probably easy to use (I think it too old, looks like it hasn't been updated sincse 2015)
  * - https://github.com/blackfizz/EazeGraph
  *
  * Relatively popular and relatively easy to use
