@@ -5,13 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.navigation.Navigation
 
 class StartFragment : Fragment() {
+
+    private lateinit var helloChartsBtn: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_start, container, false)
+        val view = inflater.inflate(R.layout.fragment_start, container, false)
+        helloChartsBtn = view.findViewById(R.id.hello_charts_btn)
+        val navController = Navigation.findNavController(requireParentFragment().requireView())
+        helloChartsBtn.setOnClickListener {
+            navController.navigate(R.id.action_startFragment_to_helloChartsFragment)
+        }
+        return view
     }
 }
