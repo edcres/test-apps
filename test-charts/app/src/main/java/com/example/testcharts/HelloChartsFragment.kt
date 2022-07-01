@@ -1,4 +1,4 @@
-package com.example.testcharts.mpandroid
+package com.example.testcharts
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

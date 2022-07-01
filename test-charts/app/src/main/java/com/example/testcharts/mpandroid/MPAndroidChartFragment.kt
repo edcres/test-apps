@@ -2,8 +2,13 @@ package com.example.testcharts.mpandroid
 
 import android.graphics.Color
 import android.graphics.DashPathEffect
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +18,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.testcharts.R
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
@@ -21,14 +27,22 @@ import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IFillFormatter
+import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.github.mikephil.charting.utils.Utils
+import com.github.mikephil.charting.utils.ColorTemplate
+import com.github.mikephil.charting.utils.MPPointF
+
+// dummy data
+private val parties = arrayOf(
+    "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
+    "Party I", "Party J", "Party K", "Party L", "Party M", "Party N", "Party O", "Party P",
+    "Party Q", "Party R", "Party S", "Party T", "Party U", "Party V", "Party W", "Party X",
+    "Party Y", "Party Z"
+)
 
 class MPAndroidChartFragment : Fragment(), OnChartValueSelectedListener {
 
@@ -161,6 +175,44 @@ class MPAndroidChartFragment : Fragment(), OnChartValueSelectedListener {
     }
 
     private fun makePieChart() {
+        pieChart.setUsePercentValues(true)
+        pieChart.description.isEnabled = true
+        pieChart.setExtraOffsets(5f,10f,5f,5f)
+        pieChart.dragDecelerationFrictionCoef = 0.95f
+//        pieChart.setCenterTextTypeface(tfLight)
+        pieChart.centerText = generateCenterSpannableText()
+
+        pieChart.isDrawHoleEnabled = true
+        pieChart.setHoleColor(Color.WHITE)
+        pieChart.setTransparentCircleColor(Color.WHITE)
+        pieChart.setTransparentCircleAlpha(110)
+        pieChart.holeRadius = 58f
+        pieChart.transparentCircleRadius = 61f
+
+        pieChart.setDrawCenterText(true)
+        pieChart.rotationAngle = 0f
+        // enable rotation of the chart by touch
+        pieChart.isRotationEnabled = true
+        pieChart.isHighlightPerTapEnabled = true
+        // add a selection listener
+        pieChart.setOnChartValueSelectedListener(this)
+        pieChart.animateY(1400, Easing.EaseInOutQuad)
+
+        val l: Legend = pieChart.legend
+        l.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+        l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        l.orientation = Legend.LegendOrientation.VERTICAL
+        l.setDrawInside(false)
+        l.xEntrySpace = 7f
+        l.yEntrySpace = 0f
+        l.yOffset = 0f
+
+        // entry label styling
+        pieChart.setEntryLabelColor(Color.WHITE)
+//        pieChart.setEntryLabelTypeface(tfRegular)
+        pieChart.setEntryLabelTextSize(12f)
+
+        setPieData(6, 14f)
     }
 
     // Generate dummy values for the data
@@ -224,7 +276,65 @@ class MPAndroidChartFragment : Fragment(), OnChartValueSelectedListener {
         }
     }
 
-    fun setPieData() {
+    fun setPieData(count: Int, range: Float) {
+        val entries = ArrayList<PieEntry>()
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+        for (i in 0 until count) {
+            entries.add(
+                PieEntry(
+                    (Math.random() * range + range / 5).toFloat(),
+                    parties[i % parties.size],
+                    resources.getDrawable(R.drawable.star)
+                )
+            )
+        }
+
+        val dataSet = PieDataSet(entries, "Election Results")
+        dataSet.setDrawIcons(false)
+
+        dataSet.sliceSpace = 3f
+        dataSet.iconsOffset = MPPointF(0f, 40f)
+        dataSet.selectionShift = 5f
+
+        // add a lot of colors
+        val colors = java.util.ArrayList<Int>()
+        for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
+        for (c in ColorTemplate.JOYFUL_COLORS) colors.add(c)
+        for (c in ColorTemplate.COLORFUL_COLORS) colors.add(c)
+        for (c in ColorTemplate.LIBERTY_COLORS) colors.add(c)
+        for (c in ColorTemplate.PASTEL_COLORS) colors.add(c)
+
+        colors.add(ColorTemplate.getHoloBlue())
+        dataSet.colors = colors
+        //dataSet.setSelectionShift(0f);
+        //dataSet.setSelectionShift(0f);
+        val data = PieData(dataSet)
+        data.setValueFormatter(PercentFormatter())
+        data.setValueTextSize(11f)
+        data.setValueTextColor(Color.WHITE)
+//        data.setValueTypeface(tfLight)
+        pieChart.data = data
+
+        // undo all highlights
+        pieChart.highlightValues(null)
+        pieChart.invalidate()
+    }
+
+    // HELPERS //
+    // for pie chart
+    private fun generateCenterSpannableText(): SpannableString? {
+        val s = SpannableString("MPAndroidChart\ndeveloped by Philipp Jahoda")
+        s.setSpan(RelativeSizeSpan(1.7f), 0, 14, 0)
+        s.setSpan(StyleSpan(Typeface.NORMAL), 14, s.length - 15, 0)
+        s.setSpan(ForegroundColorSpan(Color.GRAY), 14, s.length - 15, 0)
+        s.setSpan(RelativeSizeSpan(.8f), 14, s.length - 15, 0)
+        s.setSpan(StyleSpan(Typeface.ITALIC), s.length - 14, s.length, 0)
+        s.setSpan(ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length - 14, s.length, 0)
+        return s
     }
 }
 

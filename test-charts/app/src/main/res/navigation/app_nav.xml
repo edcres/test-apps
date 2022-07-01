@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/helloChartsFragment"
-        android:name="com.example.testcharts.mpandroid.HelloChartsFragment"
+        android:name="com.example.testcharts.HelloChartsFragment"
         android:label="fragment_hello_charts"
         tools:layout="@layout/fragment_hello_charts" />
     <fragment

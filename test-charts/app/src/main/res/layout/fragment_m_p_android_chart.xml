@@ -31,30 +31,36 @@
         app:layout_constraintTop_toBottomOf="@+id/line_chart_btn">
 
         <LinearLayout
-            android:id="@+id/line_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/line_chart_view"
+            <LinearLayout
+                android:id="@+id/line_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/line_chart_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp" />
 
-        <LinearLayout
-            android:id="@+id/pie_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="vertical">
+            </LinearLayout>
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pie_chart_view"
+            <LinearLayout
+                android:id="@+id/pie_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
 
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pie_chart_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp" />
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

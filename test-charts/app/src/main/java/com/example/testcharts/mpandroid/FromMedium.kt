@@ -1,4 +1,4 @@
-package com.example.testcharts
+package com.example.testcharts.mpandroid
 
 import android.graphics.Color
 import android.graphics.Typeface
