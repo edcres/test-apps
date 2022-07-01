@@ -5,4 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".MPAndroidChartFragment">
 
+    <Button
+        android:id="@+id/line_graph_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:text="Line Graph"/>
+
+    <Button
+        android:id="@+id/pie_chart_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:text="Pie Chart"/>
+
 </FrameLayout>
