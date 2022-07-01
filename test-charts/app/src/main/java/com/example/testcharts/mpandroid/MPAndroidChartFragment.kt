@@ -129,19 +129,19 @@ class MPAndroidChartFragment : Fragment(), OnChartValueSelectedListener {
         llXAxis.enableDashedLine(10f, 10f, 0f)
         llXAxis.labelPosition = LimitLabelPosition.RIGHT_BOTTOM
         llXAxis.textSize = 10f
-        llXAxis.typeface = tfRegular
+//        llXAxis.typeface = tfRegular
         ll1 = LimitLine(150f, "Upper Limit")
         ll1.lineWidth = 4f
         ll1.enableDashedLine(10f, 10f, 0f)
         ll1.labelPosition = LimitLabelPosition.RIGHT_TOP
         ll1.textSize = 10f
-        ll1.typeface = tfRegular
+//        ll1.typeface = tfRegular
         ll2 = LimitLine(-30f, "Lower Limit")
         ll2.lineWidth = 4f
         ll2.enableDashedLine(10f, 10f, 0f)
         ll2.labelPosition = LimitLabelPosition.RIGHT_BOTTOM
         ll2.textSize = 10f
-        ll2.typeface = tfRegular
+//        ll2.typeface = tfRegular
         // draw limit lines behind data instead of on top
         yAxis.setDrawLimitLinesBehindData(true)
         xAxis.setDrawLimitLinesBehindData(true)
