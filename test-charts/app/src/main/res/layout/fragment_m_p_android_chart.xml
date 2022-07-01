@@ -36,6 +36,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <com.github.mikephil.charting.charts.LineChart
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
 

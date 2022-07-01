@@ -9,7 +9,8 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
-        mavenCentral()
+        mavenCentral() { url 'https://jitpack.io' }     // For MPAndroidChart
+//        maven { url 'https://jitpack.io' }      // For MPAndroidChart
     }
 }
 rootProject.name = "Test Charts"
