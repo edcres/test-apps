@@ -217,7 +217,6 @@ class MPAndroidChartFragment : Fragment(), OnChartValueSelectedListener {
 
     // Generate dummy values for the data
     fun setLinearData(count: Int, range: Float) {
-
         var set1: LineDataSet?
         val values = ArrayList<Entry>()
 

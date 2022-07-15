@@ -8,6 +8,15 @@ import com.example.testallnavigation.activitytoactivity.ActToActActivity
 import com.example.testallnavigation.fragmentsnavcomnponent.FragNavCompActivity
 import com.example.testallnavigation.fragmenttofragment.FragToFragActivity
 
+/**
+ *
+ * Fragment Nav Component:
+ *      (cool things to try)
+ *      Use observers to travel between fragments. Write comments about why I used observers.
+ *      OR
+ *      Set the navController in the viewModel when the coins fragment is created
+ */
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var actToActBtn: Button
