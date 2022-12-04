@@ -13,10 +13,26 @@
         <action
             android:id="@+id/action_startFragment_to_LAFragment"
             app:destination="@id/LAFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_clickInterfaceFragment"
+            app:destination="@id/clickInterfaceFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_oneWidgetInterfaceFragment"
+            app:destination="@id/oneWidgetInterfaceFragment" />
     </fragment>
     <fragment
         android:id="@+id/LAFragment"
         android:name="com.example.testrecyclerview.listadapter.LAFragment"
         android:label="fragment_l_a"
         tools:layout="@layout/fragment_l_a" />
+    <fragment
+        android:id="@+id/clickInterfaceFragment"
+        android:name="com.example.testrecyclerview.ClickInterfaceFragment"
+        android:label="fragment_click_interface"
+        tools:layout="@layout/fragment_click_interface" />
+    <fragment
+        android:id="@+id/oneWidgetInterfaceFragment"
+        android:name="com.example.testrecyclerview.OneWidgetInterfaceFragment"
+        android:label="fragment_one_widget_interface"
+        tools:layout="@layout/fragment_one_widget_interface" />
 </navigation>

@@ -116,7 +116,7 @@ private class funs1 {
 
 
 // todo: incrementString
-import java.lang.Double.parseDouble
+//import java.lang.Double.parseDouble
 
 fun incrementString(str: String) : String {
     // Not taking decimals into account
@@ -283,8 +283,9 @@ fun orderWeight(string:String):String {
         }
     }.filter { it != "-" }
     newWeights.sortedBy {
-        finalString += " " + numsMap[it.toString()]
-        numsMap[it.toString()].toInt()
+//        finalString += " " + numsMap[it.toString()]
+//        numsMap[it.toString()].toInt()
+        0
     }
     return finalString.trim()
     // Check if the weight of one number is the same as the adjusted weight of

@@ -116,26 +116,28 @@ class MPAndroidChartFragment : Fragment(), OnChartValueSelectedListener {
         mv.chartView = lineChart
         lineChart.marker = mv
 
-        // enable scaling and dragging
+//         enable scaling and dragging
         lineChart.isDragEnabled = true
-        lineChart.setScaleEnabled(true)
+        lineChart.setScaleEnabled(false)
         // chart.setScaleXEnabled(true);
         // chart.setScaleYEnabled(true);
 
         // force pinch zoom along both axis
         lineChart.setPinchZoom(true)
 
-        xAxis = lineChart.xAxis
-        xAxis.enableGridDashedLine(10f, 10f, 0f)
 
+        xAxis = lineChart.xAxis
+//        xAxis.enableGridDashedLine(10f, 10f, 0f)
         yAxis = lineChart.axisLeft
-        // disable dual axis (only use LEFT axis)
+//        // disable dual axis (only use LEFT axis)
         lineChart.axisRight.isEnabled = false
-        // horizontal grid lines
-        yAxis.enableGridDashedLine(10f, 10f, 0f)
-        // axis range
+//        // horizontal grid lines
+//        yAxis.enableGridDashedLine(10f, 10f, 0f)
+//        // axis range
         yAxis.axisMaximum = 200f
         yAxis.axisMinimum = -50f
+        xAxis.setDrawGridLines(false)
+        yAxis.setDrawGridLines(false)
 
         // Create Limit Lines
         llXAxis = LimitLine(9f, "Index 10")
@@ -157,7 +159,7 @@ class MPAndroidChartFragment : Fragment(), OnChartValueSelectedListener {
         ll2.textSize = 10f
 //        ll2.typeface = tfRegular
         // draw limit lines behind data instead of on top
-        yAxis.setDrawLimitLinesBehindData(true)
+        yAxis.setDrawLimitLinesBehindData(false)
         xAxis.setDrawLimitLinesBehindData(true)
         // add limit lines
         yAxis.addLimitLine(ll1)
@@ -198,6 +200,7 @@ class MPAndroidChartFragment : Fragment(), OnChartValueSelectedListener {
         pieChart.setOnChartValueSelectedListener(this)
         pieChart.animateY(1400, Easing.EaseInOutQuad)
 
+        // The list of items at the side of the chart
         val l: Legend = pieChart.legend
         l.verticalAlignment = Legend.LegendVerticalAlignment.TOP
         l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
@@ -222,7 +225,9 @@ class MPAndroidChartFragment : Fragment(), OnChartValueSelectedListener {
 
         for (i in 0 until count) {
             val value = (Math.random() * range).toFloat() - 30
-            values.add(Entry(i.toFloat(), value, resources.getDrawable(R.drawable.star)))
+            values.add(
+                Entry(i.toFloat(), value, resources.getDrawable(R.drawable.star))
+            )
 //            values.add(Entry(i, value, ResourcesCompat.getDrawable(R.drawable.star)))
         }
 
@@ -277,11 +282,8 @@ class MPAndroidChartFragment : Fragment(), OnChartValueSelectedListener {
 
     fun setPieData(count: Int, range: Float) {
         val entries = ArrayList<PieEntry>()
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
-
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
+        // NOTE: The order of the entries when being added to the entries array
+        //      determines their position around the center of the chart.
         for (i in 0 until count) {
             entries.add(
                 PieEntry(
@@ -309,7 +311,6 @@ class MPAndroidChartFragment : Fragment(), OnChartValueSelectedListener {
 
         colors.add(ColorTemplate.getHoloBlue())
         dataSet.colors = colors
-        //dataSet.setSelectionShift(0f);
         //dataSet.setSelectionShift(0f);
         val data = PieData(dataSet)
         data.setValueFormatter(PercentFormatter())
