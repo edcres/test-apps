@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.testrecyclerview.R
 
-// This is a recyclerview that uses multiple widgets with click listeners in each viewHolder
+// This is a recyclerview that uses one widget with a click listener on each viewHolder (interface)
 
 private const val TAG = "OneClickFrag__TAG"
 
