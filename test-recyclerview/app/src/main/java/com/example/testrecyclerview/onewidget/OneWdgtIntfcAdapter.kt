@@ -3,6 +3,7 @@ package com.example.testrecyclerview.onewidget
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +18,7 @@ class OneWdgtIntfcAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OneWdgtIntfcViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_item_1, parent, false)
-        return OneWdgtIntfcViewHolder(itemView, onItemClickListener)
+        return OneWdgtIntfcViewHolder(itemView, packages, onItemClickListener)
     }
 
     override fun onBindViewHolder(holder: OneWdgtIntfcViewHolder, position: Int) {
@@ -26,11 +27,18 @@ class OneWdgtIntfcAdapter(
 
     class OneWdgtIntfcViewHolder constructor(
         itemView: View,
-        private var onItemClickListener: OnItemClickListener
+        private val packages: List<Package>,
+        private val onItemClickListener: OnItemClickListener
     ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         init {
             itemView.setOnClickListener(this)
+            val thisPackage = packages[adapterPosition]
+
+            val itemText1: TextView = itemView.findViewById(R.id.item_text_1)
+            val itemText2: TextView = itemView.findViewById(R.id.item_sub_text)
+            itemText1.text = thisPackage.id.toString()
+            itemText2.text = thisPackage.name
         }
 
         // Could use lambdas to handle clicks but this (interfaces) is simpler
