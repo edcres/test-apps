@@ -7,12 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testrecyclerview.R
-import com.example.testrecyclerview.listadapter.BasicRecyclerItem
 
 // List adapter and interface to handle viewholder clicks
 
 class OneWdgtIntfcAdapter(
-    private val packages: List<BasicRecyclerItem>,
+    private val packages: List<Package>,
     private val onItemClickListener: OnItemClickListener
 ) : ListAdapter<Package, OneWdgtIntfcAdapter.OneWdgtIntfcViewHolder>(OneWdgtIntfcViewHolderDiffCallback()) {
 
@@ -40,14 +39,14 @@ class OneWdgtIntfcAdapter(
             if (position != RecyclerView.NO_POSITION) {
                 // do this bc its possible to delete an item but click it before it's completely
                 // animated off the recyclerview
-                onItemClickListener.onItemClick(position)
+                onItemClickListener.onViewHolderClick(position)
             }
         }
     }
 
     // this interface is implemented by the class that calls this adapter
     interface OnItemClickListener {
-        fun onItemClick(position: Int)
+        fun onViewHolderClick(position: Int)
     }
 
     class OneWdgtIntfcViewHolderDiffCallback : DiffUtil.ItemCallback<Package>() {
