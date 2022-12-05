@@ -46,6 +46,10 @@ class ClickInterfaceAdapter(
 
         private fun widgetClicks() {
             // todo:
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                onItemClickListener.onViewHolderClick(position)
+            }
         }
     }
 

@@ -6,7 +6,7 @@
     tools:context=".onewidget.OneWidgetInterfaceFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/oneInterRecyclerview"
+        android:id="@+id/one_inter_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
