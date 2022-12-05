@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testrecyclerview.R
 import com.example.testrecyclerview.onewidget.Package
+import com.example.testrecyclerview.utils.Helper
 
 // interface to handle viewholder widgets clicks
 // ListAdapter
@@ -42,19 +43,24 @@ class ClickInterfaceAdapter(
             val thisPackage = packages[adapterPosition]
             itemText1.text = thisPackage.id.toString()
             itemText2.text = thisPackage.name
+            itemText1.setOnClickListener {
+                clickWidget(Helper.WidgetClicked.ITEM_1)
+            }
+            itemText2.setOnClickListener {
+                clickWidget(Helper.WidgetClicked.SUBTEXT)
+            }
         }
 
-        private fun widgetClicks() {
-            // todo:
+        private fun clickWidget(widget: Helper.WidgetClicked) {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                onItemClickListener.onViewHolderClick(position)
+                onItemClickListener.onViewHolderClick(position, widget)
             }
         }
     }
 
     interface OnItemClickListener {
-        fun onViewHolderClick(position: Int)
+        fun onViewHolderClick(position: Int, widget: Helper.WidgetClicked)
     }
 
     class ClickInterfaceDiffCallback : DiffUtil.ItemCallback<Package>() {

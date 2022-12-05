@@ -32,9 +32,12 @@ class ClickInterfaceFragment : Fragment(), ClickInterfaceAdapter.OnItemClickList
         return view
     }
 
-    override fun onViewHolderClick(position: Int) {
-        // todo: handle widgets clicks
+    override fun onViewHolderClick(position: Int, widget: Helper.WidgetClicked) {
         val thePackage = exampleList[position]
-        Log.d(TAG, "onViewHolderClick: ")
+        val logTxt = when(widget) {
+            Helper.WidgetClicked.ITEM_1 -> "Header"
+            Helper.WidgetClicked.SUBTEXT -> "Subtext"
+        }
+        Log.d(TAG, "onViewHolderClick: $logTxt at position $position in package #${thePackage.id}")
     }
 }
