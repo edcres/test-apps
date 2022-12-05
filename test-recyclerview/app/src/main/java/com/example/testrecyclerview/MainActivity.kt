@@ -13,6 +13,8 @@ import android.os.Bundle
  *      -In the adapter without an interface or lambda (not good, breaks separation of concerns)
  */
 
+// I believe I've never used RecyclerView.Adapter with dataBinding
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

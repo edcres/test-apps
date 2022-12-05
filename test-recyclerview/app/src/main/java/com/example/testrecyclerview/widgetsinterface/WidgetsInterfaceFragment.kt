@@ -15,7 +15,7 @@ import com.example.testrecyclerview.utils.Helper
 
 private const val TAG = "ManyWidgetsFrag__TAG"
 
-class ClickInterfaceFragment : Fragment(), ClickInterfaceAdapter.OnItemClickListener {
+class WidgetsInterfaceFragment : Fragment(), ClickInterfaceAdapter.OnItemClickListener {
 
     private val exampleList = Helper().fillUpRecyclerView(100)
     private lateinit var recyclerView: RecyclerView

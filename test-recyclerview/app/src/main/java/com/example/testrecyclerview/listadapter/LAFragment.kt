@@ -16,6 +16,14 @@ import com.example.testrecyclerview.R
 import com.example.testrecyclerview.listadapter.StartRecyclerAdapter
 import java.util.*
 
+/**
+ * Uses:
+ *      - ListAdapter
+ *      - DataBinding
+ *      - Interfaces/lambdas for click listeners
+ *      - Animations and stuff
+ */
+
 private const val TAG = "LAFrag_TAG"
 
 class LAFragment : Fragment() {
@@ -30,9 +38,7 @@ class LAFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val view = inflater.inflate(R.layout.fragment_l_a, container, false)
-
         val animController = LayoutAnimationController(AnimationUtils
             .loadAnimation(requireContext(), R.anim.item_anim))
         animController.delay = 0.20f
