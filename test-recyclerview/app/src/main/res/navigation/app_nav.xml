@@ -29,7 +29,7 @@
         android:id="@+id/clickInterfaceFragment"
         android:name="com.example.testrecyclerview.ClickInterfaceFragment"
         android:label="fragment_click_interface"
-        tools:layout="@layout/fragment_click_interface" />
+        tools:layout="@layout/fragment_widgets_interface" />
     <fragment
         android:id="@+id/oneWidgetInterfaceFragment"
         android:name="com.example.testrecyclerview.OneWidgetInterfaceFragment"

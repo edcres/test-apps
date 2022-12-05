@@ -9,15 +9,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testrecyclerview.R
 
-// List adapter and interface to handle viewholder clicks
+// interface to handle viewholder clicks
+// ListAdapter
+// no dataBinding
 
 class OneWdgtIntfcAdapter(
     private val packages: List<Package>,
     private val onItemClickListener: OnItemClickListener
-) : ListAdapter<Package, OneWdgtIntfcAdapter.OneWdgtIntfcViewHolder>(OneWdgtIntfcViewHolderDiffCallback()) {
+) : ListAdapter<Package, OneWdgtIntfcAdapter.OneWdgtIntfcViewHolder>(OneWdgtIntfcDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OneWdgtIntfcViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_item_1, parent, false)
+        val itemView =
+            LayoutInflater.from(parent.context).inflate(R.layout.recycler_item_1, parent, false)
         return OneWdgtIntfcViewHolder(itemView, packages, onItemClickListener)
     }
 
@@ -27,7 +30,7 @@ class OneWdgtIntfcAdapter(
 
     class OneWdgtIntfcViewHolder constructor(
         itemView: View,
-        private val packages: List<Package>,
+        packages: List<Package>,
         private val onItemClickListener: OnItemClickListener
     ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
@@ -57,7 +60,7 @@ class OneWdgtIntfcAdapter(
         fun onViewHolderClick(position: Int)
     }
 
-    class OneWdgtIntfcViewHolderDiffCallback : DiffUtil.ItemCallback<Package>() {
+    class OneWdgtIntfcDiffCallback : DiffUtil.ItemCallback<Package>() {
         override fun areItemsTheSame(oldItem: Package, newItem: Package): Boolean {
             return oldItem.id == newItem.id
         }
