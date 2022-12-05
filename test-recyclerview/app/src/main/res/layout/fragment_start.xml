@@ -8,7 +8,28 @@
     <Button
         android:id="@+id/l_a_adapter_btn"
         android:text="list adapter"
-        android:layout_gravity="center"
+        android:layout_gravity="top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/one_widget_btn"
+        android:text="one widget interface"
+        android:layout_gravity="start|center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/widgets_interface_btn"
+        android:text="widgets interface"
+        android:layout_gravity="start|bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/recycler_dot_adapter_btn"
+        android:text="recycler.adapter"
+        android:layout_gravity="bottom|end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
