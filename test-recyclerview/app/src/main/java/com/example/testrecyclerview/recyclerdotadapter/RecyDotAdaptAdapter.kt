@@ -1,5 +1,6 @@
 package com.example.testrecyclerview.recyclerdotadapter
 
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,16 @@ class RecyDotAdaptAdapter(
         itemText1.text = thisPackage.id.toString()
         itemText2.text = thisPackage.name
         packages[position]
+
+        
+        // todo: be careful about this below
+        if (position == 0) {
+            itemText1.setBackgroundColor(Color.YELLOW)
+        } else {
+            // if the position is not 0, set the background color to it's original state
+            // without this, some of the other items would stay yellow
+            itemText2.setBackgroundColor(Color.WHITE)
+        }
     }
 
     override fun getItemCount(): Int = packages.size
