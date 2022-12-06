@@ -17,7 +17,6 @@ private const val TAG = "Recy.AdapterFrag__TAG"
 
 class RecyDotAdapterFragment : Fragment() {
 
-    private val exampleList = Helper().fillUpRecyclerView(100)
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
@@ -25,10 +24,11 @@ class RecyDotAdapterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_recy_dot_adapter, container, false)
-        val recyclerAdapter = RecyDotAdaptAdapter(exampleList)
         recyclerView = view.findViewById(R.id.recy_dot_recycler)
-        recyclerView.adapter = recyclerAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val exampleList = Helper().fillUpRecyclerView(100)
+        val recyclerAdapter = RecyDotAdaptAdapter(exampleList)
+        recyclerView.adapter = recyclerAdapter
         return view
     }
 }

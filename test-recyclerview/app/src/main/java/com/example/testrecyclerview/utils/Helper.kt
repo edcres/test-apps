@@ -1,5 +1,6 @@
 package com.example.testrecyclerview.utils
 
+import android.util.Log
 import com.example.testrecyclerview.onewidget.Package
 
 class Helper {
@@ -9,8 +10,7 @@ class Helper {
     fun fillUpRecyclerView(size: Int): MutableList<Package> {
         val itemsList = mutableListOf<Package>()
         for (i in 1..size) {
-            val number = itemsList.size-1L
-            val thisItem = Package(itemsList.size-1L, "Subtext $number")
+            val thisItem = Package(i.toLong(), "Subtext $i")
             itemsList.add(thisItem)
         }
         return itemsList

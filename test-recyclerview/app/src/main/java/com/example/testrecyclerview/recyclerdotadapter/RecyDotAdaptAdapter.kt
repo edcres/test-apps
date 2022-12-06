@@ -1,5 +1,6 @@
 package com.example.testrecyclerview.recyclerdotadapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,11 @@ class RecyDotAdaptAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyDotAdaptViewHolder, position: Int) {
+        val itemText1: TextView = holder.itemView.findViewById(R.id.item_text_1)
+        val itemText2: TextView = holder.itemView.findViewById(R.id.item_sub_text)
+        val thisPackage = packages[position]
+        itemText1.text = thisPackage.id.toString()
+        itemText2.text = thisPackage.name
         packages[position]
     }
 
@@ -27,11 +33,15 @@ class RecyDotAdaptAdapter(
     class RecyDotAdaptViewHolder constructor(itemView: View, packages: List<Package>) :
         RecyclerView.ViewHolder(itemView) {
             init {
-                val thisPackage = packages[adapterPosition]
-                val itemText1: TextView = itemView.findViewById(R.id.item_text_1)
-                val itemText2: TextView = itemView.findViewById(R.id.item_sub_text)
-                itemText1.text = thisPackage.id.toString()
-                itemText2.text = thisPackage.name
+                // todo: maybe bug: for some reason adapter position is always -1, idk why
+                // when 'adapterPosition' = -1 = NO_POSITION
+                Log.d("recyDotAdapt__TAG", "${packages.size} $adapterPosition")
+                Log.d("recyDotAdapt__TAG", "${packages.size} $layoutPosition")
+//                val thisPackage = packages[adapterPosition]
+//                val itemText1: TextView = itemView.findViewById(R.id.item_text_1)
+//                val itemText2: TextView = itemView.findViewById(R.id.item_sub_text)
+//                itemText1.text = thisPackage.id.toString()
+//                itemText2.text = thisPackage.name
             }
     }
 }
