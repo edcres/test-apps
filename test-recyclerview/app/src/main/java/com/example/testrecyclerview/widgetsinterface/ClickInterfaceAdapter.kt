@@ -27,7 +27,10 @@ class ClickInterfaceAdapter(
     }
 
     override fun onBindViewHolder(holder: ClickInterfaceViewHolder, position: Int) {
-        packages[position]
+        val itemText1: TextView = holder.itemView.findViewById(R.id.item_text_1)
+        val itemText2: TextView = holder.itemView.findViewById(R.id.item_sub_text)
+        itemText1.text = packages[position].id.toString()
+        itemText2.text = packages[position].name
     }
 
     class ClickInterfaceViewHolder constructor(
@@ -40,9 +43,13 @@ class ClickInterfaceAdapter(
         private val itemText2: TextView = itemView.findViewById(R.id.item_sub_text)
 
         init {
-            val thisPackage = packages[adapterPosition]
-            itemText1.text = thisPackage.id.toString()
-            itemText2.text = thisPackage.name
+            // todo: maybe bug: for some reason adapterPosition is always -1, idk why
+            // when 'adapterPosition' = -1 = NO_POSITION
+            // It works with on click listeners so maybe there's a refractory period to get everything set up
+//            val thisPackage = packages[adapterPosition]
+//            itemText1.text = thisPackage.id.toString()
+//            itemText2.text = thisPackage.name
+
             itemText1.setOnClickListener {
                 clickWidget(Helper.WidgetClicked.ITEM_1)
             }
@@ -54,6 +61,8 @@ class ClickInterfaceAdapter(
         private fun clickWidget(widget: Helper.WidgetClicked) {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
+                // do this bc its possible to delete an item but click it before it's completely
+                // animated off the recyclerview
                 onItemClickListener.onViewHolderClick(position, widget)
             }
         }

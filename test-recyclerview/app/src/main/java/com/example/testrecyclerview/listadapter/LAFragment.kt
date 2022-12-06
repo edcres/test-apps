@@ -20,7 +20,7 @@ import java.util.*
  * Uses:
  *      - ListAdapter
  *      - DataBinding
- *      - Interfaces/lambdas for click listeners
+ *      - no Interfaces/lambdas for click listeners
  *      - Animations and stuff
  */
 

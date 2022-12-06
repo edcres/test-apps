@@ -13,6 +13,12 @@ import com.example.testrecyclerview.utils.Helper
 
 // This is a recyclerview that uses multiple widgets with click listeners in each viewHolder (interface)
 
+/**
+ * Uses:
+ *      - ListAdapter
+ *      - Interfaces/lambdas for click listeners
+ */
+
 private const val TAG = "ManyWidgetsFrag__TAG"
 
 class WidgetsInterfaceFragment : Fragment(), ClickInterfaceAdapter.OnItemClickListener {
@@ -27,8 +33,9 @@ class WidgetsInterfaceFragment : Fragment(), ClickInterfaceAdapter.OnItemClickLi
         val view = inflater.inflate(R.layout.fragment_widgets_interface, container, false)
         val recyclerAdapter = ClickInterfaceAdapter(exampleList, this)
         recyclerView = view.findViewById(R.id.widgets_inter_recyclerview)
-        recyclerView.adapter = recyclerAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = recyclerAdapter
+        recyclerAdapter.submitList(exampleList)     // Need to submitList() with ListAdapter
         return view
     }
 

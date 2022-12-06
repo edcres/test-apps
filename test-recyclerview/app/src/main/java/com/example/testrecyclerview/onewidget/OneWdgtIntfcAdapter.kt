@@ -25,7 +25,10 @@ class OneWdgtIntfcAdapter(
     }
 
     override fun onBindViewHolder(holder: OneWdgtIntfcViewHolder, position: Int) {
-        packages[position]
+        val itemText1: TextView = holder.itemView.findViewById(R.id.item_text_1)
+        val itemText2: TextView = holder.itemView.findViewById(R.id.item_sub_text)
+        itemText1.text = packages[position].id.toString()
+        itemText2.text = packages[position].name
     }
 
     class OneWdgtIntfcViewHolder constructor(
@@ -36,12 +39,15 @@ class OneWdgtIntfcAdapter(
 
         init {
             itemView.setOnClickListener(this)
-            val thisPackage = packages[adapterPosition]
 
-            val itemText1: TextView = itemView.findViewById(R.id.item_text_1)
-            val itemText2: TextView = itemView.findViewById(R.id.item_sub_text)
-            itemText1.text = thisPackage.id.toString()
-            itemText2.text = thisPackage.name
+            // todo: maybe bug: for some reason adapterPosition is always -1, idk why
+            // when 'adapterPosition' = -1 = NO_POSITION
+            // It works with on click listeners so maybe there's a refractory period to get everything set up
+//            val thisPackage = packages[adapterPosition]
+//            val itemText1: TextView = itemView.findViewById(R.id.item_text_1)
+//            val itemText2: TextView = itemView.findViewById(R.id.item_sub_text)
+//            itemText1.text = thisPackage.id.toString()
+//            itemText2.text = thisPackage.name
         }
 
         // Could use lambdas to handle clicks but this (interfaces) is simpler

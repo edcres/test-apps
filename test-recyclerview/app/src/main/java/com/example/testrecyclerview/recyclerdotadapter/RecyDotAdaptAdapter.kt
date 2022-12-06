@@ -26,9 +26,7 @@ class RecyDotAdaptAdapter(
         val thisPackage = packages[position]
         itemText1.text = thisPackage.id.toString()
         itemText2.text = thisPackage.name
-        packages[position]
 
-        
         // todo: be careful about this below
         if (position == 0) {
             itemText1.setBackgroundColor(Color.YELLOW)
