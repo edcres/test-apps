@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_startFragment_to_randomCatsFragment"
             app:destination="@id/randomCatsFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_obsConnectivityFragment"
+            app:destination="@id/obsConnectivityFragment" />
     </fragment>
     <fragment
         android:id="@+id/randomCatsFragment"
         android:name="com.example.testwebapis.rndcats.RandomCatsFragment"
         android:label="fragment_random_cats"
         tools:layout="@layout/fragment_random_cats" />
+    <fragment
+        android:id="@+id/obsConnectivityFragment"
+        android:name="com.example.testwebapis.ObsConnectivityFragment"
+        android:label="fragment_obs_connectivity"
+        tools:layout="@layout/fragment_obs_connectivity" />
 </navigation>

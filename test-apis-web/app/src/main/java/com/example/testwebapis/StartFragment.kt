@@ -29,6 +29,9 @@ class StartFragment : Fragment() {
             rndCatsBtn.setOnClickListener {
                 navController.navigate(R.id.action_startFragment_to_randomCatsFragment)
             }
+            observeConnectivityBtn.setOnClickListener {
+                navController.navigate(R.id.action_startFragment_to_obsConnectivityFragment)
+            }
         }
     }
 
