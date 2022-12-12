@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.onEach
  *      - you can ping a server and check if that's successful
  *          - https://www.youtube.com/watch?v=OEclG3XsPsg
  *
+ * Then test cellular data
+ *
  */
 
 /**
