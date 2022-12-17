@@ -1,5 +1,3 @@
-// initialize an express application
-// npm init -y (in the server folder)
 {
   "name": "server",
   "version": "1.0.0",
@@ -10,5 +8,11 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongoose": "^6.8.0",
+    "nodemon": "^2.0.20"
+  }
 }
