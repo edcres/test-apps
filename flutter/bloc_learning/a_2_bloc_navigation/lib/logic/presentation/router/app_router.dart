@@ -30,6 +30,7 @@ class AppRouter {
                 ));
         break;
       default:
+        null;
     }
   }
 }

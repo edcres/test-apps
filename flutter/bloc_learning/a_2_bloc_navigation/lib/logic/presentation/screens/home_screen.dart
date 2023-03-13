@@ -102,20 +102,21 @@ class _HomeScreenState extends State<HomeScreen> {
               color: widget.color,
               child: Text('Got to Second Screen'),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => BlocProvider.value(
-                      value: context.bloc<CounterCubit>(), // common mistake here. Provide an existing instance of counter cubit
-                      // value: BlocProvider.of<CounterCubit>(context),
-                      child: SecondScreen(
-                        title: 'Second Screen',
-                        color: Colors.redAccent,
-                      )
-                    ),
-                      // builder: (context) => SecondScreen(
-                      //       title: 'Second Screen',
-                      //       color: Colors.redAccent,
-                      //     )),
+                Navigator.of(context).pushNamed(
+                  '/third'
+                  // MaterialPageRoute(
+                  //   builder: (context) => BlocProvider.value(
+                  //     value: context.bloc<CounterCubit>(), // common mistake here. Provide an existing instance of counter cubit
+                  //     // value: BlocProvider.of<CounterCubit>(context),
+                  //     child: SecondScreen(
+                  //       title: 'Second Screen',
+                  //       color: Colors.redAccent,
+                  //     )
+                  //   ),
+                  //     // builder: (context) => SecondScreen(
+                  //     //       title: 'Second Screen',
+                  //     //       color: Colors.redAccent,
+                  //     //     )),
                 );
               },
             ),
