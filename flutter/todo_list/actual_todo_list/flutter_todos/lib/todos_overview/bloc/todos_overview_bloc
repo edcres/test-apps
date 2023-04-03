@@ -6,6 +6,8 @@ import 'package:todos_repository/todos_repository.dart';
 part 'todos_overview_event.dart';
 part 'todos_overview_state.dart';
 
+// The bloc does not create an instance of the TodosRepository internally. Instead, it relies on an instance of the repository to be injected via constructor.
+
 class TodosOverviewBloc extends Bloc<TodosOverviewEvent, TodosOverviewState> {
   TodosOverviewBloc({
     required TodosRepository todosRepository,
