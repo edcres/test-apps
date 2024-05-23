@@ -2,6 +2,8 @@ from pytube import YouTube
 import os
 
 def download_youtube_video():
+    print(os.curdir)
+
     try:
         # Get URL input from the user
         video_url = input("Enter the YouTube video URL: ")
