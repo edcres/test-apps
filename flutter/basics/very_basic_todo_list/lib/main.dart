@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
+// Main widget for the application. It sets up the basic theme and title.
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -15,20 +16,24 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// Main screen for the to-do list. It manages the state of the list.
 class TodoListScreen extends StatefulWidget {
   @override
   _TodoListScreenState createState() => _TodoListScreenState();
 }
 
+// A stateful widget class that manages the state of the TodoListScreen
 class _TodoListScreenState extends State<TodoListScreen> {
   final List<String> _todoItems = [];
 
+  // Method adds a new item to the list if the input is not empty.
   void _addTodoItem(String task) {
     if (task.isNotEmpty) {
       setState(() => _todoItems.add(task));
     }
   }
 
+  // Method shows a dialog to input a new item.
   void _promptAddTodoItem() {
     showDialog(
       context: context,
@@ -53,6 +58,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
     );
   }
 
+  // Method builds the list view for the to-do items.
   Widget _buildTodoList() {
     return ListView.builder(
       itemBuilder: (context, index) {
@@ -64,14 +70,18 @@ class _TodoListScreenState extends State<TodoListScreen> {
     );
   }
 
+  // Method builds each individual to-do item as a list tile.
   Widget _buildTodoItem(String todoText, int index) {
     return ListTile(
       title: Text(todoText),
     );
   }
 
+// Responsible for constructing the user interface of the TodoListScreen.
   @override
   Widget build(BuildContext context) {
+    // Scaffold: Provides the basic structure for the visual interface,
+    //   including the app bar, body, and floating action button.
     return Scaffold(
       appBar: AppBar(
         title: Text('Simple To-Do List'),
