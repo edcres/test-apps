@@ -22,7 +22,7 @@ class TodoListScreen extends StatefulWidget {
   _TodoListScreenState createState() => _TodoListScreenState();
 }
 
-// A stateful widget class that manages the state of the TodoListScreen
+// A stateful widget class that manages the state and behavior of the TodoListScreen
 class _TodoListScreenState extends State<TodoListScreen> {
   final List<String> _todoItems = [];
 
