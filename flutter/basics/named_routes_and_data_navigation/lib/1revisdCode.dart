@@ -13,23 +13,18 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       initialRoute: '/',
-      routes: {
-        '/': (context) => FirstScreen(),
-      },
       onGenerateRoute: (settings) {
-        if (settings.name == '/second') {
-          final args = settings.arguments as ScreenArguments;
-
-          return MaterialPageRoute(
-            builder: (context) {
-              return SecondScreen(
-                data: args.data,
-              );
-            },
-          );
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(builder: (context) => FirstScreen());
+          case '/second':
+            final args = settings.arguments as ScreenArguments;
+            return MaterialPageRoute(
+                builder: (context) => SecondScreen(data: args.data));
+          default:
+            assert(false, 'Need to implement ${settings.name}');
+            return null;
         }
-        assert(false, 'Need to implement ${settings.name}');
-        return null;
       },
     );
   }
