@@ -78,6 +78,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
 
   Widget _buildTodoItem(
       String todoText, int index, Animation<double> animation) {
+    // Change the animations for list items (add/remove).
     return SizeTransition(
       sizeFactor: animation,
       child: Card(
