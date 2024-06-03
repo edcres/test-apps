@@ -15,9 +15,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => FirstScreen(),
-        '/second': (context) => SecondScreen(
-              data: 'Test Data',
-            ),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/second') {
