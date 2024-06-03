@@ -47,7 +47,19 @@ class SecondScreen extends StatelessWidget {
         title: Text('Second Screen'),
       ),
       body: Center(
-        child: Text('Welcome to the Second Screen!'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Welcome to the Second Screen!'),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Go back to First Screen'),
+            ),
+          ],
+        ),
       ),
     );
   }
