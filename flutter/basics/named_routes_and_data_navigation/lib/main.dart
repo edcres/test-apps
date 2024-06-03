@@ -12,9 +12,36 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: FirstScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => FirstScreen(),
+        '/second': (context) => SecondScreen(
+              data: 'Test Data',
+            ),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/second') {
+          final args = settings.arguments as ScreenArguments;
+
+          return MaterialPageRoute(
+            builder: (context) {
+              return SecondScreen(
+                data: args.data,
+              );
+            },
+          );
+        }
+        assert(false, 'Need to implement ${settings.name}');
+        return null;
+      },
     );
   }
+}
+
+class ScreenArguments {
+  final String data;
+
+  ScreenArguments(this.data);
 }
 
 class FirstScreen extends StatelessWidget {
@@ -27,9 +54,10 @@ class FirstScreen extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Navigator.push(
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(builder: (context) => SecondScreen()),
+              '/second',
+              arguments: ScreenArguments('Hello from First Screen!'),
             );
           },
           child: Text('Go to Second Screen'),
@@ -40,6 +68,10 @@ class FirstScreen extends StatelessWidget {
 }
 
 class SecondScreen extends StatelessWidget {
+  final String data;
+
+  SecondScreen({required this.data});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +82,7 @@ class SecondScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Welcome to the Second Screen!'),
+            Text(data),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
