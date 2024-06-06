@@ -1,3 +1,4 @@
+// Values of variables.
 class CounterState {
   final int counter;
 
