@@ -5,6 +5,7 @@ import 'bloc/counter_event.dart';
 import 'bloc/counter_state.dart';
 
 // BLoC is integrated into the Flutter UI using BlocProvider and BlocBuilder.
+// App uses Streams
 
 void main() {
   runApp(MyApp());
