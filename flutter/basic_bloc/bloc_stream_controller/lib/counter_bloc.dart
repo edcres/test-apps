@@ -28,6 +28,8 @@ class CounterBloc {
     _eventController.stream.listen(_mapEventToState);
   }
 
+  // _mapEventToState method updates the counter based on the event and adds
+  //    the new state to the _stateController.
   void _mapEventToState(CounterEvent event) {
     if (event is IncrementEvent) {
       _counter++;
