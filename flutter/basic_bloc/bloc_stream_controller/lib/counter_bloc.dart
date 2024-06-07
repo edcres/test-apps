@@ -1,25 +1,44 @@
 import 'dart:async';
 
+abstract class CounterEvent {}
+
+class IncrementEvent extends CounterEvent {}
+
+class DecrementEvent extends CounterEvent {}
+
+class CounterState {
+  final int counter;
+
+  CounterState(this.counter);
+}
+
 class CounterBloc {
   int _counter = 0;
 
-  final _counterController = StreamController<int>();
+  final _stateController = StreamController<CounterState>();
+  final _eventController = StreamController<CounterEvent>();
 
   // Output stream
-  Stream<int> get counterStream => _counterController.stream;
+  Stream<CounterState> get stateStream => _stateController.stream;
 
   // Input sink
-  void increment() {
-    _counter++;
-    _counterController.sink.add(_counter);
+  StreamSink<CounterEvent> get eventSink => _eventController.sink;
+
+  CounterBloc() {
+    _eventController.stream.listen(_mapEventToState);
   }
 
-  void decrement() {
-    _counter--;
-    _counterController.sink.add(_counter);
+  void _mapEventToState(CounterEvent event) {
+    if (event is IncrementEvent) {
+      _counter++;
+    } else if (event is DecrementEvent) {
+      _counter--;
+    }
+    _stateController.sink.add(CounterState(_counter));
   }
 
   void dispose() {
-    _counterController.close();
+    _stateController.close();
+    _eventController.close();
   }
 }

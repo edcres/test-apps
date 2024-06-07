@@ -39,12 +39,12 @@ class _CounterPageState extends State<CounterPage> {
         title: Text('Counter BLoC Demo'),
       ),
       body: Center(
-        child: StreamBuilder<int>(
-          stream: _bloc.counterStream,
-          initialData: 0,
+        child: StreamBuilder<CounterState>(
+          stream: _bloc.stateStream,
+          initialData: CounterState(0),
           builder: (context, snapshot) {
             return Text(
-              'Counter: ${snapshot.data}',
+              'Counter: ${snapshot.data?.counter}',
               style: TextStyle(fontSize: 24.0),
             );
           },
@@ -54,13 +54,13 @@ class _CounterPageState extends State<CounterPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: _bloc.increment,
+            onPressed: () => _bloc.eventSink.add(IncrementEvent()),
             tooltip: 'Increment',
             child: Icon(Icons.add),
           ),
           SizedBox(height: 16.0),
           FloatingActionButton(
-            onPressed: _bloc.decrement,
+            onPressed: () => _bloc.eventSink.add(DecrementEvent()),
             tooltip: 'Decrement',
             child: Icon(Icons.remove),
           ),
