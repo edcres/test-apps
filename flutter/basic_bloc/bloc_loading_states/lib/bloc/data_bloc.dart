@@ -4,9 +4,13 @@ import 'data_state.dart';
 
 class DataBloc extends Bloc<DataEvent, DataState> {
   DataBloc() : super(InitialState()) {
+    // This tells the BLoC that whenever a FetchDataEvent is added to the BLoC,
+    //   it should handle this event using the specified event handler (_onFetchData).
     on<FetchDataEvent>(_onFetchData);
   }
 
+// This function is responsible for processing the event and emitting
+//  new states based on the logic defined within it.
   void _onFetchData(FetchDataEvent event, Emitter<DataState> emit) async {
     emit(LoadingState());
     try {
@@ -17,6 +21,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     }
   }
 
+  // Fetches fake data.
   Future<List<String>> _fetchData() async {
     await Future.delayed(Duration(seconds: 2));
     if (DateTime.now().second % 2 == 0) {
