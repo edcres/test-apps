@@ -1,16 +1,8 @@
 # bloc_loading_states
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+What the App Does
+    1. Initial State: When the app starts, it is in the InitialState.
+    2. Fetching Data: When the app starts, it automatically triggers the FetchDataEvent, causing the BLoC to enter the LoadingState.
+    3. Loading State: While data is being fetched, the UI shows a CircularProgressIndicator to indicate loading.
+    4. Loaded State: If data fetching is successful, the BLoC transitions to the LoadedState with the fetched data, and the UI displays the    data in a list.
+    5. Error State: If an error occurs during data fetching, the BLoC transitions to the ErrorState, and the UI displays an error message.
