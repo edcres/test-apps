@@ -1,5 +1,14 @@
 # bloc_to_bloc_comms
 
+____________________________________________________________
+
+The BLoC-to-BLoC communication is achieved by:
+
+    Passing an instance of LoggerBloc to CounterBloc.
+    Having CounterBloc call LoggerBloc's log method to log messages whenever the counter value changes.
+
+____________________________________________________________
+
 - CounterBloc: Manages the counter state and communicates state changes to LoggerBloc.
 
 - LoggerBloc: Logs messages received from CounterBloc.
