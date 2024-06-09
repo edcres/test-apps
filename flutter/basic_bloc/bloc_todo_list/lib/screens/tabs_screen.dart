@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../blocs/todo_bloc.dart';
 import 'completed_todos.dart';
 import 'pending_todos.dart';
 

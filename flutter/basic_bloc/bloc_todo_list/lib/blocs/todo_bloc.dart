@@ -2,16 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../models/todo.dart';
 
-class TodoState extends Equatable {
-  final List<Todo> todos;
-
-  TodoState(this.todos);
-
-  @override
-  List<Object> get props => [todos];
-}
-
-class TodoEvent extends Equatable {
+// Event Definitions
+abstract class TodoEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
@@ -34,26 +26,36 @@ class ToggleTodo extends TodoEvent {
   List<Object> get props => [index];
 }
 
-class TodoBloc extends Bloc<TodoEvent, TodoState> {
-  TodoBloc() : super(TodoState([]));
+// State Definition
+class TodoState extends Equatable {
+  final List<Todo> todos;
+
+  TodoState(this.todos);
 
   @override
-  Stream<TodoState> mapEventToState(TodoEvent event) async* {
-    if (event is AddTodo) {
+  List<Object> get props => [todos];
+}
+
+// BLoC Definition
+class TodoBloc extends Bloc<TodoEvent, TodoState> {
+  TodoBloc() : super(TodoState([])) {
+    on<AddTodo>((event, emit) {
       final List<Todo> updatedTodos = List.from(state.todos)
         ..add(Todo(
           task: event.task,
           isCompleted: false,
         ));
-      yield TodoState(updatedTodos);
-    } else if (event is ToggleTodo) {
+      emit(TodoState(updatedTodos));
+    });
+
+    on<ToggleTodo>((event, emit) {
       final List<Todo> updatedTodos = List.from(state.todos);
       final Todo todo = updatedTodos[event.index];
       updatedTodos[event.index] = Todo(
         task: todo.task,
         isCompleted: !todo.isCompleted,
       );
-      yield TodoState(updatedTodos);
-    }
+      emit(TodoState(updatedTodos));
+    });
   }
 }
