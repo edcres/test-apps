@@ -4,8 +4,8 @@ ____________________________________________________________
 
 The BLoC-to-BLoC communication is achieved by:
 
-    Passing an instance of LoggerBloc to CounterBloc.
-    Having CounterBloc call LoggerBloc's log method to log messages whenever the counter value changes.
+    -Passing an instance of LoggerBloc to CounterBloc.
+    -Having CounterBloc call LoggerBloc's log method to log messages whenever the counter value changes.
 
 ____________________________________________________________
 
