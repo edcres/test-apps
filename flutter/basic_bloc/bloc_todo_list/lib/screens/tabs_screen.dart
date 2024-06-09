@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/todo_bloc.dart';
-import 'completed_todos.dart';
-import 'pending_todos.dart';
+import 'shopping_items.dart';
+import 'chores.dart';
 
 class TabsScreen extends StatelessWidget {
   @override
@@ -14,15 +14,15 @@ class TabsScreen extends StatelessWidget {
           title: Text('To-Do List'),
           bottom: TabBar(
             tabs: [
-              Tab(text: 'Pending'),
-              Tab(text: 'Completed'),
+              Tab(text: 'Shopping'),
+              Tab(text: 'Chores'),
             ],
           ),
         ),
         body: TabBarView(
           children: [
-            PendingTodos(),
-            CompletedTodos(),
+            ShoppingItems(),
+            Chores(),
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -30,7 +30,7 @@ class TabsScreen extends StatelessWidget {
             showDialog(
               context: context,
               builder: (context) {
-                return AddTodoDialog();
+                return AddItemDialog();
               },
             );
           },
@@ -41,28 +41,53 @@ class TabsScreen extends StatelessWidget {
   }
 }
 
-class AddTodoDialog extends StatefulWidget {
+class AddItemDialog extends StatefulWidget {
   @override
-  _AddTodoDialogState createState() => _AddTodoDialogState();
+  _AddItemDialogState createState() => _AddItemDialogState();
 }
 
-class _AddTodoDialogState extends State<AddTodoDialog> {
+class _AddItemDialogState extends State<AddItemDialog> {
   final _controller = TextEditingController();
+  String _selectedCategory = 'Shopping';
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Add To-Do'),
-      content: TextField(
-        controller: _controller,
-        decoration: InputDecoration(hintText: 'Enter task here'),
+      title: Text('Add Item'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _controller,
+            decoration: InputDecoration(hintText: 'Enter item here'),
+          ),
+          DropdownButton<String>(
+            value: _selectedCategory,
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedCategory = newValue!;
+              });
+            },
+            items: <String>['Shopping', 'Chores']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ],
       ),
       actions: [
         TextButton(
           onPressed: () {
-            final task = _controller.text;
-            if (task.isNotEmpty) {
-              context.read<TodoBloc>().add(AddTodo(task));
+            final item = _controller.text;
+            if (item.isNotEmpty) {
+              if (_selectedCategory == 'Shopping') {
+                context.read<TodoBloc>().add(AddShoppingItem(item));
+              } else {
+                context.read<TodoBloc>().add(AddChore(item));
+              }
             }
             Navigator.of(context).pop();
           },

@@ -3,23 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/todo_bloc.dart';
 import '../widgets/todo_item.dart';
 
-class CompletedTodos extends StatelessWidget {
+class Chores extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TodoBloc, TodoState>(
       builder: (context, state) {
-        final completedTodos =
-            state.todos.where((todo) => todo.isCompleted).toList();
+        final chores = state.chores;
 
         return ListView.builder(
-          itemCount: completedTodos.length,
+          itemCount: chores.length,
           itemBuilder: (context, index) {
             return TodoItem(
-              todo: completedTodos[index],
+              todo: chores[index],
               onTap: () {
-                context.read<TodoBloc>().add(ToggleTodo(
-                      state.todos.indexOf(completedTodos[index]),
-                    ));
+                context.read<TodoBloc>().add(ToggleChore(index));
               },
             );
           },

@@ -3,23 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/todo_bloc.dart';
 import '../widgets/todo_item.dart';
 
-class PendingTodos extends StatelessWidget {
+class ShoppingItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TodoBloc, TodoState>(
       builder: (context, state) {
-        final pendingTodos =
-            state.todos.where((todo) => !todo.isCompleted).toList();
+        final shoppingItems = state.shoppingItems;
 
         return ListView.builder(
-          itemCount: pendingTodos.length,
+          itemCount: shoppingItems.length,
           itemBuilder: (context, index) {
             return TodoItem(
-              todo: pendingTodos[index],
+              todo: shoppingItems[index],
               onTap: () {
-                context.read<TodoBloc>().add(ToggleTodo(
-                      state.todos.indexOf(pendingTodos[index]),
-                    ));
+                context.read<TodoBloc>().add(ToggleShoppingItem(index));
               },
             );
           },
