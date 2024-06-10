@@ -44,6 +44,17 @@ class ToggleChore extends TodoEvent {
   List<Object> get props => [index];
 }
 
+class UpdateTodo extends TodoEvent {
+  final int index;
+  final String updatedTask;
+  final bool isShoppingItem;
+
+  UpdateTodo(this.index, this.updatedTask, this.isShoppingItem);
+
+  @override
+  List<Object> get props => [index, updatedTask, isShoppingItem];
+}
+
 // State Definition
 class TodoState extends Equatable {
   final List<Todo> shoppingItems;
@@ -98,6 +109,26 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       );
       emit(
           TodoState(shoppingItems: state.shoppingItems, chores: updatedChores));
+    });
+
+    on<UpdateTodo>((event, emit) {
+      if (event.isShoppingItem) {
+        final List<Todo> updatedShoppingItems = List.from(state.shoppingItems);
+        updatedShoppingItems[event.index] = Todo(
+          task: event.updatedTask,
+          isCompleted: updatedShoppingItems[event.index].isCompleted,
+        );
+        emit(TodoState(
+            shoppingItems: updatedShoppingItems, chores: state.chores));
+      } else {
+        final List<Todo> updatedChores = List.from(state.chores);
+        updatedChores[event.index] = Todo(
+          task: event.updatedTask,
+          isCompleted: updatedChores[event.index].isCompleted,
+        );
+        emit(TodoState(
+            shoppingItems: state.shoppingItems, chores: updatedChores));
+      }
     });
   }
 }

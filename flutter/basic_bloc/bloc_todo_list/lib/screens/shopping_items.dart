@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/todo_bloc.dart';
 import '../widgets/todo_item.dart';
+import 'edit_todo_screen.dart';
 
 class ShoppingItems extends StatelessWidget {
   @override
@@ -17,6 +18,14 @@ class ShoppingItems extends StatelessWidget {
               todo: shoppingItems[index],
               onTap: () {
                 context.read<TodoBloc>().add(ToggleShoppingItem(index));
+              },
+              onEdit: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EditTodoScreen(
+                      index: index,
+                      todo: shoppingItems[index],
+                      isShoppingItem: true),
+                ));
               },
             );
           },
