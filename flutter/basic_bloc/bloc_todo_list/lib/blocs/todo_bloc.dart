@@ -3,6 +3,8 @@ import 'package:equatable/equatable.dart';
 import '../models/todo.dart';
 
 // Event Definitions
+enum ItemType { Shopping, Chore }
+
 abstract class TodoEvent extends Equatable {
   @override
   List<Object> get props => [];
@@ -10,11 +12,12 @@ abstract class TodoEvent extends Equatable {
 
 class AddItem extends TodoEvent {
   final String item;
+  final ItemType itemType;
 
-  AddItem(this.item);
+  AddItem(this.item, this.itemType);
 
   @override
-  List<Object> get props => [item];
+  List<Object> get props => [item, itemType];
 }
 
 class ToggleItem extends TodoEvent {
@@ -54,6 +57,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         ..add(Todo(
           task: event.item,
           isCompleted: false,
+          itemType: event.itemType,
         ));
       emit(TodoState(items: updatedItems));
     });
@@ -64,6 +68,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       updatedItems[event.index] = Todo(
         task: item.task,
         isCompleted: !item.isCompleted,
+        itemType: item.itemType,
       );
       emit(TodoState(items: updatedItems));
     });
@@ -73,6 +78,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       updatedItems[event.index] = Todo(
         task: event.updatedTask,
         isCompleted: updatedItems[event.index].isCompleted,
+        itemType: updatedItems[event.index].itemType,
       );
       emit(TodoState(items: updatedItems));
     });

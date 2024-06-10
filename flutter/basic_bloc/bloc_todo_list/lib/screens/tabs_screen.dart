@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/todo_bloc.dart';
 import 'items_screen.dart';
+// import '../models/todo.dart';
 
 class TabsScreen extends StatelessWidget {
   @override
@@ -20,8 +21,8 @@ class TabsScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            ItemsScreen(),
-            ItemsScreen(),
+            ItemsScreen(itemType: ItemType.Shopping),
+            ItemsScreen(itemType: ItemType.Chore),
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -47,21 +48,41 @@ class AddItemDialog extends StatefulWidget {
 
 class _AddItemDialogState extends State<AddItemDialog> {
   final _controller = TextEditingController();
+  ItemType _selectedItemType = ItemType.Shopping;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Add Item'),
-      content: TextField(
-        controller: _controller,
-        decoration: InputDecoration(hintText: 'Enter item here'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _controller,
+            decoration: InputDecoration(hintText: 'Enter item here'),
+          ),
+          DropdownButton<ItemType>(
+            value: _selectedItemType,
+            onChanged: (ItemType? newValue) {
+              setState(() {
+                _selectedItemType = newValue!;
+              });
+            },
+            items: ItemType.values.map((ItemType classType) {
+              return DropdownMenuItem<ItemType>(
+                value: classType,
+                child: Text(classType.toString().split('.').last),
+              );
+            }).toList(),
+          ),
+        ],
       ),
       actions: [
         TextButton(
           onPressed: () {
             final item = _controller.text;
             if (item.isNotEmpty) {
-              context.read<TodoBloc>().add(AddItem(item));
+              context.read<TodoBloc>().add(AddItem(item, _selectedItemType));
             }
             Navigator.of(context).pop();
           },
