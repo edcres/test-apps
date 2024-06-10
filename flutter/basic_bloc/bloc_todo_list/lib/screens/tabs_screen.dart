@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/todo_bloc.dart';
-import 'shopping_items.dart';
-import 'chores.dart';
+import 'items_screen.dart';
 
 class TabsScreen extends StatelessWidget {
   @override
@@ -21,8 +20,8 @@ class TabsScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            ShoppingItems(),
-            Chores(),
+            ItemsScreen(),
+            ItemsScreen(),
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -48,46 +47,21 @@ class AddItemDialog extends StatefulWidget {
 
 class _AddItemDialogState extends State<AddItemDialog> {
   final _controller = TextEditingController();
-  String _selectedCategory = 'Shopping';
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Add Item'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: _controller,
-            decoration: InputDecoration(hintText: 'Enter item here'),
-          ),
-          DropdownButton<String>(
-            value: _selectedCategory,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedCategory = newValue!;
-              });
-            },
-            items: <String>['Shopping', 'Chores']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-        ],
+      content: TextField(
+        controller: _controller,
+        decoration: InputDecoration(hintText: 'Enter item here'),
       ),
       actions: [
         TextButton(
           onPressed: () {
             final item = _controller.text;
             if (item.isNotEmpty) {
-              if (_selectedCategory == 'Shopping') {
-                context.read<TodoBloc>().add(AddShoppingItem(item));
-              } else {
-                context.read<TodoBloc>().add(AddChore(item));
-              }
+              context.read<TodoBloc>().add(AddItem(item));
             }
             Navigator.of(context).pop();
           },

@@ -8,127 +8,73 @@ abstract class TodoEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AddShoppingItem extends TodoEvent {
+class AddItem extends TodoEvent {
   final String item;
 
-  AddShoppingItem(this.item);
+  AddItem(this.item);
 
   @override
   List<Object> get props => [item];
 }
 
-class AddChore extends TodoEvent {
-  final String chore;
-
-  AddChore(this.chore);
-
-  @override
-  List<Object> get props => [chore];
-}
-
-class ToggleShoppingItem extends TodoEvent {
+class ToggleItem extends TodoEvent {
   final int index;
 
-  ToggleShoppingItem(this.index);
+  ToggleItem(this.index);
 
   @override
   List<Object> get props => [index];
 }
 
-class ToggleChore extends TodoEvent {
-  final int index;
-
-  ToggleChore(this.index);
-
-  @override
-  List<Object> get props => [index];
-}
-
-class UpdateTodo extends TodoEvent {
+class UpdateItem extends TodoEvent {
   final int index;
   final String updatedTask;
-  final bool isShoppingItem;
 
-  UpdateTodo(this.index, this.updatedTask, this.isShoppingItem);
+  UpdateItem(this.index, this.updatedTask);
 
   @override
-  List<Object> get props => [index, updatedTask, isShoppingItem];
+  List<Object> get props => [index, updatedTask];
 }
 
 // State Definition
 class TodoState extends Equatable {
-  final List<Todo> shoppingItems;
-  final List<Todo> chores;
+  final List<Todo> items;
 
-  TodoState({required this.shoppingItems, required this.chores});
+  TodoState({required this.items});
 
   @override
-  List<Object> get props => [shoppingItems, chores];
+  List<Object> get props => [items];
 }
 
 // BLoC Definition
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
-  TodoBloc() : super(TodoState(shoppingItems: [], chores: [])) {
-    on<AddShoppingItem>((event, emit) {
-      final List<Todo> updatedShoppingItems = List.from(state.shoppingItems)
+  TodoBloc() : super(TodoState(items: [])) {
+    on<AddItem>((event, emit) {
+      final List<Todo> updatedItems = List.from(state.items)
         ..add(Todo(
           task: event.item,
           isCompleted: false,
         ));
-      emit(
-          TodoState(shoppingItems: updatedShoppingItems, chores: state.chores));
+      emit(TodoState(items: updatedItems));
     });
 
-    on<AddChore>((event, emit) {
-      final List<Todo> updatedChores = List.from(state.chores)
-        ..add(Todo(
-          task: event.chore,
-          isCompleted: false,
-        ));
-      emit(
-          TodoState(shoppingItems: state.shoppingItems, chores: updatedChores));
-    });
-
-    on<ToggleShoppingItem>((event, emit) {
-      final List<Todo> updatedShoppingItems = List.from(state.shoppingItems);
-      final Todo item = updatedShoppingItems[event.index];
-      updatedShoppingItems[event.index] = Todo(
+    on<ToggleItem>((event, emit) {
+      final List<Todo> updatedItems = List.from(state.items);
+      final Todo item = updatedItems[event.index];
+      updatedItems[event.index] = Todo(
         task: item.task,
         isCompleted: !item.isCompleted,
       );
-      emit(
-          TodoState(shoppingItems: updatedShoppingItems, chores: state.chores));
+      emit(TodoState(items: updatedItems));
     });
 
-    on<ToggleChore>((event, emit) {
-      final List<Todo> updatedChores = List.from(state.chores);
-      final Todo chore = updatedChores[event.index];
-      updatedChores[event.index] = Todo(
-        task: chore.task,
-        isCompleted: !chore.isCompleted,
+    on<UpdateItem>((event, emit) {
+      final List<Todo> updatedItems = List.from(state.items);
+      updatedItems[event.index] = Todo(
+        task: event.updatedTask,
+        isCompleted: updatedItems[event.index].isCompleted,
       );
-      emit(
-          TodoState(shoppingItems: state.shoppingItems, chores: updatedChores));
-    });
-
-    on<UpdateTodo>((event, emit) {
-      if (event.isShoppingItem) {
-        final List<Todo> updatedShoppingItems = List.from(state.shoppingItems);
-        updatedShoppingItems[event.index] = Todo(
-          task: event.updatedTask,
-          isCompleted: updatedShoppingItems[event.index].isCompleted,
-        );
-        emit(TodoState(
-            shoppingItems: updatedShoppingItems, chores: state.chores));
-      } else {
-        final List<Todo> updatedChores = List.from(state.chores);
-        updatedChores[event.index] = Todo(
-          task: event.updatedTask,
-          isCompleted: updatedChores[event.index].isCompleted,
-        );
-        emit(TodoState(
-            shoppingItems: state.shoppingItems, chores: updatedChores));
-      }
+      emit(TodoState(items: updatedItems));
     });
   }
 }

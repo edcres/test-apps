@@ -6,10 +6,8 @@ import '../models/todo.dart';
 class EditTodoScreen extends StatefulWidget {
   final int index;
   final Todo todo;
-  final bool isShoppingItem;
 
-  EditTodoScreen(
-      {required this.index, required this.todo, required this.isShoppingItem});
+  EditTodoScreen({required this.index, required this.todo});
 
   @override
   _EditTodoScreenState createState() => _EditTodoScreenState();
@@ -43,8 +41,9 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
               onPressed: () {
                 final updatedTask = _controller.text;
                 if (updatedTask.isNotEmpty) {
-                  context.read<TodoBloc>().add(UpdateTodo(
-                      widget.index, updatedTask, widget.isShoppingItem));
+                  context
+                      .read<TodoBloc>()
+                      .add(UpdateItem(widget.index, updatedTask));
                 }
                 Navigator.of(context).pop();
               },
