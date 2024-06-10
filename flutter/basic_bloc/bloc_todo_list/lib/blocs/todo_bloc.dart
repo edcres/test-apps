@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../models/todo.dart';
+import '../models/shopping_item.dart';
+import '../models/chore_item.dart';
 
 // Event Definitions
-enum ItemType { Shopping, Chore }
-
 abstract class TodoEvent extends Equatable {
   @override
   List<Object> get props => [];
@@ -54,32 +54,27 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   TodoBloc() : super(TodoState(items: [])) {
     on<AddItem>((event, emit) {
       final List<Todo> updatedItems = List.from(state.items)
-        ..add(Todo(
-          task: event.item,
-          isCompleted: false,
-          itemType: event.itemType,
-        ));
+        ..add(event.itemType == ItemType.Shopping
+            ? ShoppingItem(task: event.item, isCompleted: false)
+            : ChoreItem(task: event.item, isCompleted: false));
       emit(TodoState(items: updatedItems));
     });
 
     on<ToggleItem>((event, emit) {
       final List<Todo> updatedItems = List.from(state.items);
       final Todo item = updatedItems[event.index];
-      updatedItems[event.index] = Todo(
-        task: item.task,
-        isCompleted: !item.isCompleted,
-        itemType: item.itemType,
-      );
+      updatedItems[event.index] = item.itemType == ItemType.Shopping
+          ? ShoppingItem(task: item.task, isCompleted: !item.isCompleted)
+          : ChoreItem(task: item.task, isCompleted: !item.isCompleted);
       emit(TodoState(items: updatedItems));
     });
 
     on<UpdateItem>((event, emit) {
       final List<Todo> updatedItems = List.from(state.items);
-      updatedItems[event.index] = Todo(
-        task: event.updatedTask,
-        isCompleted: updatedItems[event.index].isCompleted,
-        itemType: updatedItems[event.index].itemType,
-      );
+      final Todo item = updatedItems[event.index];
+      updatedItems[event.index] = item.itemType == ItemType.Shopping
+          ? ShoppingItem(task: event.updatedTask, isCompleted: item.isCompleted)
+          : ChoreItem(task: event.updatedTask, isCompleted: item.isCompleted);
       emit(TodoState(items: updatedItems));
     });
   }
