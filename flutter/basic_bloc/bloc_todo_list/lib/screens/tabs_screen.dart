@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/todo_bloc.dart';
 import 'items_screen.dart';
-// import '../models/todo.dart';
 
 class TabsScreen extends StatelessWidget {
   @override
