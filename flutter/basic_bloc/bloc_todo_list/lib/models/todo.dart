@@ -1,6 +1,8 @@
-import 'package:bloc_todo_list/blocs/todo_bloc.dart';
+import 'package:equatable/equatable.dart';
 
-class Todo {
+enum ItemType { Shopping, Chore }
+
+abstract class Todo extends Equatable {
   final String task;
   final bool isCompleted;
   final ItemType itemType;
@@ -10,4 +12,7 @@ class Todo {
     required this.isCompleted,
     required this.itemType,
   });
+
+  @override
+  List<Object> get props => [task, isCompleted, itemType];
 }
