@@ -23,9 +23,42 @@ class ItemsScreen extends StatelessWidget {
             return TodoItem(
               todo: items[index],
               onTap: () {
-                context
-                    .read<TodoBloc>()
-                    .add(ToggleItem(state.items.indexOf(items[index])));
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            items[index].task,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Completed: ${items[index].isCompleted ? 'Yes' : 'No'}',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Type: ${items[index].itemType == ItemType.Shopping ? 'Shopping' : 'Chore'}',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
               },
               onEdit: () {
                 Navigator.of(context).push(MaterialPageRoute(

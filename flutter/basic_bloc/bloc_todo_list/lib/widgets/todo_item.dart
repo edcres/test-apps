@@ -17,6 +17,7 @@ class TodoItem extends StatelessWidget {
           decoration: todo.isCompleted ? TextDecoration.lineThrough : null,
         ),
       ),
+      onTap: onTap,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
