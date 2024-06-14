@@ -1,58 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'text_bloc.dart';
+import 'text_event.dart';
+import 'text_state.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreen extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
-  bool _isSaved = false;
-  String _displayText = "Loading...";
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchText();
-  }
-
-  void _fetchText() async {
-    DocumentSnapshot doc =
-        await FirebaseFirestore.instance.collection('texts').doc('doc 1').get();
-    setState(() {
-      if (doc.exists && doc['text'] != null) {
-        _displayText = doc['text'];
-      } else {
-        _displayText = "No text saved";
-      }
-    });
-  }
-
-  void _saveText() async {
-    String text = _controller.text;
-    if (text.isNotEmpty) {
-      try {
-        await FirebaseFirestore.instance.collection('texts').doc('doc 1').set({
-          'text': text,
-          'timestamp': FieldValue.serverTimestamp(),
-        });
-        setState(() {
-          _isSaved = true;
-          _displayText = text;
-        });
-        _controller.clear();
-      } catch (e) {
-        print('Error saving text: $e');
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Firestore Example'),
+        title: Text('Firestore BLoC Example'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -66,22 +26,33 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _saveText,
+              onPressed: () {
+                final text = _controller.text;
+                if (text.isNotEmpty) {
+                  context.read<TextBloc>().add(SaveText(text));
+                  _controller.clear();
+                }
+              },
               child: Text('Save Text'),
             ),
             SizedBox(height: 20),
-            Text(
-              _displayText,
-              style: TextStyle(fontSize: 16),
+            BlocBuilder<TextBloc, TextState>(
+              builder: (context, state) {
+                if (state is TextLoading) {
+                  return CircularProgressIndicator();
+                } else if (state is TextLoaded) {
+                  return Text(state.text, style: TextStyle(fontSize: 16));
+                } else if (state is TextSaved) {
+                  return Text('Text saved',
+                      style: TextStyle(color: Colors.green, fontSize: 16));
+                } else if (state is TextError) {
+                  return Text(state.message,
+                      style: TextStyle(color: Colors.red, fontSize: 16));
+                } else {
+                  return Container();
+                }
+              },
             ),
-            if (_isSaved)
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Text(
-                  'Text saved',
-                  style: TextStyle(color: Colors.green, fontSize: 16),
-                ),
-              ),
           ],
         ),
       ),
