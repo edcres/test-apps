@@ -1,4 +1,4 @@
-package com.example.flutter_android_integration
+package com.example.basic_android_ios_integreation
 
 import android.os.BatteryManager
 import android.os.Bundle
@@ -11,8 +11,11 @@ class MainActivity: FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        MethodChannel(flutterEngine?.dartExecutor?.binaryMessenger, CHANNEL).setMethodCallHandler {
-            call, result ->
+        val messenger = requireNotNull(flutterEngine?.dartExecutor?.binaryMessenger) {
+            "BinaryMessenger is null"
+        }
+
+        MethodChannel(messenger, CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == "getBatteryLevel") {
                 val batteryLevel = getBatteryLevel()
 
